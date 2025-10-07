@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/storage/shared_prefs_provider.dart';
+import 'package:tuneatlas/src/core/core.dart';
 
 part 'theme_provider.g.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 // Import screens
 import 'package:tuneatlas/src/features/discover/presentation/discover_screen.dart';
 import 'package:tuneatlas/src/features/home/presentation/home_screen.dart';
@@ -17,7 +16,6 @@ part 'router.g.dart';
 GoRouter router(Ref ref) {
   return GoRouter(
     initialLocation: '/home',
-    debugLogDiagnostics: true, // Helpful during development
 
     routes: [
       // Bottom navigation shell - wraps all tab screens
