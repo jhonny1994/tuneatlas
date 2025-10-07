@@ -4,6 +4,7 @@ analyzer:
   errors:
     invalid_annotation_target: ignore
     always_put_required_named_parameters_first: ignore
+    lines_longer_than_80_chars: ignore
   plugins:
     - custom_lint
 

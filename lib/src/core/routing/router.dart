@@ -1,117 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-// Import screens
+import 'package:tuneatlas/src/core/core.dart';
 import 'package:tuneatlas/src/features/discover/presentation/discover_screen.dart';
 import 'package:tuneatlas/src/features/home/presentation/home_screen.dart';
 import 'package:tuneatlas/src/features/library/presentation/library_screen.dart';
+import 'package:tuneatlas/src/features/onboarding/presentation/splash_screen.dart';
 import 'package:tuneatlas/src/features/player/presentation/full_player_screen.dart';
 import 'package:tuneatlas/src/features/search/presentation/search_screen.dart';
 
 part 'router.g.dart';
 
-/// GoRouter configuration
-/// This will generate `routerProvider` automatically
-@riverpod
-GoRouter router(Ref ref) {
-  return GoRouter(
-    initialLocation: '/home',
+/// Root navigation with bottom navigation bar
+class RootScreen extends StatefulWidget {
+  const RootScreen({required this.child, super.key});
 
-    routes: [
-      // Bottom navigation shell - wraps all tab screens
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return MainNavigationScaffold(navigationShell: navigationShell);
-        },
-        branches: [
-          // Branch 1: Home
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/home',
-                name: 'home',
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: HomeScreen(),
-                ),
-              ),
-            ],
-          ),
+  final Widget child;
 
-          // Branch 2: Discover
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/discover',
-                name: 'discover',
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: DiscoverScreen(),
-                ),
-              ),
-            ],
-          ),
-
-          // Branch 3: Library
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/library',
-                name: 'library',
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: LibraryScreen(),
-                ),
-              ),
-            ],
-          ),
-
-          // Branch 4: Search
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/search',
-                name: 'search',
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: SearchScreen(),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-
-      // Full-screen routes (not in bottom nav)
-      GoRoute(
-        path: '/player',
-        name: 'player',
-        pageBuilder: (context, state) => const MaterialPage(
-          fullscreenDialog: true,
-          child: FullPlayerScreen(),
-        ),
-      ),
-    ],
-  );
+  @override
+  State<RootScreen> createState() => _RootScreenState();
 }
 
-/// Main scaffold with bottom navigation bar
-class MainNavigationScaffold extends StatelessWidget {
-  const MainNavigationScaffold({
-    required this.navigationShell,
-    super.key,
-  });
+class _RootScreenState extends State<RootScreen> {
+  int _selectedIndex = 0;
 
-  final StatefulNavigationShell navigationShell;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        context.go('/home');
+      case 1:
+        context.go('/discover');
+      case 2:
+        context.go('/library');
+      case 3:
+        context.go('/search');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: navigationShell,
+      body: widget.child,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onItemTapped,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -124,8 +60,8 @@ class MainNavigationScaffold extends StatelessWidget {
             label: 'Discover',
           ),
           NavigationDestination(
-            icon: Icon(Icons.favorite_outline),
-            selectedIcon: Icon(Icons.favorite),
+            icon: Icon(Icons.library_music_outlined),
+            selectedIcon: Icon(Icons.library_music),
             label: 'Library',
           ),
           NavigationDestination(
@@ -137,4 +73,67 @@ class MainNavigationScaffold extends StatelessWidget {
       ),
     );
   }
+}
+
+@riverpod
+GoRouter router(Ref ref) {
+  // Watch initialization state
+  final initState = ref.watch(appInitializationProvider);
+
+  return GoRouter(
+    initialLocation: '/splash',
+    redirect: (context, state) {
+      final isSplash = state.matchedLocation == '/splash';
+
+      // Check if initialization is complete
+      return initState.maybeWhen(
+        success: () {
+          // Redirect from splash to home after successful initialization
+          if (isSplash) return '/home';
+          return null; // No redirect needed
+        },
+        orElse: () {
+          // Stay on splash during loading or error
+          if (!isSplash) return '/splash';
+          return null;
+        },
+      );
+    },
+    routes: [
+      // Splash screen (initialization)
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+
+      // Main app routes with bottom navigation
+      ShellRoute(
+        builder: (context, state, child) => RootScreen(child: child),
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) => const HomeScreen(),
+          ),
+          GoRoute(
+            path: '/discover',
+            builder: (context, state) => const DiscoverScreen(),
+          ),
+          GoRoute(
+            path: '/library',
+            builder: (context, state) => const LibraryScreen(),
+          ),
+          GoRoute(
+            path: '/search',
+            builder: (context, state) => const SearchScreen(),
+          ),
+        ],
+      ),
+
+      // Player screen (full screen, no bottom nav)
+      GoRoute(
+        path: '/player',
+        builder: (context, state) => const FullPlayerScreen(),
+      ),
+    ],
+  );
 }

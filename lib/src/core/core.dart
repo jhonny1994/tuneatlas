@@ -1,6 +1,8 @@
 export 'api/api.dart';
 export 'audio/audio.dart';
 export 'config/config.dart';
+export 'initialization/initialization.dart';
+export 'location/location.dart';
 export 'models/models.dart';
 export 'routing/routing.dart';
 export 'storage/storage.dart';
