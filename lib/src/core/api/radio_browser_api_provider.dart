@@ -5,7 +5,7 @@ part 'radio_browser_api_provider.g.dart';
 
 /// Provides RadioBrowserApi instance
 /// Depends on ApiClient
-@riverpod
+@Riverpod(keepAlive: true)
 RadioBrowserApi radioBrowserApi(Ref ref) {
   final apiClient = ref.watch(apiClientProvider);
   return RadioBrowserApi(apiClient);

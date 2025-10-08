@@ -6,7 +6,7 @@ import 'package:tuneatlas/src/features/home/data/local_stations_state.dart';
 part 'local_stations_provider.g.dart';
 
 /// Manages paginated local stations with infinite scroll
-@riverpod
+@Riverpod(keepAlive: true)
 class LocalStations extends _$LocalStations {
   late String _currentCountry;
 
