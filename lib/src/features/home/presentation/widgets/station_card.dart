@@ -1,9 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:tuneatlas/src/core/core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tuneatlas/src/src.dart';
 
 /// Displays a radio station in a card format
-class StationCard extends StatelessWidget {
+class StationCard extends ConsumerStatefulWidget {
   const StationCard({
     required this.station,
     this.onTap,
@@ -14,13 +16,49 @@ class StationCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
+  ConsumerState<StationCard> createState() => _StationCardState();
+}
+
+class _StationCardState extends ConsumerState<StationCard> {
+  bool _isFavorite = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_checkFavoriteStatus());
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    final isFav = await ref
+        .read(favoritesProvider.notifier)
+        .isFavorite(widget.station.stationUuid);
+    if (mounted) {
+      setState(() {
+        _isFavorite = isFav;
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    setState(() => _isLoading = true);
+
+    await ref.read(favoritesProvider.notifier).toggleFavorite(widget.station);
+
+    if (mounted) {
+      await _checkFavoriteStatus();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -37,39 +75,39 @@ class StationCard extends StatelessWidget {
                   children: [
                     // Station name
                     Text(
-                      station.name,
+                      widget.station.name,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
 
-                    // Country and tags
-                    Text(
-                      _buildSubtitle(),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.7,
-                        ),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // Station description
                     const SizedBox(height: 4),
-
-                    // Codec and bitrate
                     _buildMetadata(context),
                   ],
                 ),
               ),
 
-              // Play button
-              Icon(
-                Icons.play_circle_outline,
-                size: 32,
-                color: theme.colorScheme.primary,
+              // Favorite button
+              IconButton(
+                onPressed: _isLoading ? null : _toggleFavorite,
+                icon: _isLoading
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.colorScheme.primary,
+                        ),
+                      )
+                    : Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorite
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant,
+                      ),
               ),
             ],
           ),
@@ -87,25 +125,15 @@ class StationCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: station.favicon.isNotEmpty
+      child: widget.station.favicon.isNotEmpty
           ? ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImage(
-                imageUrl: station.favicon,
+              child: Image.network(
+                widget.station.favicon,
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-                errorWidget: (context, url, error) {
+                errorBuilder: (context, error, stackTrace) {
                   return _buildFallbackIcon(context);
                 },
               ),
@@ -123,58 +151,52 @@ class StationCard extends StatelessWidget {
     );
   }
 
-  /// Build subtitle with country and tags
-  String _buildSubtitle() {
-    final parts = <String>[];
-
-    if (station.country.isNotEmpty) {
-      parts.add(station.country);
-    }
-
-    if (station.tags != null && station.tags!.isNotEmpty) {
-      // Take first tag only
-      final firstTag = station.tags!.split(',').first.trim();
-      if (firstTag.isNotEmpty) {
-        parts.add(firstTag);
-      }
-    }
-
-    return parts.join(' • ');
-  }
-
-  /// Build metadata row (codec and bitrate)
+  /// Build metadata row
   Widget _buildMetadata(BuildContext context) {
     final theme = Theme.of(context);
-    final metadata = <String>[];
+    final tags = <String>[];
 
-    if (station.codec.isNotEmpty) {
-      metadata.add(station.codec.toUpperCase());
+    if (widget.station.country.isNotEmpty) {
+      tags.add(widget.station.country.toUpperCase());
     }
 
-    // Only show bitrate if greater than 0
-    if (station.bitrate > 0) {
-      metadata.add('${station.bitrate} kbps');
-    }
-
-    if (metadata.isEmpty) return const SizedBox.shrink();
-
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            metadata.join(' • '),
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.w500,
+    if (widget.station.language != null &&
+        widget.station.language!.isNotEmpty) {
+      tags.addAll(
+        widget.station.language!.split(',').map(
+              (lang) => lang.trim().toUpperCase(),
             ),
-          ),
-        ),
-      ],
+      );
+    }
+    if (widget.station.tags != null && widget.station.tags!.isNotEmpty) {
+      tags.addAll(
+        widget.station.tags!.split(',').map(
+              (tag) => tag.trim().toUpperCase(),
+            ),
+      );
+    }
+    if (tags.isEmpty) return const SizedBox.shrink();
+    return Wrap(
+      spacing: 2,
+      runSpacing: 2,
+      children: tags
+          .map(
+            (data) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                data,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }
