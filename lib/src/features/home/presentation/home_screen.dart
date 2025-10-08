@@ -63,7 +63,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          error: (_, _) => Text(
+          error: (_, __) => Text(
             'TuneAtlas',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurface,
@@ -111,7 +111,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   return StationCard(
                     station: station,
                     onTap: () {
-                      // TODO: Start playback
+                      // TODO: Play station
                     },
                   );
                 }
@@ -150,10 +150,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Text(
             'Try searching for stations in other countries',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -183,10 +183,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Text(
               error.toString(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
