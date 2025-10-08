@@ -122,13 +122,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }
-                // End of list
-                if (!state.hasMore) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Center(child: Text('No more stations')),
-                  );
-                }
                 return const SizedBox.shrink();
               },
             ),

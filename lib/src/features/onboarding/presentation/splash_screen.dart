@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuneatlas/src/core/initialization/app_initialization_provider.dart';
-import 'package:tuneatlas/src/core/initialization/app_initialization_state.dart';
+import 'package:tuneatlas/src/core/core.dart';
 
 /// Splash screen shown during app initialization
 /// Displays loading, success, or error states

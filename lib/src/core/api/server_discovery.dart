@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tuneatlas/src/core/config/app_config.dart';
+import 'package:tuneatlas/src/core/core.dart';
 
 /// Discovers Radio Browser API servers using DNS lookup
 /// Radio Browser uses multiple servers for load balancing

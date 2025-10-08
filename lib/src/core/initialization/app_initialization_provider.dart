@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/api/api_client_provider.dart';
-import 'package:tuneatlas/src/core/api/server_discovery_provider.dart';
-import 'package:tuneatlas/src/core/initialization/app_initialization_state.dart';
+import 'package:tuneatlas/src/core/core.dart';
 
 part 'app_initialization_provider.g.dart';
 

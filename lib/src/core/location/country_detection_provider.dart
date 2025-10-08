@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/config/app_config.dart';
+import 'package:tuneatlas/src/core/core.dart';
 
 part 'country_detection_provider.g.dart';
 

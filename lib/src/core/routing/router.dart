@@ -5,6 +5,8 @@ import 'package:tuneatlas/src/core/core.dart';
 import 'package:tuneatlas/src/features/discover/presentation/discover_screen.dart';
 import 'package:tuneatlas/src/features/home/presentation/home_screen.dart';
 import 'package:tuneatlas/src/features/library/presentation/library_screen.dart';
+import 'package:tuneatlas/src/features/onboarding/data/onboarding_provider.dart';
+import 'package:tuneatlas/src/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:tuneatlas/src/features/onboarding/presentation/splash_screen.dart';
 import 'package:tuneatlas/src/features/player/presentation/full_player_screen.dart';
 import 'package:tuneatlas/src/features/search/presentation/search_screen.dart';
@@ -77,19 +79,36 @@ class _RootScreenState extends State<RootScreen> {
 
 @riverpod
 GoRouter router(Ref ref) {
-  // Watch initialization state
+  // Watch both initialization and onboarding state
   final initState = ref.watch(appInitializationProvider);
+  final onboardingCompleted = ref.watch(onboardingStateProvider);
 
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
       final isSplash = state.matchedLocation == '/splash';
+      final isOnboarding = state.matchedLocation == '/onboarding';
 
-      // Check if initialization is complete
+      // Check initialization state
       return initState.maybeWhen(
         success: () {
-          // Redirect from splash to home after successful initialization
-          if (isSplash) return '/home';
+          // Initialization complete
+
+          // If not on onboarding screen and onboarding not completed
+          if (!onboardingCompleted && !isOnboarding) {
+            return '/onboarding';
+          }
+
+          // If on onboarding screen but already completed
+          if (isOnboarding && onboardingCompleted) {
+            return '/home';
+          }
+
+          // If on splash and onboarding completed, go to home
+          if (isSplash && onboardingCompleted) {
+            return '/home';
+          }
+
           return null; // No redirect needed
         },
         orElse: () {
@@ -104,6 +123,12 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/splash',
         builder: (context, state) => const SplashScreen(),
+      ),
+
+      // Onboarding screen (first launch)
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingScreen(),
       ),
 
       // Main app routes with bottom navigation
