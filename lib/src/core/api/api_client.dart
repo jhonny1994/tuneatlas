@@ -26,7 +26,7 @@ class ApiClient {
       ),
     );
 
-    // Add logging in debug mode
+    /* // Add logging in debug mode
     if (kDebugMode) {
       _dio.interceptors.add(
         LogInterceptor(
@@ -35,7 +35,7 @@ class ApiClient {
           logPrint: (obj) => debugPrint('[API] $obj'),
         ),
       );
-    }
+    } */
   }
 
   late final Dio _dio;

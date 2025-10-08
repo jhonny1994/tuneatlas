@@ -8,11 +8,9 @@ part 'facet.g.dart';
 @freezed
 abstract class Facet with _$Facet {
   const factory Facet({
-    /// Facet name (e.g., "United States", "English", "Rock")
     required String name,
-
-    /// Number of stations with this facet
     @JsonKey(name: 'stationcount') required int stationCount,
+    @JsonKey(name: 'iso_3166_1') String? code,
   }) = _Facet;
 
   /// From JSON factory

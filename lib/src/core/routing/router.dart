@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/core/core.dart';
 import 'package:tuneatlas/src/features/discover/presentation/discover_screen.dart';
+import 'package:tuneatlas/src/features/discover/presentation/filtered_stations_screen.dart';
 import 'package:tuneatlas/src/features/home/presentation/home_screen.dart';
 import 'package:tuneatlas/src/features/library/presentation/library_screen.dart';
 import 'package:tuneatlas/src/features/onboarding/data/onboarding_provider.dart';
@@ -158,6 +159,22 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/player',
         builder: (context, state) => const FullPlayerScreen(),
+      ),
+
+      // Filtered stations screen (from discover)
+      GoRoute(
+        path: '/filtered-stations',
+        builder: (context, state) {
+          final filterType = state.uri.queryParameters['filterType'] ?? '';
+          final filterValue = state.uri.queryParameters['filterValue'] ?? '';
+          final title = state.uri.queryParameters['title'] ?? 'Stations';
+
+          return FilteredStationsScreen(
+            filterType: filterType,
+            filterValue: filterValue,
+            title: title,
+          );
+        },
       ),
     ],
   );
