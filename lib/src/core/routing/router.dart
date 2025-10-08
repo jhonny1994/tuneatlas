@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/core.dart';
-import 'package:tuneatlas/src/features/discover/presentation/discover_screen.dart';
-import 'package:tuneatlas/src/features/discover/presentation/filtered_stations_screen.dart';
-import 'package:tuneatlas/src/features/home/presentation/home_screen.dart';
-import 'package:tuneatlas/src/features/library/presentation/library_screen.dart';
-import 'package:tuneatlas/src/features/onboarding/data/onboarding_provider.dart';
-import 'package:tuneatlas/src/features/onboarding/presentation/onboarding_screen.dart';
-import 'package:tuneatlas/src/features/onboarding/presentation/splash_screen.dart';
-import 'package:tuneatlas/src/features/player/presentation/full_player_screen.dart';
-import 'package:tuneatlas/src/features/search/presentation/search_screen.dart';
+import 'package:tuneatlas/src/src.dart';
 
 part 'router.g.dart';
 

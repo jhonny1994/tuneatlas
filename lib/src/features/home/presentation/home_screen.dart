@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuneatlas/src/core/core.dart';
-import 'package:tuneatlas/src/features/home/data/local_stations_provider.dart';
-import 'package:tuneatlas/src/features/home/presentation/widgets/station_card.dart';
-import 'package:tuneatlas/src/features/home/presentation/widgets/station_card_shimmer.dart';
+import 'package:tuneatlas/src/src.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

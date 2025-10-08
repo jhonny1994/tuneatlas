@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuneatlas/src/features/home/presentation/widgets/station_card.dart';
-import 'package:tuneatlas/src/features/home/presentation/widgets/station_card_shimmer.dart';
-import 'package:tuneatlas/src/features/search/data/search_provider.dart';
+import 'package:tuneatlas/src/src.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -177,10 +175,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           Text(
             'Enter a station name to search',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
           ),
         ],
       ),
@@ -206,10 +204,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           Text(
             'Try a different search term',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
           ),
         ],
       ),
@@ -237,10 +235,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             Text(
               error.toString(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
               textAlign: TextAlign.center,
             ),
           ],

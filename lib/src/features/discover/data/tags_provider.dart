@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/core.dart';
+import 'package:tuneatlas/src/src.dart';
 
 part 'tags_provider.g.dart';
 

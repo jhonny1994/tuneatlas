@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/core.dart';
+import 'package:tuneatlas/src/src.dart';
 
 part 'favorites_provider.g.dart';
 

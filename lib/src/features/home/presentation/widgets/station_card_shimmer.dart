@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tuneatlas/src/core/core.dart';
+import 'package:tuneatlas/src/src.dart';
 
 /// Shimmer loading placeholder for station cards
 class StationCardShimmer extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:sembast/sembast.dart';
-import 'package:tuneatlas/src/core/core.dart';
+import 'package:tuneatlas/src/src.dart';
 
 /// Service for managing favorite stations
 class FavoritesService {

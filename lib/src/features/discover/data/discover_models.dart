@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tuneatlas/src/core/models/station.dart';
+import 'package:tuneatlas/src/src.dart';
 
 part 'discover_models.freezed.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/core.dart';
-import 'package:tuneatlas/src/features/discover/data/discover_models.dart';
+import 'package:tuneatlas/src/src.dart';
 
 part 'filtered_stations_provider.g.dart';
 

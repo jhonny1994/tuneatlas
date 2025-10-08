@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuneatlas/src/features/discover/presentation/widgets/countries_tab.dart';
-import 'package:tuneatlas/src/features/discover/presentation/widgets/languages_tab.dart';
-import 'package:tuneatlas/src/features/discover/presentation/widgets/tags_tab.dart';
+import 'package:tuneatlas/src/src.dart';
 
 class DiscoverScreen extends ConsumerWidget {
   const DiscoverScreen({super.key});

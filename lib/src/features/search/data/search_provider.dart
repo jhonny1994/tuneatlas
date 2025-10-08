@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/core/core.dart';
-import 'package:tuneatlas/src/features/search/data/search_state.dart';
+import 'package:tuneatlas/src/src.dart';
 
 part 'search_provider.g.dart';
 

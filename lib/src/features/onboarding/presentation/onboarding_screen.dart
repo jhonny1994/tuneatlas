@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tuneatlas/src/features/onboarding/data/onboarding_page_data.dart';
-import 'package:tuneatlas/src/features/onboarding/data/onboarding_provider.dart';
+import 'package:tuneatlas/src/src.dart';
 
 /// Onboarding screen shown on first launch
 class OnboardingScreen extends ConsumerStatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tuneatlas/src/features/discover/data/countries_provider.dart';
+import 'package:tuneatlas/src/src.dart';
 
 class CountriesTab extends ConsumerWidget {
   const CountriesTab({super.key});

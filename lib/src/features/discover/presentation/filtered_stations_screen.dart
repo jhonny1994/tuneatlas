@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tuneatlas/src/features/discover/data/filtered_stations_provider.dart';
-import 'package:tuneatlas/src/features/home/presentation/widgets/station_card.dart';
-import 'package:tuneatlas/src/features/home/presentation/widgets/station_card_shimmer.dart';
+import 'package:tuneatlas/src/src.dart';
 
 class FilteredStationsScreen extends ConsumerStatefulWidget {
   const FilteredStationsScreen({
@@ -151,10 +149,10 @@ class _FilteredStationsScreenState
           Text(
             'No stations available for this filter',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -184,10 +182,10 @@ class _FilteredStationsScreenState
             Text(
               error.toString(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
