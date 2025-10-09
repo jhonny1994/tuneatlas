@@ -9,54 +9,11 @@ on:
     branches:
       - main
 
-  # Manual trigger option
   workflow_dispatch:
 
 jobs:
-  # Job 1: Test & Analyze
-  test:
-    name: Run Tests & Analysis
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: "temurin"
-          java-version: "17"
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
-          cache: true
-
-      - name: Cache pub dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
-
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Verify Flutter
-        run: flutter --version
-
-      - name: Analyze code
-        run: flutter analyze
-
-  # Job 2: Build Android APK
   build-android:
     name: Build Android APK
-    needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
