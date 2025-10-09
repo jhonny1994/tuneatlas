@@ -1,17 +1,16 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tuneatlas/src/src.dart' show Station;
+import 'package:tuneatlas/src/src.dart';
 
-/// Audio player service using just_audio
+/// Audio player service using audio_service for background playback
 class AudioPlayerService {
-  AudioPlayerService._() {
-    _init();
-  }
+  AudioPlayerService._();
 
   static final AudioPlayerService instance = AudioPlayerService._();
 
-  final AudioPlayer _player = AudioPlayer();
+  RadioAudioHandler? _handler;
+  bool _initialized = false;
 
   // State streams
   final _currentStationSubject = BehaviorSubject<Station?>.seeded(null);
@@ -26,9 +25,9 @@ class AudioPlayerService {
   Stream<bool> get isLoadingStream => _isLoadingSubject.stream;
   Stream<bool> get isStoppedStream => _isStoppedSubject.stream;
   Stream<String?> get errorStream => _errorSubject.stream;
-  Stream<Duration> get positionStream => _player.positionStream;
-  Stream<Duration?> get durationStream => _player.durationStream;
-  Stream<Duration> get bufferedPositionStream => _player.bufferedPositionStream;
+  Stream<Duration> get positionStream => Stream.value(Duration.zero);
+  Stream<Duration?> get durationStream => Stream.value(null);
+  Stream<Duration> get bufferedPositionStream => Stream.value(Duration.zero);
 
   // Current values
   Station? get currentStation => _currentStationSubject.value;
@@ -37,34 +36,46 @@ class AudioPlayerService {
   bool get isStopped => _isStoppedSubject.value;
   String? get error => _errorSubject.value;
 
-  void _init() {
-    // Listen to player state changes
-    _player.playerStateStream.listen((state) {
-      _isPlayingSubject.add(state.playing);
-      _isLoadingSubject.add(
-        state.processingState == ProcessingState.loading ||
-            state.processingState == ProcessingState.buffering,
+  /// Initialize audio service
+  Future<void> _ensureInitialized() async {
+    if (_initialized) return;
+
+    try {
+      _handler = await AudioService.init(
+        builder: RadioAudioHandler.new,
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.carbodex.tuneatlas.audio',
+          androidNotificationChannelName: 'TuneAtlas',
+          androidNotificationOngoing: true,
+          androidShowNotificationBadge: true,
+        ),
       );
 
-      if (state.processingState == ProcessingState.completed) {
-        _isStoppedSubject.add(true);
-      }
-    });
+      // Listen to playback state
+      _handler!.playbackState.listen((state) {
+        _isPlayingSubject.add(state.playing);
+        _isLoadingSubject.add(
+          state.processingState == AudioProcessingState.loading ||
+              state.processingState == AudioProcessingState.buffering,
+        );
+        _isStoppedSubject.add(
+          state.processingState == AudioProcessingState.idle,
+        );
+      });
 
-    // Listen to errors
-    _player.playbackEventStream.listen(
-      (event) {},
-      onError: (Object e, StackTrace st) {
-        debugPrint('[AudioPlayerService] Playback error: $e');
-        _errorSubject.add(e.toString());
-        _isLoadingSubject.add(false);
-      },
-    );
+      _initialized = true;
+      debugPrint('[AudioPlayerService] Initialized successfully');
+    } catch (e) {
+      debugPrint('[AudioPlayerService] Initialization failed: $e');
+      rethrow;
+    }
   }
 
   /// Play a radio station
   Future<void> playStation(Station station) async {
     try {
+      await _ensureInitialized();
+
       debugPrint('[AudioPlayerService] Playing station: ${station.name}');
       debugPrint('[AudioPlayerService] Stream URL: ${station.url}');
 
@@ -73,11 +84,7 @@ class AudioPlayerService {
       _isStoppedSubject.add(false);
       _currentStationSubject.add(station);
 
-      // Set audio source
-      await _player.setUrl(station.url);
-
-      // Start playback
-      await _player.play();
+      await _handler!.playStation(station);
 
       debugPrint('[AudioPlayerService] Playback started successfully');
     } on Exception catch (e) {
@@ -91,7 +98,8 @@ class AudioPlayerService {
   /// Resume playback
   Future<void> play() async {
     try {
-      await _player.play();
+      await _ensureInitialized();
+      await _handler!.play();
       _isStoppedSubject.add(false);
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error resuming: $e');
@@ -102,7 +110,8 @@ class AudioPlayerService {
   /// Pause playback
   Future<void> pause() async {
     try {
-      await _player.pause();
+      await _ensureInitialized();
+      await _handler!.pause();
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error pausing: $e');
     }
@@ -112,7 +121,8 @@ class AudioPlayerService {
   Future<void> stop() async {
     try {
       debugPrint('[AudioPlayerService] Stopping playback');
-      await _player.stop();
+      await _ensureInitialized();
+      await _handler!.stop();
       _currentStationSubject.add(null);
       _isStoppedSubject.add(true);
       _errorSubject.add(null);
@@ -132,12 +142,15 @@ class AudioPlayerService {
 
   /// Set volume (0.0 to 1.0)
   Future<void> setVolume(double volume) async {
-    await _player.setVolume(volume.clamp(0.0, 1.0));
+    // Volume control through system volume
+    debugPrint('[AudioPlayerService] Volume control via system');
   }
 
   /// Dispose resources
   Future<void> dispose() async {
-    await _player.dispose();
+    if (_handler != null) {
+      await _handler!.customAction('dispose');
+    }
     await _currentStationSubject.close();
     await _isPlayingSubject.close();
     await _isLoadingSubject.close();
