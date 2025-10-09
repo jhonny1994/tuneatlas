@@ -105,12 +105,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               itemBuilder: (context, index) {
                 if (index < state.stations.length) {
                   final station = state.stations[index];
-                  return StationCard(
-                    station: station,
-                    onTap: () {
-                      // TODO: Play station
-                    },
-                  );
+                  return StationCard(station: station);
                 }
                 // Show bottom loader if loading more
                 if (state.isLoadingMore) {

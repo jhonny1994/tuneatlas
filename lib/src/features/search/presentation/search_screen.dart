@@ -129,12 +129,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   itemBuilder: (context, index) {
                     if (index < state.results.length) {
                       final station = state.results[index];
-                      return StationCard(
-                        station: station,
-                        onTap: () {
-                          // TODO: Play station
-                        },
-                      );
+                      return StationCard(station: station);
                     }
 
                     // Bottom loading/end indicator

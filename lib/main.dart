@@ -22,7 +22,7 @@ void main() async {
       ],
       child: DevicePreview(
         builder: (context) => const TuneAtlasApp(),
-        enabled: Platform.isWindows || kDebugMode,
+        enabled: Platform.isWindows && kDebugMode,
       ),
     ),
   );

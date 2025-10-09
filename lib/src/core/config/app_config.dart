@@ -15,7 +15,7 @@ class AppConfig {
   static const Duration connectTimeout = Duration(seconds: 10);
 
   // Country Detection
-  static const String countryDetectionUrl = 'https://api.country.is/';
+  static const String countryDetectionUrl = 'https://ipwho.is/';
 
   // Pagination
   static const int pageSize = 20;

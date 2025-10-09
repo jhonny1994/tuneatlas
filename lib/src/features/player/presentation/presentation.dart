@@ -1,1 +1,1 @@
-export 'full_player_screen.dart';
+export 'widgets/mini_player.dart';

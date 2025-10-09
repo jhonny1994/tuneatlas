@@ -51,65 +51,133 @@ class _StationCardState extends ConsumerState<StationCard> {
     }
   }
 
+  void _handleTap() {
+    if (widget.onTap != null) {
+      widget.onTap!();
+    } else {
+      // Default: play station
+      unawaited(
+        ref.read(audioPlayerProvider.notifier).playStation(widget.station),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final audioState = ref.watch(audioPlayerProvider);
+
+    // Check if this station is currently playing
+    final isCurrentStation = audioState.whenOrNull(
+          data: (state) =>
+              state.currentStation?.stationUuid == widget.station.stationUuid,
+        ) ??
+        false;
+
+    final isPlaying = audioState.whenOrNull(
+          data: (state) => state.isPlaying && isCurrentStation,
+        ) ??
+        false;
+
+    final isLoadingAudio = audioState.whenOrNull(
+          data: (state) => state.isLoading && isCurrentStation,
+        ) ??
+        false;
 
     return Card(
       clipBehavior: Clip.antiAlias,
+      elevation: isCurrentStation ? 2 : 1,
       child: InkWell(
-        onTap: widget.onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              // Station logo/favicon
-              _buildLogo(context),
-              const SizedBox(width: 12),
+        onTap: _handleTap,
+        child: Container(
+          decoration: isCurrentStation
+              ? BoxDecoration(
+                  border: Border.all(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                )
+              : null,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                // Station logo/favicon
+                _buildLogo(context),
+                const SizedBox(width: 12),
 
-              // Station info
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Station name
-                    Text(
-                      widget.station.name,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    // Station description
-                    const SizedBox(height: 4),
-                    _buildMetadata(context),
-                  ],
-                ),
-              ),
-
-              // Favorite button
-              IconButton(
-                onPressed: _isLoading ? null : _toggleFavorite,
-                icon: _isLoading
-                    ? SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: theme.colorScheme.primary,
+                // Station info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Station name
+                      Text(
+                        widget.station.name,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: isCurrentStation
+                              ? theme.colorScheme.primary
+                              : null,
                         ),
-                      )
-                    : Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: _isFavorite
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-              ),
-            ],
+
+                      // Station description
+                      const SizedBox(height: 4),
+                      _buildMetadata(context),
+                    ],
+                  ),
+                ),
+
+                // Play/pause button (for current station)
+                if (isCurrentStation) ...[
+                  const SizedBox(width: 8),
+                  if (isLoadingAudio)
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: theme.colorScheme.primary,
+                      ),
+                    )
+                  else
+                    IconButton(
+                      icon: Icon(
+                        isPlaying ? Icons.pause : Icons.play_arrow,
+                        color: theme.colorScheme.primary,
+                      ),
+                      onPressed: () => ref
+                          .read(audioPlayerProvider.notifier)
+                          .togglePlayPause(),
+                    ),
+                ],
+
+                // Favorite button
+                IconButton(
+                  onPressed: _isLoading ? null : _toggleFavorite,
+                  icon: _isLoading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: theme.colorScheme.primary,
+                          ),
+                        )
+                      : Icon(
+                          _isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: _isFavorite
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.onSurfaceVariant,
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

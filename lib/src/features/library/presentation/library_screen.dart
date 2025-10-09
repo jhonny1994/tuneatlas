@@ -56,13 +56,7 @@ class LibraryScreen extends ConsumerWidget {
               itemCount: favorites.length,
               itemBuilder: (context, index) {
                 final station = favorites[index];
-                return StationCard(
-                  station: station,
-                  onTap: () {
-                    // TODO: Play station
-                    debugPrint('Tapped station: ${station.name}');
-                  },
-                );
+                return StationCard(station: station);
               },
             ),
           );

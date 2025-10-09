@@ -105,13 +105,7 @@ class _FilteredStationsScreenState
             itemBuilder: (context, index) {
               if (index < state.stations.length) {
                 final station = state.stations[index];
-                return StationCard(
-                  station: station,
-                  onTap: () {
-                    // TODO: Play station
-                    debugPrint('Tapped station: ${station.name}');
-                  },
-                );
+                return StationCard(station: station);
               }
 
               // Bottom loading/end indicator

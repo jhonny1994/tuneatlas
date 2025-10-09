@@ -1,67 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
 part 'router.g.dart';
 
-/// Root navigation with bottom navigation bar
-class RootScreen extends StatefulWidget {
+/// Root navigation with bottom navigation bar and mini player
+class RootScreen extends ConsumerWidget {
   const RootScreen({required this.child, super.key});
 
   final Widget child;
 
   @override
-  State<RootScreen> createState() => _RootScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final location = GoRouterState.of(context).uri.path;
 
-class _RootScreenState extends State<RootScreen> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        context.go('/home');
-      case 1:
-        context.go('/discover');
-      case 2:
-        context.go('/library');
-      case 3:
-        context.go('/search');
+    // Determine selected index based on current route
+    var selectedIndex = 0;
+    if (location.startsWith('/discover')) {
+      selectedIndex = 1;
+    } else if (location.startsWith('/library')) {
+      selectedIndex = 2;
+    } else if (location.startsWith('/search')) {
+      selectedIndex = 3;
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore),
-            label: 'Discover',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.library_music_outlined),
-            selectedIcon: Icon(Icons.library_music),
-            label: 'Library',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search),
-            label: 'Search',
+      body: child,
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Mini player (shown when audio is playing)
+          const MiniPlayer(),
+
+          // Bottom navigation bar
+          NavigationBar(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: (index) {
+              switch (index) {
+                case 0:
+                  context.go('/home');
+                case 1:
+                  context.go('/discover');
+                case 2:
+                  context.go('/library');
+                case 3:
+                  context.go('/search');
+              }
+            },
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.explore_outlined),
+                selectedIcon: Icon(Icons.explore),
+                label: 'Discover',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.library_music_outlined),
+                selectedIcon: Icon(Icons.library_music),
+                label: 'Library',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.search_outlined),
+                selectedIcon: Icon(Icons.search),
+                label: 'Search',
+              ),
+            ],
           ),
         ],
       ),
@@ -144,12 +153,6 @@ GoRouter router(Ref ref) {
             builder: (context, state) => const SearchScreen(),
           ),
         ],
-      ),
-
-      // Player screen (full screen, no bottom nav)
-      GoRoute(
-        path: '/player',
-        builder: (context, state) => const FullPlayerScreen(),
       ),
 
       // Filtered stations screen (from discover)
