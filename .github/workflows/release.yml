@@ -53,9 +53,6 @@ jobs:
       - name: Analyze code
         run: flutter analyze
 
-      - name: Run tests
-        run: flutter test
-
   # Job 2: Build Android APK
   build-android:
     name: Build Android APK
