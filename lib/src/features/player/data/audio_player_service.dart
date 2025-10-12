@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
@@ -87,39 +89,57 @@ class AudioPlayerService {
       debugPrint('[AudioPlayerService] Playing station: ${station.name}');
       debugPrint('[AudioPlayerService] Stream URL: ${station.url}');
 
+      // Clear any previous errors first
       _errorSubject.add(null);
+
+      // Set loading state
       _isLoadingSubject.add(true);
       _isStoppedSubject.add(false);
+      _isPlayingSubject.add(false);
+
+      // Update current station
       _currentStationSubject.add(station);
 
       // Add timeout for station playback
       await _handler!.playStation(station).timeout(
         const Duration(seconds: 20),
         onTimeout: () {
-          throw Exception(
+          throw TimeoutException(
             'Failed to connect to radio stream - please try again',
           );
         },
       );
 
+      // Success - clear error state
+      _errorSubject.add(null);
       debugPrint('[AudioPlayerService] Playback started successfully');
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error playing station: $e');
 
       // Format user-friendly error message
       var errorMessage = 'Failed to play station';
-      if (e.toString().contains('timeout')) {
+      if (e is TimeoutException || e.toString().contains('timeout')) {
         errorMessage = 'Connection timeout - stream may be offline';
       } else if (e.toString().contains('404')) {
         errorMessage = 'Stream not found - station may be offline';
-      } else if (e.toString().contains('network')) {
+      } else if (e.toString().contains('403') || e.toString().contains('401')) {
+        errorMessage = 'Access denied - stream requires authentication';
+      } else if (e.toString().contains('network') ||
+          e.toString().contains('SocketException')) {
         errorMessage = 'Network error - check your connection';
+      } else if (e.toString().contains('format')) {
+        errorMessage = 'Unsupported audio format';
       }
 
+      // Update all states properly on error
       _errorSubject.add(errorMessage);
       _isLoadingSubject.add(false);
       _isPlayingSubject.add(false);
-      _currentStationSubject.add(null);
+      _isStoppedSubject.add(true);
+      // Keep station for retry attempts
+      // Don't clear station: _currentStationSubject.add(null);
+
+      debugPrint('[AudioPlayerService] Error state set: $errorMessage');
     }
   }
 

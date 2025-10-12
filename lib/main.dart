@@ -35,6 +35,10 @@ class TuneAtlasApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final theme = ref.watch(themeModeProvider);
+
+    // Initialize network reconnect handler
+    ref.watch(networkReconnectHandlerProvider);
+
     return MaterialApp.router(
       title: 'TuneAtlas',
       debugShowCheckedModeBanner: false,

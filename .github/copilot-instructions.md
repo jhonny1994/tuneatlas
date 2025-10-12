@@ -35,15 +35,29 @@ dart run build_runner build --delete-conflicting-outputs
 - **Initialization Flow**: `AppInitialization` provider (`app_initialization_provider.dart`) orchestrates discovery → API setup → app ready
 - **Error Handling**: All API methods return `Result<T>` for type-safe error propagation
 
+### Network State Management
+- **Network Monitoring**: `NetworkMonitor` provider streams `NetworkStatus` (online/offline) using `connectivity_plus`
+- **Offline Indicator**: `OfflineIndicator` widget shows persistent banner when connection is lost
+- **Auto-Reconnect**: `NetworkReconnectHandler` automatically resumes playback when network returns
+  - Tracks last playing station before disconnect
+  - Waits 2 seconds for network stability before reconnecting
+  - Validates user hasn't changed stations before reconnecting
+- **UI Integration**: Offline indicator integrated into `RootScreen` above main content
+
 ### Audio Playback Architecture
 - **Service Layer**: `AudioPlayerService` singleton wraps `just_audio` + `audio_service` for background playback
 - **Audio Handler**: `RadioAudioHandler` extends `BaseAudioHandler` for system media controls
 - **State Management**: `AudioPlayer` provider exposes reactive `Stream<AudioState>` combining all audio streams (position, playing status, loading, errors)
 - **Station Playback**: Call `audioPlayerProvider.playStation(station)` - never manipulate streams directly
-- **Error Handling**: 
-  - Built-in 15-20 second timeouts prevent infinite loading
-  - Use `ref.listenToAudioErrors(context)` extension in screens to show error snackbars
-  - Mini player automatically displays error banner with retry button
+- **Error Handling** (production-grade implementation):
+  - **Dual Timeouts**: 15s in `audio_handler.dart`, 20s in `audio_player_service.dart` prevent infinite loading
+  - **State Consistency**: Always clear loading state on error, set playing=false, stopped=true
+  - **Station Retention**: Keep `_currentStation` on error to enable retry without re-selection
+  - **Categorized Errors**: TimeoutException, 404/403, network errors, format errors → user-friendly messages
+  - **Consolidated Handling**: `_handleError()` method in handler ensures all error paths set consistent state
+  - **UI Integration**: Use `ref.listenToAudioErrors(context)` extension in screens to show error snackbars
+  - **Mini Player**: Automatically displays error banner with retry button when errors occur
+  - **Recovery**: Error clearing on successful playback attempts, no stale error state
 
 ### Persistence Strategy
 - **Favorites**: Sembast NoSQL database (`database_service.dart`, `favorites_service.dart`) stores station objects in `favorites` store

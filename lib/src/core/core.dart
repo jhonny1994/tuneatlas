@@ -4,6 +4,7 @@ export 'database/database.dart';
 export 'initialization/initialization.dart';
 export 'location/location.dart';
 export 'models/models.dart';
+export 'network/network.dart';
 export 'routing/routing.dart';
 export 'storage/storage.dart';
 export 'utils/utils.dart';

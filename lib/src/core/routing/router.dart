@@ -27,7 +27,14 @@ class RootScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      body: child,
+      body: Column(
+        children: [
+          // Offline indicator at the top
+          const OfflineIndicator(),
+          // Main content
+          Expanded(child: child),
+        ],
+      ),
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

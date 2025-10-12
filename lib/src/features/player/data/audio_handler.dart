@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
@@ -27,47 +29,59 @@ class RadioAudioHandler extends BaseAudioHandler {
     );
 
     // Listen to player state changes
-    _player.playerStateStream.listen((playerState) {
-      final isPlaying = playerState.playing;
-      final processingState = const {
-        ProcessingState.idle: AudioProcessingState.idle,
-        ProcessingState.loading: AudioProcessingState.loading,
-        ProcessingState.buffering: AudioProcessingState.buffering,
-        ProcessingState.ready: AudioProcessingState.ready,
-        ProcessingState.completed: AudioProcessingState.completed,
-      }[playerState.processingState]!;
+    _player.playerStateStream.listen(
+      (playerState) {
+        final isPlaying = playerState.playing;
+        final processingState = const {
+          ProcessingState.idle: AudioProcessingState.idle,
+          ProcessingState.loading: AudioProcessingState.loading,
+          ProcessingState.buffering: AudioProcessingState.buffering,
+          ProcessingState.ready: AudioProcessingState.ready,
+          ProcessingState.completed: AudioProcessingState.completed,
+        }[playerState.processingState]!;
 
-      playbackState.add(
-        playbackState.value.copyWith(
-          controls: [
-            MediaControl.stop,
-            if (isPlaying) MediaControl.pause else MediaControl.play,
-          ],
-          systemActions: const {
-            MediaAction.stop,
-          },
-          androidCompactActionIndices: const [0, 1], // Stop + Play/Pause
-          processingState: processingState,
-          playing: isPlaying,
-        ),
-      );
-    });
-
-    // Listen to errors from playback stream
-    _player.playbackEventStream.listen(
-      (event) {},
-      onError: (Object e, StackTrace st) {
-        debugPrint('[RadioAudioHandler] Playback error: $e');
-        debugPrint('[RadioAudioHandler] Stack trace: $st');
-
-        // Set error state and stop loading
         playbackState.add(
           playbackState.value.copyWith(
-            processingState: AudioProcessingState.error,
-            playing: false,
+            controls: [
+              MediaControl.stop,
+              if (isPlaying) MediaControl.pause else MediaControl.play,
+            ],
+            systemActions: const {
+              MediaAction.stop,
+            },
+            androidCompactActionIndices: const [0, 1], // Stop + Play/Pause
+            processingState: processingState,
+            playing: isPlaying,
           ),
         );
       },
+      onError: (Object e, StackTrace st) {
+        debugPrint('[RadioAudioHandler] Player state error: $e');
+        debugPrint('[RadioAudioHandler] Stack trace: $st');
+        _handleError();
+      },
+    );
+
+    // Listen to errors from playback stream
+    _player.playbackEventStream.listen(
+      (event) {
+        // Monitor playback events
+      },
+      onError: (Object e, StackTrace st) {
+        debugPrint('[RadioAudioHandler] Playback event error: $e');
+        debugPrint('[RadioAudioHandler] Stack trace: $st');
+        _handleError();
+      },
+    );
+  }
+
+  /// Handle error state consistently
+  void _handleError() {
+    playbackState.add(
+      playbackState.value.copyWith(
+        processingState: AudioProcessingState.error,
+        playing: false,
+      ),
     );
   }
 
@@ -76,6 +90,14 @@ class RadioAudioHandler extends BaseAudioHandler {
     try {
       debugPrint('[RadioAudioHandler] Playing: ${station.name}');
       _currentStation = station;
+
+      // Reset to loading state
+      playbackState.add(
+        playbackState.value.copyWith(
+          processingState: AudioProcessingState.loading,
+          playing: false,
+        ),
+      );
 
       // Update media item for notification with proper metadata
       mediaItem.add(
@@ -94,7 +116,9 @@ class RadioAudioHandler extends BaseAudioHandler {
       await _player.setUrl(station.url).timeout(
         const Duration(seconds: 15),
         onTimeout: () {
-          throw Exception('Stream connection timeout - server not responding');
+          throw TimeoutException(
+            'Stream connection timeout - server not responding',
+          );
         },
       );
 
@@ -104,15 +128,7 @@ class RadioAudioHandler extends BaseAudioHandler {
       debugPrint('[RadioAudioHandler] Playback started');
     } catch (e) {
       debugPrint('[RadioAudioHandler] Error playing station: $e');
-
-      // Set error state and ensure loading is cleared
-      playbackState.add(
-        playbackState.value.copyWith(
-          processingState: AudioProcessingState.error,
-          playing: false,
-        ),
-      );
-
+      _handleError();
       rethrow;
     }
   }
