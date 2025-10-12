@@ -43,6 +43,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final stationsAsync = ref.watch(localStationsProvider);
     final userCountryAsync = ref.watch(userCountryProvider);
 
+    // Listen for audio errors and show snackbar
+    ref.listenToAudioErrors(context);
+
     return Scaffold(
       appBar: AppBar(
         title: userCountryAsync.when(

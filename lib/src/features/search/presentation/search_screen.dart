@@ -63,6 +63,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final searchAsync = ref.watch(searchProvider);
     final theme = Theme.of(context);
 
+    // Listen for audio errors and show snackbar
+    ref.listenToAudioErrors(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.surfaceContainer,

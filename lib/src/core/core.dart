@@ -6,3 +6,4 @@ export 'location/location.dart';
 export 'models/models.dart';
 export 'routing/routing.dart';
 export 'storage/storage.dart';
+export 'utils/utils.dart';

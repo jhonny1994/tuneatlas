@@ -67,6 +67,9 @@ class _FilteredStationsScreenState
       ),
     );
 
+    // Listen for audio errors and show snackbar
+    ref.listenToAudioErrors(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.surfaceContainer,

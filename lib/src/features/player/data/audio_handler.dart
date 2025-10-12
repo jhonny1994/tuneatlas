@@ -53,14 +53,18 @@ class RadioAudioHandler extends BaseAudioHandler {
       );
     });
 
-    // Listen to errors
+    // Listen to errors from playback stream
     _player.playbackEventStream.listen(
       (event) {},
       onError: (Object e, StackTrace st) {
-        debugPrint('[RadioAudioHandler] Error: $e');
+        debugPrint('[RadioAudioHandler] Playback error: $e');
+        debugPrint('[RadioAudioHandler] Stack trace: $st');
+
+        // Set error state and stop loading
         playbackState.add(
           playbackState.value.copyWith(
             processingState: AudioProcessingState.error,
+            playing: false,
           ),
         );
       },
@@ -86,8 +90,13 @@ class RadioAudioHandler extends BaseAudioHandler {
         ),
       );
 
-      // Set audio source
-      await _player.setUrl(station.url);
+      // Set audio source with timeout
+      await _player.setUrl(station.url).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw Exception('Stream connection timeout - server not responding');
+        },
+      );
 
       // Start playback
       await _player.play();
@@ -96,9 +105,11 @@ class RadioAudioHandler extends BaseAudioHandler {
     } catch (e) {
       debugPrint('[RadioAudioHandler] Error playing station: $e');
 
+      // Set error state and ensure loading is cleared
       playbackState.add(
         playbackState.value.copyWith(
           processingState: AudioProcessingState.error,
+          playing: false,
         ),
       );
 

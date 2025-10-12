@@ -54,13 +54,21 @@ class AudioPlayerService {
       // Listen to playback state
       _handler!.playbackState.listen((state) {
         _isPlayingSubject.add(state.playing);
-        _isLoadingSubject.add(
-          state.processingState == AudioProcessingState.loading ||
-              state.processingState == AudioProcessingState.buffering,
-        );
+
+        final isLoading =
+            state.processingState == AudioProcessingState.loading ||
+                state.processingState == AudioProcessingState.buffering;
+        final isError = state.processingState == AudioProcessingState.error;
+
+        _isLoadingSubject.add(isLoading);
         _isStoppedSubject.add(
           state.processingState == AudioProcessingState.idle,
         );
+
+        // Clear loading and set error state when error occurs
+        if (isError && isLoading) {
+          _isLoadingSubject.add(false);
+        }
       });
 
       _initialized = true;
@@ -84,13 +92,33 @@ class AudioPlayerService {
       _isStoppedSubject.add(false);
       _currentStationSubject.add(station);
 
-      await _handler!.playStation(station);
+      // Add timeout for station playback
+      await _handler!.playStation(station).timeout(
+        const Duration(seconds: 20),
+        onTimeout: () {
+          throw Exception(
+            'Failed to connect to radio stream - please try again',
+          );
+        },
+      );
 
       debugPrint('[AudioPlayerService] Playback started successfully');
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error playing station: $e');
-      _errorSubject.add('Failed to play station: $e');
+
+      // Format user-friendly error message
+      var errorMessage = 'Failed to play station';
+      if (e.toString().contains('timeout')) {
+        errorMessage = 'Connection timeout - stream may be offline';
+      } else if (e.toString().contains('404')) {
+        errorMessage = 'Stream not found - station may be offline';
+      } else if (e.toString().contains('network')) {
+        errorMessage = 'Network error - check your connection';
+      }
+
+      _errorSubject.add(errorMessage);
       _isLoadingSubject.add(false);
+      _isPlayingSubject.add(false);
       _currentStationSubject.add(null);
     }
   }
