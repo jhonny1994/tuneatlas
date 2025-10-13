@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:tuneatlas/src/core/models/station.dart';
+import 'package:tuneatlas/src/core/core.dart';
 
 /// Background audio handler with modern notification styling
 class RadioAudioHandler extends BaseAudioHandler {
@@ -91,11 +91,11 @@ class RadioAudioHandler extends BaseAudioHandler {
       debugPrint('[RadioAudioHandler] Playing: ${station.name}');
       _currentStation = station;
 
-      // Reset to loading state
+      // CRITICAL: Reset to clean loading state (clears any previous error)
       playbackState.add(
-        playbackState.value.copyWith(
+        PlaybackState(
           processingState: AudioProcessingState.loading,
-          playing: false,
+          controls: [],
         ),
       );
 
@@ -106,8 +106,7 @@ class RadioAudioHandler extends BaseAudioHandler {
           title: station.name,
           artist: station.country.isNotEmpty ? station.country : 'Radio',
           album: 'Live Radio',
-          artUri:
-              station.favicon.isNotEmpty ? Uri.parse(station.favicon) : null,
+          artUri: _parseArtUri(station.favicon),
           duration: Duration.zero, // Live stream = no duration
         ),
       );
@@ -177,6 +176,29 @@ class RadioAudioHandler extends BaseAudioHandler {
   Future<void> customAction(String name, [Map<String, dynamic>? extras]) async {
     if (name == 'dispose') {
       await _player.dispose();
+    }
+  }
+
+  /// Safely parse favicon URL to Uri
+  /// Returns null if URL is empty, invalid, or null
+  Uri? _parseArtUri(String? favicon) {
+    if (favicon == null || favicon.isEmpty) {
+      return null;
+    }
+
+    try {
+      final uri = Uri.parse(favicon);
+      // Validate that the URI has a scheme and host
+      if (uri.hasScheme && uri.hasAuthority) {
+        return uri;
+      }
+      debugPrint(
+        '[RadioAudioHandler] Invalid artUri: $favicon (missing scheme or host)',
+      );
+      return null;
+    } on Exception catch (e) {
+      debugPrint('[RadioAudioHandler] Failed to parse artUri: $favicon - $e');
+      return null;
     }
   }
 }

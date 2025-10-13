@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -214,25 +216,33 @@ class MiniPlayer extends ConsumerWidget {
                     // Show retry button on error
                     IconButton(
                       icon: const Icon(Icons.refresh),
-                      onPressed: () => ref
-                          .read(audioPlayerProvider.notifier)
-                          .playStation(station),
+                      onPressed: () async {
+                        unawaited(Haptics.light());
+                        await ref
+                            .read(audioPlayerProvider.notifier)
+                            .playStation(station);
+                      },
                     )
                   else
                     IconButton(
                       icon: Icon(
                         state.isPlaying ? Icons.pause : Icons.play_arrow,
                       ),
-                      onPressed: () => ref
-                          .read(audioPlayerProvider.notifier)
-                          .togglePlayPause(),
+                      onPressed: () async {
+                        unawaited(Haptics.light());
+                        await ref
+                            .read(audioPlayerProvider.notifier)
+                            .togglePlayPause();
+                      },
                     ),
 
                   // Stop button
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () =>
-                        ref.read(audioPlayerProvider.notifier).stop(),
+                    onPressed: () async {
+                      unawaited(Haptics.light());
+                      await ref.read(audioPlayerProvider.notifier).stop();
+                    },
                   ),
                 ],
               ),

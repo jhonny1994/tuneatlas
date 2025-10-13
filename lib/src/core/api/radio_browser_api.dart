@@ -13,6 +13,7 @@ class RadioBrowserApi {
     required String countryCode,
     int limit = 100,
     int offset = 0,
+    bool hidebroken = false,
   }) async {
     try {
       final response = await _apiClient.get(
@@ -22,6 +23,7 @@ class RadioBrowserApi {
           'offset': offset,
           'order': 'votes',
           'reverse': 'true',
+          'hidebroken': hidebroken.toString(),
         },
       );
 
@@ -44,6 +46,7 @@ class RadioBrowserApi {
     required String language,
     int limit = 100,
     int offset = 0,
+    bool hidebroken = false,
   }) async {
     try {
       final response = await _apiClient.get(
@@ -53,6 +56,7 @@ class RadioBrowserApi {
           'offset': offset,
           'order': 'votes',
           'reverse': 'true',
+          'hidebroken': hidebroken.toString(),
         },
       );
 
@@ -75,6 +79,7 @@ class RadioBrowserApi {
     required String tag,
     int limit = 100,
     int offset = 0,
+    bool hidebroken = false,
   }) async {
     try {
       final response = await _apiClient.get(
@@ -84,6 +89,7 @@ class RadioBrowserApi {
           'offset': offset,
           'order': 'votes',
           'reverse': 'true',
+          'hidebroken': hidebroken.toString(),
         },
       );
 
@@ -106,6 +112,7 @@ class RadioBrowserApi {
     required String query,
     int limit = 100,
     int offset = 0,
+    bool hidebroken = false,
   }) async {
     try {
       final response = await _apiClient.get(
@@ -115,6 +122,7 @@ class RadioBrowserApi {
           'offset': offset,
           'order': 'votes',
           'reverse': 'true',
+          'hidebroken': hidebroken.toString(),
         },
       );
 
@@ -136,6 +144,7 @@ class RadioBrowserApi {
   Future<Result<List<Station>>> getTopVotedStations({
     int limit = 100,
     int offset = 0,
+    bool hidebroken = false,
   }) async {
     try {
       final response = await _apiClient.get(
@@ -143,6 +152,7 @@ class RadioBrowserApi {
         queryParameters: {
           'limit': limit,
           'offset': offset,
+          'hidebroken': hidebroken.toString(),
         },
       );
 
@@ -234,6 +244,23 @@ class RadioBrowserApi {
     } on Exception catch (e) {
       debugPrint('[RadioBrowserApi] Unexpected error: $e');
       return const Result.failure('Failed to vote');
+    }
+  }
+
+  /// Track station click (call when user starts playing a station)
+  /// This helps Radio Browser track station popularity
+  /// Counts once per IP per station per day
+  Future<Result<void>> trackStationClick(String stationUuid) async {
+    try {
+      await _apiClient.get('/json/url/$stationUuid');
+      debugPrint('[RadioBrowserApi] Station click tracked: $stationUuid');
+      return const Result.success(null);
+    } on ApiException catch (e) {
+      debugPrint('[RadioBrowserApi] Error tracking station click: $e');
+      return Result.failure(e.message);
+    } on Exception catch (e) {
+      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+      return const Result.failure('Failed to track click');
     }
   }
 }

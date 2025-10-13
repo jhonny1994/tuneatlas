@@ -44,7 +44,7 @@ class NetworkMonitor extends _$NetworkMonitor {
   }
 
   /// Check if currently online
-  Future<bool> get isOnline async {
+  Future<bool> isOnline() async {
     final status = await checkConnectivity();
     return status == NetworkStatus.online;
   }

@@ -127,53 +127,83 @@ GoRouter router(Ref ref) {
       );
     },
     routes: [
-      // Splash screen (initialization)
+      // Splash screen (initialization) - Fade in
       GoRoute(
         path: '/splash',
-        builder: (context, state) => const SplashScreen(),
+        pageBuilder: (context, state) => AppPageTransitions.fadeTransition(
+          child: const SplashScreen(),
+          state: state,
+        ),
       ),
 
-      // Onboarding screen (first launch)
+      // Onboarding screen (first launch) - Slide from right
       GoRoute(
         path: '/onboarding',
-        builder: (context, state) => const OnboardingScreen(),
+        pageBuilder: (context, state) =>
+            AppPageTransitions.slideRightTransition(
+          child: const OnboardingScreen(),
+          state: state,
+        ),
       ),
 
-      // Main app routes with bottom navigation
+      // Main app routes with bottom navigation - Scale fade for smooth peer transitions
       ShellRoute(
         builder: (context, state, child) => RootScreen(child: child),
         routes: [
           GoRoute(
             path: '/home',
-            builder: (context, state) => const HomeScreen(),
+            pageBuilder: (context, state) =>
+                AppPageTransitions.scaleFadeTransition(
+              child: const HomeScreen(),
+              state: state,
+              duration: const Duration(milliseconds: 200),
+            ),
           ),
           GoRoute(
             path: '/discover',
-            builder: (context, state) => const DiscoverScreen(),
+            pageBuilder: (context, state) =>
+                AppPageTransitions.scaleFadeTransition(
+              child: const DiscoverScreen(),
+              state: state,
+              duration: const Duration(milliseconds: 200),
+            ),
           ),
           GoRoute(
             path: '/library',
-            builder: (context, state) => const LibraryScreen(),
+            pageBuilder: (context, state) =>
+                AppPageTransitions.scaleFadeTransition(
+              child: const LibraryScreen(),
+              state: state,
+              duration: const Duration(milliseconds: 200),
+            ),
           ),
           GoRoute(
             path: '/search',
-            builder: (context, state) => const SearchScreen(),
+            pageBuilder: (context, state) =>
+                AppPageTransitions.scaleFadeTransition(
+              child: const SearchScreen(),
+              state: state,
+              duration: const Duration(milliseconds: 200),
+            ),
           ),
         ],
       ),
 
-      // Filtered stations screen (from discover)
+      // Filtered stations screen (from discover) - Shared axis for hierarchy
       GoRoute(
         path: '/filtered-stations',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final filterType = state.uri.queryParameters['filterType'] ?? '';
           final filterValue = state.uri.queryParameters['filterValue'] ?? '';
           final title = state.uri.queryParameters['title'] ?? 'Stations';
 
-          return FilteredStationsScreen(
-            filterType: filterType,
-            filterValue: filterValue,
-            title: title,
+          return AppPageTransitions.sharedAxisTransition(
+            child: FilteredStationsScreen(
+              filterType: filterType,
+              filterValue: filterValue,
+              title: title,
+            ),
+            state: state,
           );
         },
       ),

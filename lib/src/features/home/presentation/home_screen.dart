@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:tuneatlas/src/src.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -77,7 +78,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Icons.brightness_6_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
-            onPressed: () => ref.read(themeModeProvider.notifier).toggle(),
+            onPressed: () async {
+              unawaited(Haptics.toggle());
+              await ref.read(themeModeProvider.notifier).toggle();
+            },
           ),
         ],
       ),
@@ -99,26 +103,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
           return RefreshIndicator(
             onRefresh: () async {
+              unawaited(Haptics.light());
               await ref.read(localStationsProvider.notifier).refresh();
             },
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: state.stations.length + 1,
-              itemBuilder: (context, index) {
-                if (index < state.stations.length) {
-                  final station = state.stations[index];
-                  return StationCard(station: station);
-                }
-                // Show bottom loader if loading more
-                if (state.isLoadingMore) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
+            child: AnimationLimiter(
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: state.stations.length + 1,
+                itemBuilder: (context, index) {
+                  if (index < state.stations.length) {
+                    final station = state.stations[index];
+                    return StaggeredListItem(
+                      index: index,
+                      child: StationCard(station: station),
+                    );
+                  }
+                  // Show bottom loader if loading more
+                  if (state.isLoadingMore) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 24),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
             ),
           );
         },
@@ -127,73 +137,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.radio_button_off,
-            size: 80,
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'No stations found',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Try searching for stations in other countries',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+    return const EmptyStateWidget(
+      icon: Icons.radio_button_off,
+      title: 'No stations found',
+      message: 'Try searching for stations in other countries',
     );
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 80,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Failed to load stations',
-              style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () =>
-                  ref.read(localStationsProvider.notifier).refresh(),
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+    return ErrorStateWidget(
+      title: 'Failed to load stations',
+      error: error,
+      onRetry: () => ref.read(localStationsProvider.notifier).refresh(),
     );
   }
 }

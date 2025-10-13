@@ -12,6 +12,7 @@ class AudioPlayerService {
   static final AudioPlayerService instance = AudioPlayerService._();
 
   RadioAudioHandler? _handler;
+  RadioBrowserApi? api;
   bool _initialized = false;
 
   // State streams
@@ -89,7 +90,8 @@ class AudioPlayerService {
       debugPrint('[AudioPlayerService] Playing station: ${station.name}');
       debugPrint('[AudioPlayerService] Stream URL: ${station.url}');
 
-      // Clear any previous errors first
+      // CRITICAL: Clear error state BEFORE attempting new playback
+      // This prevents stale errors from previous stations
       _errorSubject.add(null);
 
       // Set loading state
@@ -113,6 +115,9 @@ class AudioPlayerService {
       // Success - clear error state
       _errorSubject.add(null);
       debugPrint('[AudioPlayerService] Playback started successfully');
+
+      // Track station click for Radio Browser API (async, don't await)
+      await _trackStationClick(station.stationUuid);
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error playing station: $e');
 
@@ -131,15 +136,17 @@ class AudioPlayerService {
         errorMessage = 'Unsupported audio format';
       }
 
+      // CRITICAL: Only set error state ONCE (not multiple times)
       // Update all states properly on error
-      _errorSubject.add(errorMessage);
+      if (_errorSubject.value != errorMessage) {
+        _errorSubject.add(errorMessage);
+        debugPrint('[AudioPlayerService] Error state set: $errorMessage');
+      }
       _isLoadingSubject.add(false);
       _isPlayingSubject.add(false);
       _isStoppedSubject.add(true);
       // Keep station for retry attempts
       // Don't clear station: _currentStationSubject.add(null);
-
-      debugPrint('[AudioPlayerService] Error state set: $errorMessage');
     }
   }
 
@@ -204,5 +211,28 @@ class AudioPlayerService {
     await _isLoadingSubject.close();
     await _isStoppedSubject.close();
     await _errorSubject.close();
+  }
+
+  /// Track station click for Radio Browser API
+  /// Runs asynchronously without blocking playback
+  Future<void> _trackStationClick(String stationUuid) async {
+    if (api == null) {
+      debugPrint(
+        '[AudioPlayerService] Cannot track click - API not initialized',
+      );
+      return;
+    }
+
+    // Run async without awaiting (fire and forget)
+    await api!.trackStationClick(stationUuid).then((result) {
+      result.when(
+        success: (_) {
+          debugPrint('[AudioPlayerService] Station click tracked');
+        },
+        failure: (error) {
+          debugPrint('[AudioPlayerService] Click tracking failed: $error');
+        },
+      );
+    });
   }
 }

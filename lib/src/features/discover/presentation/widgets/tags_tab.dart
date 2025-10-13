@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -11,7 +14,7 @@ class TagsTab extends ConsumerWidget {
     final tagsAsync = ref.watch(tagsProvider);
 
     return tagsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const ListTileShimmer(),
       error: (error, stack) => _buildError(context, ref, error),
       data: (tags) {
         if (tags.isEmpty) {
@@ -21,62 +24,63 @@ class TagsTab extends ConsumerWidget {
         // Show only top 100 tags for better performance
         final topTags = tags.take(100).toList();
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: topTags.length,
-          itemBuilder: (context, index) {
-            final tag = topTags[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.tertiaryContainer,
-                  child: Icon(
-                    Icons.sell,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
+        return AnimationLimiter(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: topTags.length,
+            itemBuilder: (context, index) {
+              final tag = topTags[index];
+
+              final tile = Card(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.tertiaryContainer,
+                    child: Icon(
+                      Icons.sell,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
                   ),
+                  title: Text(tag.name),
+                  subtitle: Text('${tag.stationCount} stations'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    unawaited(Haptics.light());
+                    unawaited(
+                      context.push(
+                        '/filtered-stations?filterType=tag&filterValue=${tag.name}&title=${Uri.encodeComponent(tag.name)}',
+                      ),
+                    );
+                  },
                 ),
-                title: Text(tag.name),
-                subtitle: Text('${tag.stationCount} stations'),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.push(
-                  '/filtered-stations?filterType=tag&filterValue=${tag.name}&title=${Uri.encodeComponent(tag.name)}',
-                ),
-              ),
-            );
-          },
+              );
+
+              return StaggeredListItem(
+                index: index,
+                child: tile,
+              );
+            },
+          ),
         );
       },
     );
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          const Text('Failed to load tags'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () => ref.invalidate(tagsProvider),
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
+    return ErrorStateWidget(
+      title: 'Failed to load tags',
+      error: error,
+      onRetry: () => ref.invalidate(tagsProvider),
     );
   }
 
   Widget _buildEmpty(BuildContext context) {
-    return const Center(
-      child: Text('No tags available'),
+    return const EmptyStateWidget(
+      icon: Icons.sell_outlined,
+      title: 'No tags available',
+      message: 'Unable to load tags at this time',
     );
   }
 }

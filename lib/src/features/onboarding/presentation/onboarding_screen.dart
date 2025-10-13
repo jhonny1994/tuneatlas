@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +69,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: _skipToEnd,
+                  onPressed: () async {
+                    unawaited(Haptics.light());
+                    await _skipToEnd();
+                  },
                   child: const Text('Skip'),
                 ),
               )
@@ -107,7 +112,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _nextPage,
+                  onPressed: () async {
+                    unawaited(Haptics.light());
+                    await _nextPage();
+                  },
                   child: Text(isLastPage ? 'Get Started' : 'Next'),
                 ),
               ),

@@ -6,12 +6,18 @@ import 'package:tuneatlas/src/src.dart';
 extension AudioErrorListener on WidgetRef {
   /// Listen to audio player errors and show snackbar notifications
   /// Call this in the build method of screens that play audio
+  ///
+  /// NOTE: Snackbar only shows when mini player is NOT visible to avoid double error display
   void listenToAudioErrors(BuildContext context) {
     listen<AsyncValue<AudioState>>(
       audioPlayerProvider,
       (previous, next) {
         next.whenData((state) {
-          if (state.error != null) {
+          // Only show snackbar if:
+          // 1. There is an error
+          // 2. There is NO current station (mini player not visible)
+          // This prevents double error display (snackbar + mini player error banner)
+          if (state.error != null && state.currentStation == null) {
             _showErrorSnackBar(context, state.error!);
           }
         });

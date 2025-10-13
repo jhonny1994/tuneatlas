@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tuneatlas/src/src.dart';
@@ -22,6 +23,7 @@ class StationCard extends ConsumerStatefulWidget {
 class _StationCardState extends ConsumerState<StationCard> {
   bool _isFavorite = false;
   bool _isLoading = true;
+  bool _isPressed = false;
 
   @override
   void initState() {
@@ -44,6 +46,9 @@ class _StationCardState extends ConsumerState<StationCard> {
   Future<void> _toggleFavorite() async {
     setState(() => _isLoading = true);
 
+    // Add haptic feedback for toggle action
+    unawaited(Haptics.toggle());
+
     await ref.read(favoritesProvider.notifier).toggleFavorite(widget.station);
 
     if (mounted) {
@@ -52,6 +57,9 @@ class _StationCardState extends ConsumerState<StationCard> {
   }
 
   void _handleTap() {
+    // Add haptic feedback
+    unawaited(Haptics.light());
+
     if (widget.onTap != null) {
       widget.onTap!();
     } else {
@@ -84,104 +92,114 @@ class _StationCardState extends ConsumerState<StationCard> {
         ) ??
         false;
 
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      elevation: isCurrentStation ? 2 : 1,
-      child: InkWell(
-        onTap: _handleTap,
-        child: Container(
-          decoration: isCurrentStation
-              ? BoxDecoration(
-                  border: Border.all(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.5),
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                )
-              : null,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                // Station logo/favicon
-                _buildLogo(context),
-                const SizedBox(width: 12),
-
-                // Station info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Station name
-                      Text(
-                        widget.station.name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isCurrentStation
-                              ? theme.colorScheme.primary
-                              : null,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-
-                      // Station description
-                      const SizedBox(height: 4),
-                      _buildMetadata(context),
-                    ],
-                  ),
-                ),
-
-                // Play/pause button (for current station)
-                if (isCurrentStation) ...[
-                  const SizedBox(width: 8),
-                  if (isLoadingAudio)
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: theme.colorScheme.primary,
-                      ),
-                    )
-                  else
-                    IconButton(
-                      icon: Icon(
-                        isPlaying ? Icons.pause : Icons.play_arrow,
-                        color: theme.colorScheme.primary,
-                      ),
-                      onPressed: () => ref
-                          .read(audioPlayerProvider.notifier)
-                          .togglePlayPause(),
+    return AnimatedScale(
+      scale: _isPressed ? AppConfig.pressedScale : 1.0,
+      duration: AppConfig.fastAnimation,
+      curve: AppConfig.defaultCurve,
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        elevation: isCurrentStation ? 2 : 1,
+        child: InkWell(
+          onTap: _handleTap,
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          child: Container(
+            decoration: isCurrentStation
+                ? BoxDecoration(
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                      width: 2,
                     ),
-                ],
+                    borderRadius: BorderRadius.circular(12),
+                  )
+                : null,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  // Station logo/favicon
+                  _buildLogo(context),
+                  const SizedBox(width: 12),
 
-                // Favorite button
-                IconButton(
-                  onPressed: _isLoading ? null : _toggleFavorite,
-                  icon: _isLoading
-                      ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: theme.colorScheme.primary,
+                  // Station info
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Station name
+                        Text(
+                          widget.station.name,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: isCurrentStation
+                                ? theme.colorScheme.primary
+                                : null,
                           ),
-                        )
-                      : Icon(
-                          _isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: _isFavorite
-                              ? theme.colorScheme.error
-                              : theme.colorScheme.onSurfaceVariant,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+
+                        // Station description
+                        const SizedBox(height: 4),
+                        _buildMetadata(context),
+                      ],
+                    ),
+                  ),
+
+                  // Play/pause button (for current station)
+                  if (isCurrentStation) ...[
+                    const SizedBox(width: 8),
+                    if (isLoadingAudio)
+                      SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: theme.colorScheme.primary,
+                        ),
+                      )
+                    else
+                      IconButton(
+                        icon: Icon(
+                          isPlaying ? Icons.pause : Icons.play_arrow,
+                          color: theme.colorScheme.primary,
+                        ),
+                        onPressed: () => ref
+                            .read(audioPlayerProvider.notifier)
+                            .togglePlayPause(),
+                      ),
+                  ],
+
+                  // Favorite button
+                  IconButton(
+                    onPressed: _isLoading ? null : _toggleFavorite,
+                    icon: _isLoading
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.colorScheme.primary,
+                            ),
+                          )
+                        : Icon(
+                            _isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: _isFavorite
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
+                  ),
+                ],
+              ), // Row
+            ), // Padding
+          ), // Container
+        ), // InkWell
+      ), // Card
+    ); // AnimatedScale
   }
 
   /// Build station logo
@@ -196,12 +214,12 @@ class _StationCardState extends ConsumerState<StationCard> {
       child: widget.station.favicon.isNotEmpty
           ? ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                widget.station.favicon,
+              child: CachedNetworkImage(
+                imageUrl: widget.station.favicon,
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                errorWidget: (context, error, stackTrace) {
                   return _buildFallbackIcon(context);
                 },
               ),

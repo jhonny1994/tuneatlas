@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:tuneatlas/src/src.dart';
 
 class LibraryScreen extends ConsumerWidget {
@@ -32,7 +33,10 @@ class LibraryScreen extends ConsumerWidget {
                 data: (favorites) => favorites.isNotEmpty
                     ? IconButton(
                         icon: const Icon(Icons.delete_outline),
-                        onPressed: () => _showClearDialog(context, ref),
+                        onPressed: () {
+                          unawaited(Haptics.light());
+                          _showClearDialog(context, ref);
+                        },
                       )
                     : null,
               ) ??
@@ -49,15 +53,21 @@ class LibraryScreen extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
+              unawaited(Haptics.light());
               await ref.read(favoritesProvider.notifier).refresh();
             },
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: favorites.length,
-              itemBuilder: (context, index) {
-                final station = favorites[index];
-                return StationCard(station: station);
-              },
+            child: AnimationLimiter(
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: favorites.length,
+                itemBuilder: (context, index) {
+                  final station = favorites[index];
+                  return StaggeredListItem(
+                    index: index,
+                    child: StationCard(station: station),
+                  );
+                },
+              ),
             ),
           );
         },
@@ -66,77 +76,18 @@ class LibraryScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.favorite_border,
-            size: 80,
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'No favorites yet',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              'Add stations to your favorites by tapping the heart icon',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ],
-      ),
+    return const EmptyStateWidget(
+      icon: Icons.favorite_border,
+      title: 'No favorites yet',
+      message: 'Add stations to your favorites by tapping the heart icon',
     );
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 80,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Failed to load favorites',
-              style: Theme.of(context).textTheme.headlineSmall,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () => ref.read(favoritesProvider.notifier).refresh(),
-              icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
-            ),
-          ],
-        ),
-      ),
+    return ErrorStateWidget(
+      title: 'Failed to load favorites',
+      error: error,
+      onRetry: () => ref.read(favoritesProvider.notifier).refresh(),
     );
   }
 
@@ -151,11 +102,15 @@ class LibraryScreen extends ConsumerWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                unawaited(Haptics.light());
+                Navigator.of(context).pop();
+              },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () async {
+                unawaited(Haptics.medium());
                 await FavoritesService.instance.clearAll();
                 await ref.read(favoritesProvider.notifier).refresh();
                 if (context.mounted) {

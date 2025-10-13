@@ -13,6 +13,10 @@ class AudioPlayer extends _$AudioPlayer {
   Stream<AudioState> build() {
     _service = AudioPlayerService.instance;
 
+    // Inject RadioBrowserApi for click tracking
+    final api = ref.read(radioBrowserApiProvider);
+    _service.api = api;
+
     // Combine all streams into a single AudioState stream
     return _service.currentStationStream.switchMap((station) {
       return _service.isPlayingStream.switchMap((isPlaying) {

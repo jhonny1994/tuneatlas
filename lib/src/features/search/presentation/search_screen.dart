@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:tuneatlas/src/src.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -54,6 +55,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   void _onClearSearch() {
+    unawaited(Haptics.light());
     _searchController.clear();
     ref.read(searchProvider.notifier).clear();
   }
@@ -125,26 +127,31 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   return _buildInitialState(context);
                 }
 
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: state.results.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < state.results.length) {
-                      final station = state.results[index];
-                      return StationCard(station: station);
-                    }
+                return AnimationLimiter(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: state.results.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < state.results.length) {
+                        final station = state.results[index];
+                        return StaggeredListItem(
+                          index: index,
+                          child: StationCard(station: station),
+                        );
+                      }
 
-                    // Bottom loading/end indicator
-                    if (state.isLoadingMore) {
-                      return const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 24),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
+                      // Bottom loading/end indicator
+                      if (state.isLoadingMore) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 24),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
 
-                    return const SizedBox.shrink();
-                  },
+                      return const SizedBox.shrink();
+                    },
+                  ),
                 );
               },
             ),
@@ -184,31 +191,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context, String query) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: 80,
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'No results found',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Try a different search term',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-          ),
-        ],
-      ),
+    return const EmptyStateWidget(
+      icon: Icons.search_off,
+      title: 'No results found',
+      message: 'Try a different search term',
     );
   }
 

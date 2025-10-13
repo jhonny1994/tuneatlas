@@ -84,7 +84,7 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
     await Future<void>.delayed(const Duration(seconds: 2));
 
     // Check if network is still online
-    final isOnline = await ref.read(networkMonitorProvider.notifier).isOnline;
+    final isOnline = await ref.read(networkMonitorProvider.notifier).isOnline();
     if (!isOnline) {
       debugPrint('[NetworkReconnectHandler] Network not stable, aborting');
       return;

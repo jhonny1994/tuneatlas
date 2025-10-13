@@ -95,7 +95,68 @@ dart run build_runner build --delete-conflicting-outputs
 
 ### Reusable Utilities
 - **Audio Error Listener**: `AudioErrorListener` extension on `WidgetRef` provides `listenToAudioErrors(context)` for consistent error handling
+- **Haptic Feedback**: `Haptics` utility class provides consistent tactile feedback (light/selection/medium/heavy/vibrate)
 - Always prefer extensions/utilities over duplicating code across screens
+
+### UI/UX Enhancements
+- **Haptic Feedback**: All interactive elements provide tactile feedback using `Haptics` utility
+  - Station taps: `Haptics.light()`
+  - Favorite toggles: `Haptics.toggle()`
+  - Theme switches: `Haptics.toggle()`
+  - Pull-to-refresh: `Haptics.light()`
+  - Onboarding navigation: `Haptics.light()`
+  - Dialog buttons: `Haptics.light()` (cancel), `Haptics.medium()` (destructive actions)
+  - Feature flag: `AppConfig.enableHaptics` to disable globally
+- **Micro-Interactions**: Cards use `AnimatedScale` with press state tracking for tactile feel
+  - Press scale: `AppConfig.pressedScale` (0.97)
+  - Animation duration: `AppConfig.fastAnimation` (150ms)
+  - Curve: `AppConfig.defaultCurve` (easeInOutCubic)
+- **Page Transitions**: Custom transitions via `AppPageTransitions` utility
+  - Fade: For splash/initialization screens
+  - Slide Right: For hierarchical forward navigation (onboarding)
+  - Scale Fade: For bottom navigation peer transitions (200ms)
+  - Shared Axis: For hierarchical navigation with depth (filtered screens)
+  - All transitions respect Material Design motion principles
+  - **Accessibility**: All transitions check `MediaQuery.disableAnimationsOf()` to respect reduced motion preferences
+- **Staggered Animations**: Lists use `StaggeredListItem` reusable widget for sequential reveals
+  - First 20 items animated (AppConfig.maxStaggerItems)
+  - 300ms duration with 50ms stagger delay (AppConfig.staggerOffset)
+  - Slide (50px vertical) + fade combination
+  - Applied to: Home, Search, Library, Discover tabs (Countries, Languages, Tags)
+  - **Accessibility**: Respects `MediaQuery.disableAnimationsOf()` for reduced motion
+  - **DRY**: Centralized in `StaggeredListItem` widget to eliminate code duplication
+- **Error States**: Consistent error UI via `ErrorStateWidget` reusable widget
+  - Standardized icon, title, message, and retry button
+  - Built-in haptic feedback on retry action
+  - Used across: Home, Search, Library, Discover tabs, Filtered Stations
+  - **DRY**: Eliminated ~150 lines of duplicated error handling code
+- **Empty States**: Consistent empty UI via `EmptyStateWidget` reusable widget
+  - Standardized icon, title, and message layout
+  - Optional action button support
+  - Used across: Home, Search, Library, Discover tabs (Countries, Languages, Tags), Filtered Stations
+  - **DRY**: Eliminated ~180 lines of duplicated empty state code
+  - **Consistency**: All empty states now follow the same visual pattern
+- **Loading States**: Context-specific shimmer variants
+  - `StationCardShimmer`: For station lists
+  - `ListTileShimmer`: For countries/languages/tags tabs
+  - `StationListShimmer`: Wrapper for multiple shimmer cards
+
+### Reusable Utilities
+- **Haptics**: `Haptics` utility class provides consistent tactile feedback (light/selection/medium/heavy/vibrate)
+- **Audio Error Listener**: `AudioErrorListener` extension on `WidgetRef` provides `listenToAudioErrors(context)` for consistent error handling
+- **Staggered Animations**: `StaggeredListItem` widget for consistent list reveals with reduced motion support
+- **Error States**: `ErrorStateWidget` for consistent error UI with retry button and haptic feedback
+- **Empty States**: `EmptyStateWidget` for consistent empty UI with icon, title, and message
+- Always prefer extensions/utilities over duplicating code across screens
+
+### UI Constants (AppConfig)
+All UI constants are centralized in `AppConfig` for consistent design:
+- **Border Radius**: `radiusCard` (16), `radiusInput` (12), `radiusImage` (8), `radiusChip` (4)
+- **Spacing**: `spacingXXL` (48), `spacingXL` (32), `spacingL` (24), `spacingM` (16), `spacingS` (8), `spacingXS` (4)
+- **Padding**: `paddingScreen` (16), `paddingContent` (32), `paddingCard` (12)
+- **Icons**: `iconSizeLarge` (80) for empty/error states
+- **Buttons**: `buttonHeight` (48) for standard buttons
+- Never hardcode dimensions - always use AppConfig constants
 
 ## Common Tasks
 
