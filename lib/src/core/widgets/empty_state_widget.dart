@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tuneatlas/src/src.dart';
 
 /// A reusable empty state widget that displays consistent UI across the app.
@@ -13,6 +14,7 @@ class EmptyStateWidget extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.message,
+    this.lottieAsset, // NEW: optional Lottie animation
     this.action,
     this.actionLabel,
     this.onActionPressed,
@@ -27,6 +29,9 @@ class EmptyStateWidget extends StatelessWidget {
 
   /// Descriptive message text
   final String message;
+
+  /// Optional Lottie animation asset path
+  final String? lottieAsset;
 
   /// Optional action button icon
   final IconData? action;
@@ -49,12 +54,22 @@ class EmptyStateWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: AppConfig.iconSizeLarge,
-              color: theme.colorScheme.primary.withValues(alpha: 0.5),
-              semanticLabel: 'Empty state',
-            ),
+            // Show Lottie animation if provided, otherwise use icon
+            if (lottieAsset != null)
+              Lottie.asset(
+                lottieAsset!,
+                width: 120,
+                height: 120,
+                fit: BoxFit.contain,
+                repeat: true,
+              )
+            else
+              Icon(
+                icon,
+                size: AppConfig.iconSizeLarge,
+                color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                semanticLabel: 'Empty state',
+              ),
             const SizedBox(height: AppConfig.spacingL),
             Text(
               title,

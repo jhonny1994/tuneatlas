@@ -193,6 +193,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget _buildEmptyState(BuildContext context, String query) {
     return const EmptyStateWidget(
       icon: Icons.search_off,
+      lottieAsset: 'assets/lottie/search_empty.json',
       title: 'No results found',
       message: 'Try a different search term',
     );

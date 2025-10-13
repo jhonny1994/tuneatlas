@@ -78,6 +78,7 @@ class LibraryScreen extends ConsumerWidget {
   Widget _buildEmptyState(BuildContext context) {
     return const EmptyStateWidget(
       icon: Icons.favorite_border,
+      lottieAsset: 'assets/lottie/favorites_empty.json',
       title: 'No favorites yet',
       message: 'Add stations to your favorites by tapping the heart icon',
     );

@@ -139,6 +139,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildEmptyState(BuildContext context) {
     return const EmptyStateWidget(
       icon: Icons.radio_button_off,
+      lottieAsset: 'assets/lottie/radio_empty.json',
       title: 'No stations found',
       message: 'Try searching for stations in other countries',
     );
