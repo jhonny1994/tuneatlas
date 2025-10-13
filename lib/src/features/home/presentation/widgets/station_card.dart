@@ -98,7 +98,10 @@ class _StationCardState extends ConsumerState<StationCard> {
       curve: AppConfig.defaultCurve,
       child: Card(
         clipBehavior: Clip.antiAlias,
-        elevation: isCurrentStation ? 2 : 1,
+        elevation: isCurrentStation ? 4 : 1, // Enhanced from 2 to 4
+        shadowColor: isCurrentStation 
+          ? theme.colorScheme.primary.withValues(alpha: 0.3)
+          : null,
         child: InkWell(
           onTap: _handleTap,
           onTapDown: (_) => setState(() => _isPressed = true),
@@ -108,10 +111,18 @@ class _StationCardState extends ConsumerState<StationCard> {
             decoration: isCurrentStation
                 ? BoxDecoration(
                     border: Border.all(
-                      color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.8), // Enhanced from 0.5 to 0.8
                       width: 2,
                     ),
                     borderRadius: BorderRadius.circular(12),
+                    // Add glow effect for active station
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   )
                 : null,
             child: Padding(
@@ -132,7 +143,8 @@ class _StationCardState extends ConsumerState<StationCard> {
                         Text(
                           widget.station.name,
                           style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700, // Enhanced from w600
+                            letterSpacing: -0.3, // Tighter for display text
                             color: isCurrentStation
                                 ? theme.colorScheme.primary
                                 : null,
@@ -204,12 +216,27 @@ class _StationCardState extends ConsumerState<StationCard> {
 
   /// Build station logo
   Widget _buildLogo(BuildContext context) {
+    final audioState = ref.watch(audioPlayerProvider);
+    final isCurrentStation = audioState.whenOrNull(
+          data: (state) =>
+              state.currentStation?.stationUuid == widget.station.stationUuid,
+        ) ??
+        false;
+
     return Container(
       width: 60,
       height: 60,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
+        // Add shadow when active
+        boxShadow: isCurrentStation ? [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ] : null,
       ),
       child: widget.station.favicon.isNotEmpty
           ? ClipRRect(
@@ -278,6 +305,7 @@ class _StationCardState extends ConsumerState<StationCard> {
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: theme.colorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.w500,
+                  letterSpacing: 0.5, // Better tag readability
                 ),
               ),
             ),

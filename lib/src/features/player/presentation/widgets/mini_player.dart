@@ -38,10 +38,17 @@ class MiniPlayer extends ConsumerWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
         boxShadow: [
+          // Primary shadow - more pronounced
           BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: theme.colorScheme.shadow.withValues(alpha: 0.3), // Enhanced from 0.2
+            blurRadius: 16, // Enhanced from 8
+            offset: const Offset(0, -4), // Enhanced from -2
+          ),
+          // Secondary shadow for depth
+          BoxShadow(
+            color: theme.colorScheme.shadow.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, -1),
           ),
         ],
       ),
@@ -93,16 +100,46 @@ class MiniPlayer extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 children: [
-                  // Station artwork
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: station.favicon.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: station.favicon,
-                            width: 56,
-                            height: 56,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
+                  // Station artwork with glow when playing
+                  Container(
+                    decoration: state.isPlaying ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withValues(alpha: 0.4),
+                          blurRadius: 12,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ) : null,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: station.favicon.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: station.favicon,
+                              width: 56,
+                              height: 56,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Container(
+                                width: 56,
+                                height: 56,
+                                color: theme.colorScheme.surfaceContainerHigh,
+                                child: Icon(
+                                  Icons.radio,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                width: 56,
+                                height: 56,
+                                color: theme.colorScheme.surfaceContainerHigh,
+                                child: Icon(
+                                  Icons.radio,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                            )
+                          : Container(
                               width: 56,
                               height: 56,
                               color: theme.colorScheme.surfaceContainerHigh,
@@ -111,25 +148,7 @@ class MiniPlayer extends ConsumerWidget {
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            errorWidget: (context, url, error) => Container(
-                              width: 56,
-                              height: 56,
-                              color: theme.colorScheme.surfaceContainerHigh,
-                              child: Icon(
-                                Icons.radio,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                          )
-                        : Container(
-                            width: 56,
-                            height: 56,
-                            color: theme.colorScheme.surfaceContainerHigh,
-                            child: Icon(
-                              Icons.radio,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
+                    ),
                   ),
                   const SizedBox(width: 12),
 
