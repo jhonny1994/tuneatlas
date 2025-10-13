@@ -92,11 +92,15 @@ class _StationCardState extends ConsumerState<StationCard> {
         ) ??
         false;
 
-    return AnimatedScale(
-      scale: _isPressed ? AppConfig.pressedScale : 1.0,
+    return AnimatedRotation(
+      turns: _isPressed ? -0.002 : 0, // Subtle 0.72 degree rotation
       duration: AppConfig.fastAnimation,
       curve: AppConfig.defaultCurve,
-      child: Card(
+      child: AnimatedScale(
+        scale: _isPressed ? AppConfig.pressedScale : 1.0,
+        duration: AppConfig.fastAnimation,
+        curve: AppConfig.defaultCurve,
+        child: Card(
         clipBehavior: Clip.antiAlias,
         elevation: isCurrentStation ? 4 : 1, // Enhanced from 2 to 4
         shadowColor: isCurrentStation 
@@ -184,26 +188,30 @@ class _StationCardState extends ConsumerState<StationCard> {
                       ),
                   ],
 
-                  // Favorite button
-                  IconButton(
-                    onPressed: _isLoading ? null : _toggleFavorite,
-                    icon: _isLoading
-                        ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: theme.colorScheme.primary,
+                  // Favorite button with smooth scale animation
+                  AnimatedScale(
+                    scale: _isLoading ? 0.8 : 1.0, // Slight scale down when loading
+                    duration: AppConfig.fastAnimation,
+                    child: IconButton(
+                      onPressed: _isLoading ? null : _toggleFavorite,
+                      icon: _isLoading
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: theme.colorScheme.primary,
+                              ),
+                            )
+                          : Icon(
+                              _isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: _isFavorite
+                                  ? theme.colorScheme.error
+                                  : theme.colorScheme.onSurfaceVariant,
                             ),
-                          )
-                        : Icon(
-                            _isFavorite
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                            color: _isFavorite
-                                ? theme.colorScheme.error
-                                : theme.colorScheme.onSurfaceVariant,
-                          ),
+                    ),
                   ),
                 ],
               ), // Row
@@ -211,7 +219,8 @@ class _StationCardState extends ConsumerState<StationCard> {
           ), // Container
         ), // InkWell
       ), // Card
-    ); // AnimatedScale
+    ), // AnimatedScale
+    ); // AnimatedRotation
   }
 
   /// Build station logo
