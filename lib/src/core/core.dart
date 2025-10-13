@@ -2,6 +2,7 @@ export 'api/api.dart';
 export 'config/config.dart';
 export 'database/database.dart';
 export 'initialization/initialization.dart';
+export 'l10n/l10n.dart';
 export 'location/location.dart';
 export 'models/models.dart';
 export 'network/network.dart';

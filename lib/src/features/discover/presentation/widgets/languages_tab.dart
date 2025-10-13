@@ -12,6 +12,7 @@ class LanguagesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final languagesAsync = ref.watch(languagesProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return languagesAsync.when(
       loading: () => const ListTileShimmer(),
@@ -41,7 +42,7 @@ class LanguagesTab extends ConsumerWidget {
                     ),
                   ),
                   title: Text(language.name),
-                  subtitle: Text('${language.stationCount} stations'),
+                  subtitle: Text(l10n.stationsCount(language.stationCount)),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     unawaited(Haptics.light());
@@ -66,18 +67,20 @@ class LanguagesTab extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return ErrorStateWidget(
-      title: 'Failed to load languages',
+      title: l10n.errorLoadingStations,
       error: error,
       onRetry: () => ref.invalidate(languagesProvider),
     );
   }
 
   Widget _buildEmpty(BuildContext context) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.language_outlined,
-      title: 'No languages available',
-      message: 'Unable to load languages at this time',
+      title: l10n.noLanguagesTitle,
+      message: l10n.noData,
     );
   }
 }

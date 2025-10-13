@@ -45,6 +45,8 @@ class TuneAtlasApp extends ConsumerWidget {
       themeMode: theme,
       theme: AppTheme.lightTheme(),
       darkTheme: AppTheme.darkTheme(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       // GoRouter configuration
       routerConfig: router,
     );

@@ -12,6 +12,7 @@ class CountriesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final countriesAsync = ref.watch(countriesProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return countriesAsync.when(
       loading: () => const ListTileShimmer(),
@@ -46,7 +47,7 @@ class CountriesTab extends ConsumerWidget {
                     ),
                   ),
                   title: Text(country.name),
-                  subtitle: Text('${country.stationCount} stations'),
+                  subtitle: Text(l10n.stationsCount(country.stationCount)),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     unawaited(Haptics.light());
@@ -71,18 +72,20 @@ class CountriesTab extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return ErrorStateWidget(
-      title: 'Failed to load countries',
+      title: l10n.errorLoadingStations,
       error: error,
       onRetry: () => ref.invalidate(countriesProvider),
     );
   }
 
   Widget _buildEmpty(BuildContext context) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.public_off,
-      title: 'No countries available',
-      message: 'Unable to load countries at this time',
+      title: l10n.noCountriesTitle,
+      message: l10n.noData,
     );
   }
 }

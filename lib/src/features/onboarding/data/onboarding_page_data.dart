@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuneatlas/src/src.dart';
 
 /// Data model for onboarding pages
 class OnboardingPageData {
@@ -17,27 +18,27 @@ class OnboardingPageData {
 
 /// Predefined onboarding pages
 class OnboardingPages {
-  static const pages = [
-    OnboardingPageData(
-      title: 'Discover Radio Stations',
-      description:
-          'Access thousands of radio stations from around the world. Find your favorite music, news, and talk shows.',
-      icon: Icons.radio,
-      color: Color(0xFF6200EE),
-    ),
-    OnboardingPageData(
-      title: 'Browse by Country',
-      description:
-          'Explore local and international stations. Filter by country, language, or genre to find what you love.',
-      icon: Icons.public,
-      color: Color(0xFF03DAC6),
-    ),
-    OnboardingPageData(
-      title: 'Save Your Favorites',
-      description:
-          'Create your personal library of favorite stations. Quick access to the stations you listen to most.',
-      icon: Icons.favorite,
-      color: Color(0xFFBB86FC),
-    ),
-  ];
+  static List<OnboardingPageData> pages(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      OnboardingPageData(
+        title: l10n.welcomeTitle,
+        description: l10n.welcomeDescription,
+        icon: Icons.radio,
+        color: const Color(0xFF6200EE),
+      ),
+      OnboardingPageData(
+        title: l10n.exploreTitle,
+        description: l10n.exploreDescription,
+        icon: Icons.public,
+        color: const Color(0xFF03DAC6),
+      ),
+      OnboardingPageData(
+        title: l10n.favoritesTitle,
+        description: l10n.favoritesDescription,
+        icon: Icons.favorite,
+        color: const Color(0xFFBB86FC),
+      ),
+    ];
+  }
 }

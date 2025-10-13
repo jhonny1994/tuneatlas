@@ -15,6 +15,7 @@ class RootScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
+    final l10n = AppLocalizations.of(context)!;
 
     // Determine selected index based on current route
     var selectedIndex = 0;
@@ -56,26 +57,26 @@ class RootScreen extends ConsumerWidget {
                   context.go('/search');
               }
             },
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
-                label: 'Home',
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: l10n.home,
               ),
               NavigationDestination(
-                icon: Icon(Icons.explore_outlined),
-                selectedIcon: Icon(Icons.explore),
-                label: 'Discover',
+                icon: const Icon(Icons.explore_outlined),
+                selectedIcon: const Icon(Icons.explore),
+                label: l10n.discover,
               ),
               NavigationDestination(
-                icon: Icon(Icons.library_music_outlined),
-                selectedIcon: Icon(Icons.library_music),
-                label: 'Library',
+                icon: const Icon(Icons.library_music_outlined),
+                selectedIcon: const Icon(Icons.library_music),
+                label: l10n.library,
               ),
               NavigationDestination(
-                icon: Icon(Icons.search_outlined),
-                selectedIcon: Icon(Icons.search),
-                label: 'Search',
+                icon: const Icon(Icons.search_outlined),
+                selectedIcon: const Icon(Icons.search),
+                label: l10n.search,
               ),
             ],
           ),
@@ -193,9 +194,10 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/filtered-stations',
         pageBuilder: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
           final filterType = state.uri.queryParameters['filterType'] ?? '';
           final filterValue = state.uri.queryParameters['filterValue'] ?? '';
-          final title = state.uri.queryParameters['title'] ?? 'Stations';
+          final title = state.uri.queryParameters['title'] ?? l10n.stations;
 
           return AppPageTransitions.sharedAxisTransition(
             child: FilteredStationsScreen(

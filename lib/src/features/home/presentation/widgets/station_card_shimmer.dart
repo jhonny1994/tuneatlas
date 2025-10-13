@@ -43,109 +43,160 @@ class _StationCardShimmerState extends State<StationCardShimmer>
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Row(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Logo shimmer
-            AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _animation.value,
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: shimmerColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+            // Top row: Logo + Info + Favorite button
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Logo shimmer (80x80 to match Material You)
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _animation.value,
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: shimmerColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(width: 16),
+
+                // Text shimmers (expanded)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Title shimmer (station name - 2 lines possible)
+                      AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _animation.value,
+                            child: Container(
+                              height: 20,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: shimmerColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 4),
+
+                      // Technical info shimmer (country, codec, bitrate)
+                      AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _animation.value,
+                            child: Container(
+                              height: 14,
+                              width: 180,
+                              decoration: BoxDecoration(
+                                color: shimmerColor,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 8),
+
+                      // Tags/metadata shimmer
+                      AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _animation.value,
+                            child: Container(
+                              height: 24,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                color: shimmerColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                );
-              },
+                ),
+
+                // Favorite button shimmer
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _animation.value,
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: shimmerColor,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
 
-            // Text shimmers
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Title shimmer
-                  AnimatedBuilder(
+            // Action buttons shimmer
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                // Play button shimmer (expanded)
+                Expanded(
+                  child: AnimatedBuilder(
                     animation: _animation,
                     builder: (context, child) {
                       return Opacity(
                         opacity: _animation.value,
                         child: Container(
-                          height: 16,
-                          width: double.infinity,
+                          height: 48,
                           decoration: BoxDecoration(
                             color: shimmerColor,
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(24),
                           ),
                         ),
                       );
                     },
                   ),
-                  const SizedBox(height: 8),
+                ),
+                const SizedBox(width: 8),
 
-                  // Subtitle shimmer
-                  AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _animation.value,
-                        child: Container(
-                          height: 12,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            color: shimmerColor,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
+                // More options button shimmer
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Opacity(
+                      opacity: _animation.value,
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: shimmerColor,
+                          borderRadius: BorderRadius.circular(24),
                         ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Metadata shimmer
-                  AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _animation.value,
-                        child: Container(
-                          height: 20,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            color: shimmerColor,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-
-            // Play button shimmer
-            AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _animation.value,
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: shimmerColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),

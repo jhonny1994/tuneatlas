@@ -107,7 +107,7 @@ class AudioPlayerService {
         const Duration(seconds: 20),
         onTimeout: () {
           throw TimeoutException(
-            'Failed to connect to radio stream - please try again',
+            'errorFailedToConnect',
           );
         },
       );
@@ -121,19 +121,19 @@ class AudioPlayerService {
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error playing station: $e');
 
-      // Format user-friendly error message
-      var errorMessage = 'Failed to play station';
+      // Format user-friendly error message (keys for AudioErrorMapper)
+      var errorMessage = 'errorFailedToPlay';
       if (e is TimeoutException || e.toString().contains('timeout')) {
-        errorMessage = 'Connection timeout - stream may be offline';
+        errorMessage = 'errorConnectionTimeout';
       } else if (e.toString().contains('404')) {
-        errorMessage = 'Stream not found - station may be offline';
+        errorMessage = 'errorStreamNotFound';
       } else if (e.toString().contains('403') || e.toString().contains('401')) {
-        errorMessage = 'Access denied - stream requires authentication';
+        errorMessage = 'errorAccessDenied';
       } else if (e.toString().contains('network') ||
           e.toString().contains('SocketException')) {
-        errorMessage = 'Network error - check your connection';
+        errorMessage = 'errorNetworkIssue';
       } else if (e.toString().contains('format')) {
-        errorMessage = 'Unsupported audio format';
+        errorMessage = 'errorUnsupportedFormat';
       }
 
       // CRITICAL: Only set error state ONCE (not multiple times)
@@ -158,7 +158,7 @@ class AudioPlayerService {
       _isStoppedSubject.add(false);
     } on Exception catch (e) {
       debugPrint('[AudioPlayerService] Error resuming: $e');
-      _errorSubject.add('Failed to resume playback');
+      _errorSubject.add('errorFailedToResume');
     }
   }
 

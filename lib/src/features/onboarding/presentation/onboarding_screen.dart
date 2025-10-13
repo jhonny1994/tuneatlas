@@ -38,14 +38,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   Future<void> _skipToEnd() async {
     await _pageController.animateToPage(
-      OnboardingPages.pages.length - 1,
+      OnboardingPages.pages(context).length - 1,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
 
   Future<void> _nextPage() async {
-    if (_currentPage < OnboardingPages.pages.length - 1) {
+    if (_currentPage < OnboardingPages.pages(context).length - 1) {
       await _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -58,7 +58,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isLastPage = _currentPage == OnboardingPages.pages.length - 1;
+    final l10n = AppLocalizations.of(context)!;
+    final isLastPage =
+        _currentPage == OnboardingPages.pages(context).length - 1;
 
     return Scaffold(
       body: SafeArea(
@@ -73,7 +75,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     unawaited(Haptics.light());
                     await _skipToEnd();
                   },
-                  child: const Text('Skip'),
+                  child: Text(l10n.skip),
                 ),
               )
             else
@@ -84,9 +86,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: _onPageChanged,
-                itemCount: OnboardingPages.pages.length,
+                itemCount: OnboardingPages.pages(context).length,
                 itemBuilder: (context, index) {
-                  final page = OnboardingPages.pages[index];
+                  final page = OnboardingPages.pages(context)[index];
                   return _OnboardingPage(page: page);
                 },
               ),
@@ -96,7 +98,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                OnboardingPages.pages.length,
+                OnboardingPages.pages(context).length,
                 (index) => _PageIndicator(
                   isActive: index == _currentPage,
                   color: theme.colorScheme.primary,
@@ -111,12 +113,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               child: SizedBox(
                 width: double.infinity,
                 height: 48,
-                child: ElevatedButton(
+                child: FilledButton(
                   onPressed: () async {
                     unawaited(Haptics.light());
                     await _nextPage();
                   },
-                  child: Text(isLastPage ? 'Get Started' : 'Next'),
+                  child: Text(isLastPage ? l10n.getStarted : l10n.next),
                 ),
               ),
             ),

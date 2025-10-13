@@ -12,6 +12,7 @@ class LibraryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesAsync = ref.watch(favoritesProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +22,7 @@ class LibraryScreen extends ConsumerWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
-          'Library',
+          l10n.library,
           style: TextStyle(
             color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -76,55 +77,66 @@ class LibraryScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.favorite_border,
-      lottieAsset: 'assets/lottie/favorites_empty.json',
-      title: 'No favorites yet',
-      message: 'Add stations to your favorites by tapping the heart icon',
+      title: l10n.noFavoritesTitle,
+      message: l10n.noFavoritesMessage,
     );
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return ErrorStateWidget(
-      title: 'Failed to load favorites',
+      title: l10n.errorLoadingStations,
       error: error,
       onRetry: () => ref.read(favoritesProvider.notifier).refresh(),
     );
   }
 
   void _showClearDialog(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     unawaited(
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Clear all favorites?'),
-          content: const Text(
-            'This will remove all stations from your library. This action cannot be undone.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                unawaited(Haptics.light());
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
+        builder: (context) {
+          final favoritesAsync = ref.watch(favoritesProvider);
+          final count = favoritesAsync.maybeWhen(
+            data: (favorites) => favorites.length,
+            orElse: () => 0,
+          );
+
+          return AlertDialog(
+            title: Text(l10n.clearFavoritesConfirmTitle),
+            content: Text(
+              l10n.clearFavoritesConfirmMessage(count),
             ),
-            TextButton(
-              onPressed: () async {
-                unawaited(Haptics.medium());
-                await FavoritesService.instance.clearAll();
-                await ref.read(favoritesProvider.notifier).refresh();
-                if (context.mounted) {
+            actions: [
+              FilledButton.tonal(
+                onPressed: () {
+                  unawaited(Haptics.light());
                   Navigator.of(context).pop();
-                }
-              },
-              child: Text(
-                'Clear',
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                },
+                child: Text(l10n.cancel),
               ),
-            ),
-          ],
-        ),
+              FilledButton(
+                onPressed: () async {
+                  unawaited(Haptics.medium());
+                  await FavoritesService.instance.clearAll();
+                  await ref.read(favoritesProvider.notifier).refresh();
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                },
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  foregroundColor: Theme.of(context).colorScheme.onError,
+                ),
+                child: Text(l10n.clear),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -8,6 +8,7 @@ class DiscoverScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return DefaultTabController(
       length: 3,
@@ -19,7 +20,7 @@ class DiscoverScreen extends ConsumerWidget {
           elevation: 0,
           scrolledUnderElevation: 0,
           title: Text(
-            'Discover',
+            l10n.discover,
             style: TextStyle(
               color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
@@ -31,10 +32,10 @@ class DiscoverScreen extends ConsumerWidget {
             unselectedLabelColor: theme.colorScheme.onSurface.withValues(
               alpha: 0.6,
             ),
-            tabs: const [
-              Tab(text: 'Countries'),
-              Tab(text: 'Languages'),
-              Tab(text: 'Tags'),
+            tabs: [
+              Tab(text: l10n.countries),
+              Tab(text: l10n.languages),
+              Tab(text: l10n.tags),
             ],
           ),
         ),

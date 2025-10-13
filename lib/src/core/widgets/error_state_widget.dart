@@ -13,18 +13,17 @@ import 'package:tuneatlas/src/src.dart';
 class ErrorStateWidget extends StatelessWidget {
   const ErrorStateWidget({
     required this.onRetry,
-    this.title = 'Something went wrong',
+    required this.title,
     this.message,
     this.error,
     this.icon = Icons.error_outline,
-    this.retryLabel = 'Retry',
     super.key,
   });
 
   /// Callback when retry button is pressed
   final VoidCallback onRetry;
 
-  /// Error title (defaults to "Something went wrong")
+  /// Error title
   final String title;
 
   /// Optional descriptive message
@@ -36,12 +35,10 @@ class ErrorStateWidget extends StatelessWidget {
   /// Icon to display (defaults to error_outline)
   final IconData icon;
 
-  /// Label for retry button (defaults to "Retry")
-  final String retryLabel;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Center(
       child: Padding(
@@ -53,7 +50,7 @@ class ErrorStateWidget extends StatelessWidget {
               icon,
               size: AppConfig.iconSizeLarge,
               color: theme.colorScheme.error,
-              semanticLabel: 'Error',
+              semanticLabel: l10n.errorSemanticLabel,
             ),
             const SizedBox(height: 24),
             Text(
@@ -72,14 +69,14 @@ class ErrorStateWidget extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 24),
-            ElevatedButton.icon(
+            FilledButton.icon(
               onPressed: () {
                 unawaited(Haptics.light());
                 onRetry();
               },
               icon: const Icon(Icons.refresh),
-              label: Text(retryLabel),
-              style: ElevatedButton.styleFrom(
+              label: Text(l10n.tryAgain),
+              style: FilledButton.styleFrom(
                 minimumSize: const Size(120, AppConfig.buttonHeight),
               ),
             ),

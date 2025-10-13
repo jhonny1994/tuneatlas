@@ -32,15 +32,22 @@ class MiniPlayer extends ConsumerWidget {
     AudioState state,
   ) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final station = state.currentStation!;
 
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceContainerHighest,
+        border: Border(
+          top: BorderSide(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+          ),
+        ),
         boxShadow: [
           // Primary shadow - more pronounced
           BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.3), // Enhanced from 0.2
+            color: theme.colorScheme.shadow
+                .withValues(alpha: 0.3), // Enhanced from 0.2
             blurRadius: 16, // Enhanced from 8
             offset: const Offset(0, -4), // Enhanced from -2
           ),
@@ -102,16 +109,19 @@ class MiniPlayer extends ConsumerWidget {
                 children: [
                   // Station artwork with glow when playing
                   Container(
-                    decoration: state.isPlaying ? BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withValues(alpha: 0.4),
-                          blurRadius: 12,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ) : null,
+                    decoration: state.isPlaying
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: theme.colorScheme.primary
+                                    .withValues(alpha: 0.4),
+                                blurRadius: 12,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          )
+                        : null,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: station.favicon.isNotEmpty
@@ -196,12 +206,15 @@ class MiniPlayer extends ConsumerWidget {
                             Expanded(
                               child: Text(
                                 state.error != null
-                                    ? 'Error'
+                                    ? AudioErrorMapper.getLocalizedError(
+                                        context,
+                                        state.error!,
+                                      )
                                     : (state.isLoading
-                                        ? 'Connecting...'
+                                        ? l10n.loadingStation
                                         : (state.isPlaying
-                                            ? 'Playing'
-                                            : 'Paused')),
+                                            ? l10n.playing
+                                            : l10n.paused)),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: state.error != null
                                       ? theme.colorScheme.error

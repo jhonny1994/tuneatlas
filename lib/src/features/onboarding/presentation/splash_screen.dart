@@ -24,6 +24,7 @@ class SplashScreen extends ConsumerWidget {
 
   /// Loading state UI
   Widget _buildLoading(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -37,7 +38,7 @@ class SplashScreen extends ConsumerWidget {
 
         // App name
         Text(
-          'TuneAtlas',
+          l10n.appName,
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -49,7 +50,7 @@ class SplashScreen extends ConsumerWidget {
         const SizedBox(height: 16),
 
         Text(
-          'Discovering servers...',
+          l10n.initializingApp,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(
                   context,
@@ -62,6 +63,7 @@ class SplashScreen extends ConsumerWidget {
 
   /// Success state UI (briefly shown before navigation)
   Widget _buildSuccess(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -72,7 +74,7 @@ class SplashScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          'Ready!',
+          l10n.ready,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ],
@@ -81,6 +83,7 @@ class SplashScreen extends ConsumerWidget {
 
   /// Error state UI with retry button
   Widget _buildError(BuildContext context, String message, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(32),
       child: Column(
@@ -96,7 +99,7 @@ class SplashScreen extends ConsumerWidget {
 
           // Error title
           Text(
-            'Connection Failed',
+            l10n.failedToInitialize,
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
@@ -115,11 +118,11 @@ class SplashScreen extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // Retry button
-          ElevatedButton.icon(
+          FilledButton.icon(
             onPressed: () =>
                 ref.read(appInitializationProvider.notifier).retry(),
             icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
+            label: Text(l10n.retry),
           ),
         ],
       ),

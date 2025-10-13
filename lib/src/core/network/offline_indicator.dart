@@ -24,6 +24,7 @@ class OfflineIndicator extends ConsumerWidget {
 
   Widget _buildOfflineBanner(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Material(
       color: theme.colorScheme.errorContainer,
@@ -41,7 +42,7 @@ class OfflineIndicator extends ConsumerWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'No internet connection',
+                l10n.noInternetConnection,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
                   fontWeight: FontWeight.w500,

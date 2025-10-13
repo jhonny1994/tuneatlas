@@ -41,6 +41,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final stationsAsync = ref.watch(localStationsProvider);
     final userCountryAsync = ref.watch(userCountryProvider);
 
@@ -49,25 +51,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: theme.colorScheme.surfaceContainer,
+        foregroundColor: theme.colorScheme.onSurface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         title: userCountryAsync.when(
           data: (countryCode) => Text(
-            'Stations in $countryCode',
+            l10n.stationsIn(countryCode),
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
+              color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
           loading: () => Text(
-            'TuneAtlas',
+            l10n.appName,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
+              color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
           error: (_, __) => Text(
-            'TuneAtlas',
+            l10n.appName,
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
+              color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -137,17 +144,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.radio_button_off,
-      lottieAsset: 'assets/lottie/radio_empty.json',
-      title: 'No stations found',
-      message: 'Try searching for stations in other countries',
+      title: l10n.noStationsTitle,
+      message: l10n.noStationsMessage('country'),
     );
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return ErrorStateWidget(
-      title: 'Failed to load stations',
+      title: l10n.errorLoadingStations,
       error: error,
       onRetry: () => ref.read(localStationsProvider.notifier).refresh(),
     );

@@ -128,16 +128,18 @@ class _FilteredStationsScreenState
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.radio_button_off,
-      title: 'No stations found',
-      message: 'No stations available for this filter',
+      title: l10n.noStationsTitle,
+      message: l10n.noStationsMessage(widget.filterType.toLowerCase()),
     );
   }
 
   Widget _buildError(BuildContext context, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return ErrorStateWidget(
-      title: 'Failed to load stations',
+      title: l10n.errorLoadingStations,
       error: error,
       onRetry: () {
         ref.invalidate(

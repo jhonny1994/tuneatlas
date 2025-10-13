@@ -64,6 +64,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     final searchAsync = ref.watch(searchProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     // Listen for audio errors and show snackbar
     ref.listenToAudioErrors(context);
@@ -76,7 +77,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         title: Text(
-          'Search',
+          l10n.search,
           style: TextStyle(
             color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -92,7 +93,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               controller: _searchController,
               onChanged: _onSearchChanged,
               decoration: InputDecoration(
-                hintText: 'Search stations...',
+                hintText: l10n.searchStations,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
@@ -162,6 +163,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildInitialState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -173,12 +175,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'Search for radio stations',
+            l10n.searchForStations,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
-            'Enter a station name to search',
+            l10n.enterStationName,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(
                     context,
@@ -191,15 +193,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context, String query) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.search_off,
-      lottieAsset: 'assets/lottie/search_empty.json',
-      title: 'No results found',
-      message: 'Try a different search term',
+      title: l10n.noSearchResultsTitle,
+      message: l10n.noSearchResultsMessage,
     );
   }
 
   Widget _buildError(BuildContext context, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -213,7 +216,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              'Search failed',
+              l10n.errorSearchingStations,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),

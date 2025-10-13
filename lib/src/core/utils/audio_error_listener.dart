@@ -30,6 +30,11 @@ extension AudioErrorListener on WidgetRef {
     // Check if widget is still mounted before showing snackbar
     if (!context.mounted) return;
 
+    // Get localized error message
+    final localizedMessage =
+        AudioErrorMapper.getLocalizedError(context, message);
+    final l10n = AppLocalizations.of(context)!;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -37,14 +42,14 @@ extension AudioErrorListener on WidgetRef {
             const Icon(Icons.error_outline, color: Colors.white),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(message),
+              child: Text(localizedMessage),
             ),
           ],
         ),
         backgroundColor: Theme.of(context).colorScheme.error,
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
-          label: 'Dismiss',
+          label: l10n.cancel,
           textColor: Colors.white,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();

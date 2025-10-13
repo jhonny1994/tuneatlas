@@ -12,6 +12,7 @@ class TagsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tagsAsync = ref.watch(tagsProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return tagsAsync.when(
       loading: () => const ListTileShimmer(),
@@ -44,7 +45,7 @@ class TagsTab extends ConsumerWidget {
                     ),
                   ),
                   title: Text(tag.name),
-                  subtitle: Text('${tag.stationCount} stations'),
+                  subtitle: Text(l10n.stationsCount(tag.stationCount)),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     unawaited(Haptics.light());
@@ -69,18 +70,20 @@ class TagsTab extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
+    final l10n = AppLocalizations.of(context)!;
     return ErrorStateWidget(
-      title: 'Failed to load tags',
+      title: l10n.errorLoadingStations,
       error: error,
       onRetry: () => ref.invalidate(tagsProvider),
     );
   }
 
   Widget _buildEmpty(BuildContext context) {
-    return const EmptyStateWidget(
+    final l10n = AppLocalizations.of(context)!;
+    return EmptyStateWidget(
       icon: Icons.sell_outlined,
-      title: 'No tags available',
-      message: 'Unable to load tags at this time',
+      title: l10n.noTagsTitle,
+      message: l10n.noData,
     );
   }
 }
