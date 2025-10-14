@@ -311,4 +311,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get errorSemanticLabel => 'خطأ';
+
+  @override
+  String get language => 'اللغة';
 }

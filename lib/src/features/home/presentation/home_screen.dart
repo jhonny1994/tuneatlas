@@ -71,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          error: (_, __) => Text(
+          error: (_, _) => Text(
             l10n.appName,
             style: TextStyle(
               color: theme.colorScheme.onSurface,
@@ -90,6 +90,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               await ref.read(themeModeProvider.notifier).toggle();
             },
           ),
+          const LanguageButton(),
         ],
       ),
       body: stationsAsync.when(

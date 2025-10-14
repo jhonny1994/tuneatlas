@@ -91,5 +91,6 @@
   "stationsIn": "محطات في {countryCode}",
   "stations": "المحطات",
   "emptyStateSemanticLabel": "حالة فارغة",
-  "errorSemanticLabel": "خطأ"
+  "errorSemanticLabel": "خطأ",
+  "language": "اللغة"
 }

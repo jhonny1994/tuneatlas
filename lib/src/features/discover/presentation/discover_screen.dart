@@ -26,6 +26,9 @@ class DiscoverScreen extends ConsumerWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+          actions: const [
+            LanguageButton(),
+          ],
           bottom: TabBar(
             indicatorColor: theme.colorScheme.primary,
             labelColor: theme.colorScheme.primary,

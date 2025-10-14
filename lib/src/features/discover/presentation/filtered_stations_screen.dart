@@ -84,6 +84,9 @@ class _FilteredStationsScreenState
             fontWeight: FontWeight.w600,
           ),
         ),
+        actions: const [
+          LanguageButton(),
+        ],
       ),
       body: stationsAsync.when(
         loading: () => const StationListShimmer(),

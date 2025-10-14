@@ -29,7 +29,6 @@ class LibraryScreen extends ConsumerWidget {
           ),
         ),
         actions: [
-          // Show clear all button if there are favorites
           favoritesAsync.whenOrNull(
                 data: (favorites) => favorites.isNotEmpty
                     ? IconButton(
@@ -42,6 +41,7 @@ class LibraryScreen extends ConsumerWidget {
                     : null,
               ) ??
               const SizedBox.shrink(),
+          const LanguageButton(),
         ],
       ),
       body: favoritesAsync.when(
