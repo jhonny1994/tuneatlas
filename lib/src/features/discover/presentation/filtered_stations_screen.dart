@@ -84,8 +84,18 @@ class _FilteredStationsScreenState
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: const [
-          LanguageButton(),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.brightness_6_outlined,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            onPressed: () async {
+              unawaited(Haptics.toggle());
+              await ref.read(themeModeProvider.notifier).toggle();
+            },
+          ),
+          const LanguageButton(),
         ],
       ),
       body: stationsAsync.when(

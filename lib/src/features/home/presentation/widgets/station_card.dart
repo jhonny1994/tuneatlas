@@ -77,18 +77,21 @@ class _StationCardState extends ConsumerState<StationCard> {
     final audioState = ref.watch(audioPlayerProvider);
 
     // Check if this station is currently playing
-    final isCurrentStation = audioState.whenOrNull(
+    final isCurrentStation =
+        audioState.whenOrNull(
           data: (state) =>
               state.currentStation?.stationUuid == widget.station.stationUuid,
         ) ??
         false;
 
-    final isPlaying = audioState.whenOrNull(
+    final isPlaying =
+        audioState.whenOrNull(
           data: (state) => state.isPlaying && isCurrentStation,
         ) ??
         false;
 
-    final isLoadingAudio = audioState.whenOrNull(
+    final isLoadingAudio =
+        audioState.whenOrNull(
           data: (state) => state.isLoading && isCurrentStation,
         ) ??
         false;
@@ -116,16 +119,18 @@ class _StationCardState extends ConsumerState<StationCard> {
               decoration: isCurrentStation
                   ? BoxDecoration(
                       border: Border.all(
-                        color: theme.colorScheme.primary
-                            .withValues(alpha: 0.8), // Enhanced from 0.5 to 0.8
+                        color: theme.colorScheme.primary.withValues(
+                          alpha: 0.8,
+                        ), // Enhanced from 0.5 to 0.8
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppConfig.radiusCard),
                       // Add glow effect for active station
                       boxShadow: [
                         BoxShadow(
-                          color:
-                              theme.colorScheme.primary.withValues(alpha: 0.2),
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.2,
+                          ),
                           blurRadius: 12,
                           spreadRadius: 2,
                         ),
@@ -228,7 +233,8 @@ class _StationCardState extends ConsumerState<StationCard> {
   /// Build station logo
   Widget _buildLogo(BuildContext context) {
     final audioState = ref.watch(audioPlayerProvider);
-    final isCurrentStation = audioState.whenOrNull(
+    final isCurrentStation =
+        audioState.whenOrNull(
           data: (state) =>
               state.currentStation?.stationUuid == widget.station.stationUuid,
         ) ??
@@ -244,10 +250,9 @@ class _StationCardState extends ConsumerState<StationCard> {
         boxShadow: isCurrentStation
             ? [
                 BoxShadow(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -513,7 +518,9 @@ class _StationCardState extends ConsumerState<StationCard> {
     if (widget.station.language != null &&
         widget.station.language!.isNotEmpty) {
       tags.addAll(
-        widget.station.language!.split(',').map(
+        widget.station.language!
+            .split(',')
+            .map(
               (lang) => lang.trim(),
             ),
       );
@@ -522,7 +529,9 @@ class _StationCardState extends ConsumerState<StationCard> {
     // Add tags
     if (widget.station.tags != null && widget.station.tags!.isNotEmpty) {
       tags.addAll(
-        widget.station.tags!.split(',').map(
+        widget.station.tags!
+            .split(',')
+            .map(
               (tag) => tag.trim(),
             ),
       );

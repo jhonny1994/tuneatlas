@@ -41,6 +41,16 @@ class LibraryScreen extends ConsumerWidget {
                     : null,
               ) ??
               const SizedBox.shrink(),
+          IconButton(
+            icon: Icon(
+              Icons.brightness_6_outlined,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+            onPressed: () async {
+              unawaited(Haptics.toggle());
+              await ref.read(themeModeProvider.notifier).toggle();
+            },
+          ),
           const LanguageButton(),
         ],
       ),

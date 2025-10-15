@@ -43,10 +43,13 @@ class LocaleNotifier extends _$LocaleNotifier {
     await prefs.setString(_key, languageCode);
     state = Locale(languageCode);
   }
+}
 
-  /// Get the currently selected language info
-  SupportedLanguage get currentLanguage {
-    return SupportedLanguages.getByLocale(state.languageCode) ??
-        SupportedLanguages.defaultLanguage;
-  }
+/// Provider that exposes the currently selected language info
+/// This is derived from the current locale
+@riverpod
+SupportedLanguage currentLanguage(Ref ref) {
+  final locale = ref.watch(localeProvider);
+  return SupportedLanguages.getByLocale(locale.languageCode) ??
+      SupportedLanguages.defaultLanguage;
 }

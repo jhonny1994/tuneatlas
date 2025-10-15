@@ -60,7 +60,7 @@ class AudioPlayerService {
 
         final isLoading =
             state.processingState == AudioProcessingState.loading ||
-                state.processingState == AudioProcessingState.buffering;
+            state.processingState == AudioProcessingState.buffering;
         final isError = state.processingState == AudioProcessingState.error;
 
         _isLoadingSubject.add(isLoading);
@@ -82,7 +82,7 @@ class AudioPlayerService {
     }
   }
 
-  /// Play a radio station
+  /// Play a radio station - just keep buffering until it connects
   Future<void> playStation(Station station) async {
     try {
       await _ensureInitialized();
@@ -94,7 +94,7 @@ class AudioPlayerService {
       // This prevents stale errors from previous stations
       _errorSubject.add(null);
 
-      // Set loading state
+      // Set loading/buffering state
       _isLoadingSubject.add(true);
       _isStoppedSubject.add(false);
       _isPlayingSubject.add(false);
@@ -102,15 +102,9 @@ class AudioPlayerService {
       // Update current station
       _currentStationSubject.add(station);
 
-      // Add timeout for station playback
-      await _handler!.playStation(station).timeout(
-        const Duration(seconds: 20),
-        onTimeout: () {
-          throw TimeoutException(
-            'errorFailedToConnect',
-          );
-        },
-      );
+      // Just play - let just_audio handle buffering naturally
+      // No timeout, no retries - radio streams will connect when ready
+      await _handler!.playStation(station);
 
       // Success - clear error state
       _errorSubject.add(null);
@@ -122,32 +116,36 @@ class AudioPlayerService {
       debugPrint('[AudioPlayerService] Error playing station: $e');
 
       // Format user-friendly error message (keys for AudioErrorMapper)
-      var errorMessage = 'errorFailedToPlay';
-      if (e is TimeoutException || e.toString().contains('timeout')) {
-        errorMessage = 'errorConnectionTimeout';
-      } else if (e.toString().contains('404')) {
-        errorMessage = 'errorStreamNotFound';
-      } else if (e.toString().contains('403') || e.toString().contains('401')) {
-        errorMessage = 'errorAccessDenied';
-      } else if (e.toString().contains('network') ||
-          e.toString().contains('SocketException')) {
-        errorMessage = 'errorNetworkIssue';
-      } else if (e.toString().contains('format')) {
-        errorMessage = 'errorUnsupportedFormat';
-      }
+      final errorMessage = _formatErrorMessage(e);
 
-      // CRITICAL: Only set error state ONCE (not multiple times)
+      debugPrint('[AudioPlayerService] Error state set: $errorMessage');
+
       // Update all states properly on error
-      if (_errorSubject.value != errorMessage) {
-        _errorSubject.add(errorMessage);
-        debugPrint('[AudioPlayerService] Error state set: $errorMessage');
-      }
+      _errorSubject.add(errorMessage);
       _isLoadingSubject.add(false);
       _isPlayingSubject.add(false);
       _isStoppedSubject.add(true);
-      // Keep station for retry attempts
-      // Don't clear station: _currentStationSubject.add(null);
+
+      // Keep station for manual retry attempts
+      // Don't clear: _currentStationSubject.add(null);
     }
+  }
+
+  /// Format error message for display
+  String _formatErrorMessage(Exception e) {
+    if (e is TimeoutException || e.toString().contains('timeout')) {
+      return 'errorConnectionTimeout';
+    } else if (e.toString().contains('404')) {
+      return 'errorStreamNotFound';
+    } else if (e.toString().contains('403') || e.toString().contains('401')) {
+      return 'errorAccessDenied';
+    } else if (e.toString().contains('network') ||
+        e.toString().contains('SocketException')) {
+      return 'errorNetworkIssue';
+    } else if (e.toString().contains('format')) {
+      return 'errorUnsupportedFormat';
+    }
+    return 'errorFailedToPlay';
   }
 
   /// Resume playback
@@ -176,6 +174,7 @@ class AudioPlayerService {
   Future<void> stop() async {
     try {
       debugPrint('[AudioPlayerService] Stopping playback');
+
       await _ensureInitialized();
       await _handler!.stop();
       _currentStationSubject.add(null);

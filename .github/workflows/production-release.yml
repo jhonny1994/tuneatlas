@@ -1,167 +1,167 @@
 name: Production Release
 
 on:
-    workflow_dispatch:
-        inputs:
-            release_notes:
-                description: "Release notes for this version"
-                required: false
-                default: "Bug fixes and improvements"
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: "Release notes for this version"
+        required: false
+        default: "Bug fixes and improvements"
 
 env:
-    FLUTTER_VERSION: "3.24.5"
-    JAVA_VERSION: "17"
+  FLUTTER_VERSION: "3.24.5"
+  JAVA_VERSION: "17"
 
 jobs:
-    # Code quality checks
-    analyze:
-        name: Analyze Code
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+  # Code quality checks
+  analyze:
+    name: Analyze Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Setup Flutter
-              uses: subosito/flutter-action@v2
-              with:
-                  flutter-version: ${{ env.FLUTTER_VERSION }}
-                  channel: "stable"
-                  cache: true
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
 
-            - name: Install dependencies
-              run: flutter pub get
+      - name: Install dependencies
+        run: flutter pub get
 
-            - name: Run code generation
-              run: dart run build_runner build --delete-conflicting-outputs
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
 
-            - name: Analyze code
-              run: flutter analyze
+      - name: Analyze code
+        run: flutter analyze
 
-            - name: Check formatting
-              run: dart format --set-exit-if-changed .
+      - name: Check formatting
+        run: dart format --set-exit-if-changed .
 
-    # Build signed Android App Bundle for Google Play
-    build-production:
-        name: Build Production Release
-        runs-on: ubuntu-latest
-        needs: analyze
+  # Build signed Android App Bundle for Google Play
+  build-production:
+    name: Build Production Release
+    runs-on: ubuntu-latest
+    needs: analyze
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - name: Setup Java
-              uses: actions/setup-java@v4
-              with:
-                  distribution: "temurin"
-                  java-version: ${{ env.JAVA_VERSION }}
-                  cache: "gradle"
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: "gradle"
 
-            - name: Setup Flutter
-              uses: subosito/flutter-action@v2
-              with:
-                  flutter-version: ${{ env.FLUTTER_VERSION }}
-                  channel: "stable"
-                  cache: true
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+          cache: true
 
-            - name: Get Flutter dependencies
-              run: flutter pub get
+      - name: Get Flutter dependencies
+        run: flutter pub get
 
-            - name: Run code generation
-              run: dart run build_runner build --delete-conflicting-outputs
+      - name: Run code generation
+        run: dart run build_runner build --delete-conflicting-outputs
 
-            - name: Get version from pubspec
-              id: version
-              run: |
-                  VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f 2)
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "Building version $VERSION"
+      - name: Get version from pubspec
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f 2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version $VERSION"
 
-            - name: Decode keystore
-              run: |
-                  echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/tuneatlas-keystore.jks
+      - name: Decode keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/tuneatlas-keystore.jks
 
-            - name: Create key.properties
-              run: |
-                  cat > android/key.properties << EOF
-                  storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-                  keyPassword=${{ secrets.KEY_PASSWORD }}
-                  keyAlias=${{ secrets.KEY_ALIAS }}
-                  storeFile=tuneatlas-keystore.jks
-                  EOF
+      - name: Create key.properties
+        run: |
+          cat > android/key.properties << EOF
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          storeFile=tuneatlas-keystore.jks
+          EOF
 
-            - name: Build App Bundle (AAB)
-              run: flutter build appbundle --release
+      - name: Build App Bundle (AAB)
+        run: flutter build appbundle --release
 
-            - name: Build APK
-              run: flutter build apk --release
+      - name: Build APK
+        run: flutter build apk --release
 
-            - name: Rename outputs
-              run: |
-                  cd build/app/outputs
-                  # Rename AAB
-                  mv bundle/release/app-release.aab bundle/release/TuneAtlas-v${{ steps.version.outputs.version }}.aab
-                  # Rename APK
-                  mv flutter-apk/app-release.apk flutter-apk/TuneAtlas-v${{ steps.version.outputs.version }}.apk
+      - name: Rename outputs
+        run: |
+          cd build/app/outputs
+          # Rename AAB
+          mv bundle/release/app-release.aab bundle/release/TuneAtlas-v${{ steps.version.outputs.version }}.aab
+          # Rename APK
+          mv flutter-apk/app-release.apk flutter-apk/TuneAtlas-v${{ steps.version.outputs.version }}.apk
 
-            - name: Upload AAB artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: app-bundle
-                  path: build/app/outputs/bundle/release/TuneAtlas-*.aab
-                  retention-days: 90
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle
+          path: build/app/outputs/bundle/release/TuneAtlas-*.aab
+          retention-days: 90
 
-            - name: Upload APK artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: app-apk
-                  path: build/app/outputs/flutter-apk/TuneAtlas-*.apk
-                  retention-days: 90
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-apk
+          path: build/app/outputs/flutter-apk/TuneAtlas-*.apk
+          retention-days: 90
 
-            - name: Clean up secrets
-              if: always()
-              run: |
-                  rm -f android/app/tuneatlas-keystore.jks
-                  rm -f android/key.properties
+      - name: Clean up secrets
+        if: always()
+        run: |
+          rm -f android/app/tuneatlas-keystore.jks
+          rm -f android/key.properties
 
-            - name: Create Production Release
-              uses: ncipollo/release-action@v1
-              with:
-                  artifacts: |
-                      build/app/outputs/bundle/release/TuneAtlas-*.aab
-                      build/app/outputs/flutter-apk/TuneAtlas-*.apk
-                  tag: v${{ steps.version.outputs.version }}
-                  name: "TuneAtlas v${{ steps.version.outputs.version }}"
-                  body: |
-                      ## 🎵 TuneAtlas v${{ steps.version.outputs.version }} - Production Release
+      - name: Create Production Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: |
+            build/app/outputs/bundle/release/TuneAtlas-*.aab
+            build/app/outputs/flutter-apk/TuneAtlas-*.apk
+          tag: v${{ steps.version.outputs.version }}
+          name: "TuneAtlas v${{ steps.version.outputs.version }}"
+          body: |
+            ## 🎵 TuneAtlas v${{ steps.version.outputs.version }} - Production Release
 
-                      **Version:** ${{ steps.version.outputs.version }}  
-                      **Build Number:** ${{ github.run_number }}  
-                      **Commit:** ${{ github.sha }}
+            **Version:** ${{ steps.version.outputs.version }}  
+            **Build Number:** ${{ github.run_number }}  
+            **Commit:** ${{ github.sha }}
 
-                      ### 📦 Downloads
-                      - **TuneAtlas.aab** - For Google Play Store upload
-                      - **TuneAtlas.apk** - For direct installation
+            ### 📦 Downloads
+            - **TuneAtlas.aab** - For Google Play Store upload
+            - **TuneAtlas.apk** - For direct installation
 
-                      ### 📝 What's New
-                      ${{ github.event.inputs.release_notes }}
+            ### 📝 What's New
+            ${{ github.event.inputs.release_notes }}
 
-                      ### 🚀 Installation
-                      **Google Play Store (Recommended)**
-                      - Upload the .aab file to Google Play Console
+            ### 🚀 Installation
+            **Google Play Store (Recommended)**
+            - Upload the .aab file to Google Play Console
 
-                      **Direct APK Installation**
-                      1. Download the APK file
-                      2. Enable "Install from Unknown Sources" in Settings
-                      3. Install and enjoy! 🎧
+            **Direct APK Installation**
+            1. Download the APK file
+            2. Enable "Install from Unknown Sources" in Settings
+            3. Install and enjoy! 🎧
 
-                      ---
+            ---
 
-                      *This is a production release signed with the upload key and ready for distribution.*
-                  token: ${{ secrets.GITHUB_TOKEN }}
-                  draft: false
-                  prerelease: false
-                  allowUpdates: false
-                  makeLatest: true
+            *This is a production release signed with the upload key and ready for distribution.*
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: false
+          allowUpdates: false
+          makeLatest: true

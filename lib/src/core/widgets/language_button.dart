@@ -12,11 +12,7 @@ class LanguageButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(localeProvider);
-    final currentLanguage =
-        SupportedLanguages.getByLocale(
-          currentLocale.languageCode,
-        ) ??
-        SupportedLanguages.defaultLanguage;
+    final currentLanguage = ref.watch(currentLanguageProvider);
     final theme = Theme.of(context);
 
     return IconButton(
@@ -47,26 +43,29 @@ class LanguageButton extends ConsumerWidget {
           title: Text(l10n.language),
           content: SizedBox(
             width: double.maxFinite,
-            child: ListView(
-              shrinkWrap: true,
-              children: SupportedLanguages.all.map((language) {
-                return RadioGroup<String>(
-                  groupValue: currentLocale.languageCode,
-                  child: Text(
-                    language.nativeName,
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                  onChanged: (value) async {
-                    if (value != null && value != currentLocale.languageCode) {
-                      unawaited(Haptics.toggle());
-                      await ref.read(localeProvider.notifier).setLocale(value);
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                    }
-                  },
-                );
-              }).toList(),
+            child: RadioGroup<String>(
+              groupValue: currentLocale.languageCode,
+              onChanged: (value) async {
+                if (value != null && value != currentLocale.languageCode) {
+                  unawaited(Haptics.toggle());
+                  await ref.read(localeProvider.notifier).setLocale(value);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                }
+              },
+              child: ListView(
+                shrinkWrap: true,
+                children: SupportedLanguages.all.map((language) {
+                  return RadioListTile<String>(
+                    value: language.locale,
+                    title: Text(
+                      language.nativeName,
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
           ),
           actions: [
