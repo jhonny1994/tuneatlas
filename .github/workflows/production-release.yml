@@ -86,13 +86,24 @@ jobs:
 
       - name: Decode keystore
         run: |
+          echo "Creating keystore in android/app/"
           mkdir -p android/app
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/tuneatlas-keystore.jks
-          if [ ! -f android/app/tuneatlas-keystore.jks ] || [ ! -s android/app/tuneatlas-keystore.jks ]; then
-            echo "Error: Failed to decode keystore or file is empty"
+
+          # Verify the file was created
+          if [ ! -f android/app/tuneatlas-keystore.jks ]; then
+            echo "ERROR: Keystore file was not created"
             exit 1
           fi
+
+          if [ ! -s android/app/tuneatlas-keystore.jks ]; then
+            echo "ERROR: Keystore file is empty"
+            exit 1
+          fi
+
+          # Show file details
           ls -lh android/app/tuneatlas-keystore.jks
+          file android/app/tuneatlas-keystore.jks
           echo "Keystore decoded successfully"
 
       - name: Create key.properties
@@ -109,6 +120,18 @@ jobs:
       - name: Verify keystore with keytool
         run: |
           keytool -list -v -keystore android/app/tuneatlas-keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}" || echo "Warning: Could not verify keystore"
+
+      - name: Debug file structure
+        run: |
+          echo "=== Checking file structure ==="
+          ls -la android/ || true
+          ls -la android/app/ || true
+          echo "=== Keystore file ==="
+          file android/app/tuneatlas-keystore.jks || echo "Keystore not found"
+          echo "=== key.properties content ==="
+          cat android/key.properties || echo "key.properties not found"
+          echo "=== Testing Gradle keystore resolution ==="
+          cd android && ./gradlew :app:tasks --all | grep -i sign || true
 
       - name: Build App Bundle (AAB)
         run: flutter build appbundle --release
