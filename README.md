@@ -57,12 +57,21 @@
 ---
 
 ## 📱 Screenshots
-
+### Light
 <div align="center">
-  <img src="screenshots/home.png" width="200" alt="Home Screen">
-  <img src="screenshots/discover.png" width="200" alt="Discover">
-  <img src="screenshots/player.png" width="200" alt="Player">
-  <img src="screenshots/library.png" width="200" alt="Library">
+  <img src="screenshots/1-home.png" width="200" alt="Home Screen">
+  <img src="screenshots/2-discover.png" width="200" alt="Discover">
+  <img src="screenshots/3-library.png" width="200" alt="Library">
+  <img src="screenshots/4-search.png" width="200" alt="Search">
+</div>
+
+---
+### Dark
+<div align="center">
+  <img src="screenshots/1-home-dark.png" width="200" alt="Home Screen">
+  <img src="screenshots/2-discover-dark.png" width="200" alt="Discover">
+  <img src="screenshots/3-library-dark.png" width="200" alt="Library">
+  <img src="screenshots/4-search-dark.png" width="200" alt="Search">
 </div>
 
 ---

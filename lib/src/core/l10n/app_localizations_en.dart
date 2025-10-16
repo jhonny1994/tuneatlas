@@ -314,4 +314,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get language => 'Language';
+
+  @override
+  String get liveRadio => 'Live Radio';
+
+  @override
+  String get radio => 'Radio';
+
+  @override
+  String get searchFailed => 'Search failed';
+
+  @override
+  String get failedToLoadMore => 'Failed to load more results';
+
+  @override
+  String get failedToLoadStations => 'Failed to load stations';
+
+  @override
+  String get streamTimeoutError =>
+      'Stream connection timeout - server not responding';
+
+  @override
+  String get failedToConnectToServers =>
+      'Failed to connect to Radio Browser servers. Please check your internet connection and try again.';
 }

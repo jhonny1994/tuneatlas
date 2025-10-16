@@ -655,6 +655,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language'**
   String get language;
+
+  /// Default album name for media notification
+  ///
+  /// In en, this message translates to:
+  /// **'Live Radio'**
+  String get liveRadio;
+
+  /// Default artist name for media notification when country is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Radio'**
+  String get radio;
+
+  /// Error message when search operation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Search failed'**
+  String get searchFailed;
+
+  /// Error message when pagination fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load more results'**
+  String get failedToLoadMore;
+
+  /// Error message when station loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load stations'**
+  String get failedToLoadStations;
+
+  /// Error message when stream connection times out
+  ///
+  /// In en, this message translates to:
+  /// **'Stream connection timeout - server not responding'**
+  String get streamTimeoutError;
+
+  /// Initialization error message when unable to discover servers
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to connect to Radio Browser servers. Please check your internet connection and try again.'**
+  String get failedToConnectToServers;
 }
 
 class _AppLocalizationsDelegate

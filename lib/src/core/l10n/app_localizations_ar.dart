@@ -314,4 +314,27 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get language => 'اللغة';
+
+  @override
+  String get liveRadio => 'راديو مباشر';
+
+  @override
+  String get radio => 'راديو';
+
+  @override
+  String get searchFailed => 'فشل البحث';
+
+  @override
+  String get failedToLoadMore => 'فشل تحميل المزيد من النتائج';
+
+  @override
+  String get failedToLoadStations => 'فشل تحميل المحطات';
+
+  @override
+  String get streamTimeoutError =>
+      'انتهت مهلة الاتصال بالبث - الخادم لا يستجيب';
+
+  @override
+  String get failedToConnectToServers =>
+      'فشل الاتصال بخوادم Radio Browser. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.';
 }
