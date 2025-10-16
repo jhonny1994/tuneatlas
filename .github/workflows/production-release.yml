@@ -114,24 +114,10 @@ jobs:
           keyAlias=${{ secrets.KEY_ALIAS }}
           storeFile=tuneatlas-keystore.jks
           EOF
-          echo "key.properties created:"
-          cat android/key.properties
 
       - name: Verify keystore with keytool
         run: |
-          keytool -list -v -keystore android/app/tuneatlas-keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}" || echo "Warning: Could not verify keystore"
-
-      - name: Debug file structure
-        run: |
-          echo "=== Checking file structure ==="
-          ls -la android/ || true
-          ls -la android/app/ || true
-          echo "=== Keystore file ==="
-          file android/app/tuneatlas-keystore.jks || echo "Keystore not found"
-          echo "=== key.properties content ==="
-          cat android/key.properties || echo "key.properties not found"
-          echo "=== Testing Gradle keystore resolution ==="
-          cd android && ./gradlew :app:tasks --all | grep -i sign || true
+          keytool -list -v -keystore android/app/tuneatlas-keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}" | head -n 20
 
       - name: Build App Bundle (AAB)
         run: flutter build appbundle --release
