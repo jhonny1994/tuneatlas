@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="https://img.shields.io/badge/Flutter-3.8.0+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
-  <img src="https://img.shields.io/badge/Dart-3.0+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
+  <img src="https://img.shields.io/badge/Flutter-3.24+-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter">
+  <img src="https://img.shields.io/badge/Dart-3.5+-0175C2?style=for-the-badge&logo=dart&logoColor=white" alt="Dart">
   <img src="https://img.shields.io/badge/Material%203-Enabled-6200EE?style=for-the-badge" alt="Material 3">
   <img src="https://img.shields.io/badge/WCAG%20AA-Compliant-00AA00?style=for-the-badge" alt="Accessibility">
 </div>
@@ -129,8 +129,8 @@ lib/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Flutter SDK**: 3.8.0 or higher
-- **Dart SDK**: 3.0.0 or higher
+- **Flutter SDK**: 3.24.0 or higher
+- **Dart SDK**: 3.5.0 or higher
 - **IDE**: Android Studio, VS Code, or IntelliJ with Flutter plugin
 
 ### Installation
@@ -186,8 +186,8 @@ open Runner.xcworkspace
 ### Core Technologies
 | Technology | Purpose | Version |
 |------------|---------|---------|
-| **Flutter** | Cross-platform UI framework | 3.8.0+ |
-| **Dart** | Programming language | 3.0.0+ |
+| **Flutter** | Cross-platform UI framework | 3.24+ |
+| **Dart** | Programming language | 3.5+ |
 | **Material 3** | Design system | Latest |
 
 ### State Management & Architecture

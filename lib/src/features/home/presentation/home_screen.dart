@@ -71,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          error: (_, _) => Text(
+          error: (_, __) => Text(
             l10n.appName,
             style: TextStyle(
               color: theme.colorScheme.onSurface,
