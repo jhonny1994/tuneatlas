@@ -9,7 +9,7 @@ on:
         default: "Bug fixes and improvements"
 
 env:
-  FLUTTER_VERSION: "3.24.5"
+  FLUTTER_VERSION: "3.35.3"
   JAVA_VERSION: "17"
 
 jobs:
