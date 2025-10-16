@@ -77,21 +77,18 @@ class _StationCardState extends ConsumerState<StationCard> {
     final audioState = ref.watch(audioPlayerProvider);
 
     // Check if this station is currently playing
-    final isCurrentStation =
-        audioState.whenOrNull(
+    final isCurrentStation = audioState.whenOrNull(
           data: (state) =>
               state.currentStation?.stationUuid == widget.station.stationUuid,
         ) ??
         false;
 
-    final isPlaying =
-        audioState.whenOrNull(
+    final isPlaying = audioState.whenOrNull(
           data: (state) => state.isPlaying && isCurrentStation,
         ) ??
         false;
 
-    final isLoadingAudio =
-        audioState.whenOrNull(
+    final isLoadingAudio = audioState.whenOrNull(
           data: (state) => state.isLoading && isCurrentStation,
         ) ??
         false;
@@ -233,8 +230,7 @@ class _StationCardState extends ConsumerState<StationCard> {
   /// Build station logo
   Widget _buildLogo(BuildContext context) {
     final audioState = ref.watch(audioPlayerProvider);
-    final isCurrentStation =
-        audioState.whenOrNull(
+    final isCurrentStation = audioState.whenOrNull(
           data: (state) =>
               state.currentStation?.stationUuid == widget.station.stationUuid,
         ) ??
@@ -520,9 +516,7 @@ class _StationCardState extends ConsumerState<StationCard> {
     if (widget.station.language != null &&
         widget.station.language!.isNotEmpty) {
       tags.addAll(
-        widget.station.language!
-            .split(',')
-            .map(
+        widget.station.language!.split(',').map(
               (lang) => lang.trim(),
             ),
       );
@@ -531,9 +525,7 @@ class _StationCardState extends ConsumerState<StationCard> {
     // Add tags
     if (widget.station.tags != null && widget.station.tags!.isNotEmpty) {
       tags.addAll(
-        widget.station.tags!
-            .split(',')
-            .map(
+        widget.station.tags!.split(',').map(
               (tag) => tag.trim(),
             ),
       );

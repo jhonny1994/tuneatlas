@@ -164,12 +164,11 @@ class RadioBrowserApi {
     try {
       final response = await _apiClient.get('/json/countries');
 
-      final countries =
-          (response.data as List)
-              .map((json) => Facet.fromJson(json as Map<String, dynamic>))
-              .toList()
-            // Sort by station count descending
-            ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
+      final countries = (response.data as List)
+          .map((json) => Facet.fromJson(json as Map<String, dynamic>))
+          .toList()
+        // Sort by station count descending
+        ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
 
       return Result.success(countries);
     } on ApiException catch (e) {
@@ -184,12 +183,11 @@ class RadioBrowserApi {
     try {
       final response = await _apiClient.get('/json/languages');
 
-      final languages =
-          (response.data as List)
-              .map((json) => Facet.fromJson(json as Map<String, dynamic>))
-              .toList()
-            // Sort by station count descending
-            ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
+      final languages = (response.data as List)
+          .map((json) => Facet.fromJson(json as Map<String, dynamic>))
+          .toList()
+        // Sort by station count descending
+        ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
 
       return Result.success(languages);
     } on ApiException catch (e) {
@@ -204,12 +202,11 @@ class RadioBrowserApi {
     try {
       final response = await _apiClient.get('/json/tags');
 
-      final tags =
-          (response.data as List)
-              .map((json) => Facet.fromJson(json as Map<String, dynamic>))
-              .toList()
-            // Sort by station count descending
-            ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
+      final tags = (response.data as List)
+          .map((json) => Facet.fromJson(json as Map<String, dynamic>))
+          .toList()
+        // Sort by station count descending
+        ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
 
       return Result.success(tags);
     } on ApiException catch (e) {

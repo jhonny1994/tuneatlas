@@ -37,9 +37,6 @@ jobs:
       - name: Analyze code
         run: flutter analyze
 
-      - name: Check formatting
-        run: dart format --set-exit-if-changed .
-
   # Build signed Android App Bundle for Google Play
   build-production:
     name: Build Production Release

@@ -215,10 +215,10 @@ class MiniPlayer extends ConsumerWidget {
                                         state.error!,
                                       )
                                     : (state.isLoading
-                                          ? l10n.loadingStation
-                                          : (state.isPlaying
-                                                ? l10n.playing
-                                                : l10n.paused)),
+                                        ? l10n.loadingStation
+                                        : (state.isPlaying
+                                            ? l10n.playing
+                                            : l10n.paused)),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: state.error != null
                                       ? theme.colorScheme.error

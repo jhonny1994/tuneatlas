@@ -40,8 +40,8 @@ class SplashScreen extends ConsumerWidget {
         Text(
           l10n.appName,
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 48),
 
@@ -52,10 +52,10 @@ class SplashScreen extends ConsumerWidget {
         Text(
           l10n.initializingApp,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.7),
-          ),
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withValues(alpha: 0.7),
+              ),
         ),
       ],
     );
@@ -109,10 +109,10 @@ class SplashScreen extends ConsumerWidget {
           Text(
             _getLocalizedError(l10n, message),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),

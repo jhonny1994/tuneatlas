@@ -106,16 +106,14 @@ class RadioAudioHandler extends BaseAudioHandler {
       );
 
       // Set audio source with timeout
-      await _player
-          .setUrl(station.url)
-          .timeout(
-            const Duration(seconds: 15),
-            onTimeout: () {
-              throw TimeoutException(
-                'Stream connection timeout - server not responding',
-              );
-            },
+      await _player.setUrl(station.url).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () {
+          throw TimeoutException(
+            'Stream connection timeout - server not responding',
           );
+        },
+      );
 
       // Start playback
       await _player.play();

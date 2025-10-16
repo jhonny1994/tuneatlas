@@ -59,7 +59,7 @@ class AudioPlayerService {
 
         final isLoading =
             state.processingState == AudioProcessingState.loading ||
-            state.processingState == AudioProcessingState.buffering;
+                state.processingState == AudioProcessingState.buffering;
         final isError = state.processingState == AudioProcessingState.error;
 
         _isLoadingSubject.add(isLoading);

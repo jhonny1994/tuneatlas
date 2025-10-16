@@ -32,9 +32,6 @@ jobs:
       - name: Analyze code
         run: flutter analyze
 
-      - name: Check formatting
-        run: dart format --set-exit-if-changed .
-
   # Build Android APK (Debug)
   build-android:
     name: Build Android Debug

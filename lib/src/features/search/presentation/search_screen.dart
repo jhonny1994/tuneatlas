@@ -201,10 +201,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           Text(
             l10n.enterStationName,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
           ),
         ],
       ),
@@ -242,10 +242,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             Text(
               error.toString(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
+                  ),
               textAlign: TextAlign.center,
             ),
           ],

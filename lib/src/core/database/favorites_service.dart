@@ -79,9 +79,8 @@ class FavoritesService {
 
       final records = await _store.find(db);
 
-      final stations = records
-          .map((record) => Station.fromJson(record.value))
-          .toList();
+      final stations =
+          records.map((record) => Station.fromJson(record.value)).toList();
 
       return stations;
     } on Exception {
