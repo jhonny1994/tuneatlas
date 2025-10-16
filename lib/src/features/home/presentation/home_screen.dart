@@ -119,12 +119,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 controller: _scrollController,
                 padding: const EdgeInsets.all(16),
                 itemCount: state.stations.length + 1,
+                cacheExtent: 500, // Pre-render off-screen items
+                addAutomaticKeepAlives: false, // Don't keep state unnecessarily
                 itemBuilder: (context, index) {
                   if (index < state.stations.length) {
                     final station = state.stations[index];
                     return StaggeredListItem(
                       index: index,
-                      child: StationCard(station: station),
+                      child: StationCard(
+                        key: ValueKey(station.stationUuid),
+                        station: station,
+                      ),
                     );
                   }
                   // Show bottom loader if loading more

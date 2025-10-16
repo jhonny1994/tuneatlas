@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:tuneatlas/src/src.dart';
 
 /// Radio Browser API service
@@ -33,10 +32,8 @@ class RadioBrowserApi {
 
       return Result.success(stations);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching stations by country: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load stations');
     }
   }
@@ -66,10 +63,8 @@ class RadioBrowserApi {
 
       return Result.success(stations);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching stations by language: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load stations');
     }
   }
@@ -99,10 +94,8 @@ class RadioBrowserApi {
 
       return Result.success(stations);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching stations by tag: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load stations');
     }
   }
@@ -132,10 +125,8 @@ class RadioBrowserApi {
 
       return Result.success(stations);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error searching stations: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to search stations');
     }
   }
@@ -162,10 +153,8 @@ class RadioBrowserApi {
 
       return Result.success(stations);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching top voted stations: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load stations');
     }
   }
@@ -175,18 +164,17 @@ class RadioBrowserApi {
     try {
       final response = await _apiClient.get('/json/countries');
 
-      final countries = (response.data as List)
-          .map((json) => Facet.fromJson(json as Map<String, dynamic>))
-          .toList()
-        // Sort by station count descending
-        ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
+      final countries =
+          (response.data as List)
+              .map((json) => Facet.fromJson(json as Map<String, dynamic>))
+              .toList()
+            // Sort by station count descending
+            ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
 
       return Result.success(countries);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching countries: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load countries');
     }
   }
@@ -196,18 +184,17 @@ class RadioBrowserApi {
     try {
       final response = await _apiClient.get('/json/languages');
 
-      final languages = (response.data as List)
-          .map((json) => Facet.fromJson(json as Map<String, dynamic>))
-          .toList()
-        // Sort by station count descending
-        ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
+      final languages =
+          (response.data as List)
+              .map((json) => Facet.fromJson(json as Map<String, dynamic>))
+              .toList()
+            // Sort by station count descending
+            ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
 
       return Result.success(languages);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching languages: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load languages');
     }
   }
@@ -217,18 +204,17 @@ class RadioBrowserApi {
     try {
       final response = await _apiClient.get('/json/tags');
 
-      final tags = (response.data as List)
-          .map((json) => Facet.fromJson(json as Map<String, dynamic>))
-          .toList()
-        // Sort by station count descending
-        ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
+      final tags =
+          (response.data as List)
+              .map((json) => Facet.fromJson(json as Map<String, dynamic>))
+              .toList()
+            // Sort by station count descending
+            ..sort((a, b) => b.stationCount.compareTo(a.stationCount));
 
       return Result.success(tags);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error fetching tags: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to load tags');
     }
   }
@@ -239,10 +225,8 @@ class RadioBrowserApi {
       await _apiClient.get('/json/vote/$stationUuid');
       return const Result.success(null);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error voting for station: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to vote');
     }
   }
@@ -253,13 +237,10 @@ class RadioBrowserApi {
   Future<Result<void>> trackStationClick(String stationUuid) async {
     try {
       await _apiClient.get('/json/url/$stationUuid');
-      debugPrint('[RadioBrowserApi] Station click tracked: $stationUuid');
       return const Result.success(null);
     } on ApiException catch (e) {
-      debugPrint('[RadioBrowserApi] Error tracking station click: $e');
       return Result.failure(e.message);
-    } on Exception catch (e) {
-      debugPrint('[RadioBrowserApi] Unexpected error: $e');
+    } on Exception {
       return const Result.failure('Failed to track click');
     }
   }

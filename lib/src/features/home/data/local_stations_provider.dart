@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -18,8 +17,6 @@ class LocalStations extends _$LocalStations {
   /// Load initial page (reset everything)
   Future<LocalStationsState> _loadInitial() async {
     try {
-      debugPrint('[LocalStations] Loading initial page...');
-
       // Get user's country
       final countryCode = await ref.watch(userCountryProvider.future);
       _currentCountry = countryCode;
@@ -33,8 +30,6 @@ class LocalStations extends _$LocalStations {
 
       return result.when(
         success: (stations) {
-          debugPrint('[LocalStations] Loaded ${stations.length} stations');
-
           return LocalStationsState(
             stations: stations,
             currentOffset: AppConfig.pageSize,
@@ -43,15 +38,13 @@ class LocalStations extends _$LocalStations {
           );
         },
         failure: (error) {
-          debugPrint('[LocalStations] Error: $error');
           return LocalStationsState(
             isLoading: false,
             error: error,
           );
         },
       );
-    } on Exception catch (e) {
-      debugPrint('[LocalStations] Unexpected error: $e');
+    } on Exception {
       return const LocalStationsState(
         isLoading: false,
         error: 'Failed to load stations',
@@ -63,15 +56,10 @@ class LocalStations extends _$LocalStations {
   Future<void> loadMore() async {
     // Don't load if already loading or no data
     if (!state.value!.canLoadMore) {
-      debugPrint('[LocalStations] Cannot load more: canLoadMore = false');
       return;
     }
 
     try {
-      debugPrint(
-        '[LocalStations] Loading more from offset ${state.value!.currentOffset}...',
-      );
-
       // Set loading state
       state = AsyncData(state.value!.copyWith(isLoadingMore: true));
 
@@ -85,10 +73,6 @@ class LocalStations extends _$LocalStations {
 
       result.when(
         success: (newStations) {
-          debugPrint(
-            '[LocalStations] Loaded ${newStations.length} more stations',
-          );
-
           // Append new stations to existing list
           final updatedStations = [...state.value!.stations, ...newStations];
 
@@ -102,7 +86,6 @@ class LocalStations extends _$LocalStations {
           );
         },
         failure: (error) {
-          debugPrint('[LocalStations] Pagination error: $error');
           // Keep existing data, just stop loading
           state = AsyncData(
             state.value!.copyWith(
@@ -112,8 +95,7 @@ class LocalStations extends _$LocalStations {
           );
         },
       );
-    } on Exception catch (e) {
-      debugPrint('[LocalStations] Pagination unexpected error: $e');
+    } on Exception {
       state = AsyncData(
         state.value!.copyWith(
           isLoadingMore: false,
@@ -125,7 +107,6 @@ class LocalStations extends _$LocalStations {
 
   /// Refresh (pull to refresh)
   Future<void> refresh() async {
-    debugPrint('[LocalStations] Refreshing...');
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(_loadInitial);
   }

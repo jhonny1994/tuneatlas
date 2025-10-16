@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:sembast/sembast.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -11,8 +10,9 @@ class FavoritesService {
   static const String _storeName = 'favorites';
 
   // Get store
-  final StoreRef<int, Map<String, Object?>> _store =
-      intMapStoreFactory.store(_storeName);
+  final StoreRef<int, Map<String, Object?>> _store = intMapStoreFactory.store(
+    _storeName,
+  );
 
   /// Add station to favorites
   Future<void> addFavorite(Station station) async {
@@ -28,15 +28,12 @@ class FavoritesService {
       );
 
       if (existing != null) {
-        debugPrint('[FavoritesService] Station already in favorites');
         return;
       }
 
       // Add to favorites
       await _store.add(db, station.toJson());
-      debugPrint('[FavoritesService] Added favorite: ${station.name}');
     } catch (e) {
-      debugPrint('[FavoritesService] Error adding favorite: $e');
       rethrow;
     }
   }
@@ -52,10 +49,7 @@ class FavoritesService {
           filter: Filter.equals('stationuuid', stationUuid),
         ),
       );
-
-      debugPrint('[FavoritesService] Removed favorite: $stationUuid');
     } catch (e) {
-      debugPrint('[FavoritesService] Error removing favorite: $e');
       rethrow;
     }
   }
@@ -73,8 +67,7 @@ class FavoritesService {
       );
 
       return record != null;
-    } on Exception catch (e) {
-      debugPrint('[FavoritesService] Error checking favorite: $e');
+    } on Exception {
       return false;
     }
   }
@@ -86,14 +79,12 @@ class FavoritesService {
 
       final records = await _store.find(db);
 
-      final stations =
-          records.map((record) => Station.fromJson(record.value)).toList();
-
-      debugPrint('[FavoritesService] Loaded ${stations.length} favorites');
+      final stations = records
+          .map((record) => Station.fromJson(record.value))
+          .toList();
 
       return stations;
-    } on Exception catch (e) {
-      debugPrint('[FavoritesService] Error loading favorites: $e');
+    } on Exception {
       return [];
     }
   }
@@ -103,8 +94,7 @@ class FavoritesService {
     try {
       final db = await DatabaseService.instance.database;
       return await _store.count(db);
-    } on Exception catch (e) {
-      debugPrint('[FavoritesService] Error counting favorites: $e');
+    } on Exception {
       return 0;
     }
   }
@@ -114,9 +104,7 @@ class FavoritesService {
     try {
       final db = await DatabaseService.instance.database;
       await _store.delete(db);
-      debugPrint('[FavoritesService] Cleared all favorites');
     } catch (e) {
-      debugPrint('[FavoritesService] Error clearing favorites: $e');
       rethrow;
     }
   }

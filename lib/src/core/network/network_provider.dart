@@ -1,5 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'network_provider.g.dart';
@@ -27,8 +27,6 @@ class NetworkMonitor extends _$NetworkMonitor {
       );
 
       final status = isConnected ? NetworkStatus.online : NetworkStatus.offline;
-
-      debugPrint('[NetworkMonitor] Status: $status (${results.join(', ')})');
 
       return status;
     });

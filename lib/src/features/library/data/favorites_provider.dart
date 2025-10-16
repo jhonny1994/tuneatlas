@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -14,12 +13,9 @@ class Favorites extends _$Favorites {
 
   Future<List<Station>> _loadFavorites() async {
     try {
-      debugPrint('[Favorites] Loading favorites...');
       final favorites = await FavoritesService.instance.getAllFavorites();
-      debugPrint('[Favorites] Loaded ${favorites.length} favorites');
       return favorites;
-    } on Exception catch (e) {
-      debugPrint('[Favorites] Error loading favorites: $e');
+    } on Exception {
       return [];
     }
   }
@@ -31,8 +27,8 @@ class Favorites extends _$Favorites {
 
       // Refresh state
       state = await AsyncValue.guard(_loadFavorites);
-    } on Exception catch (e) {
-      debugPrint('[Favorites] Error adding favorite: $e');
+    } on Exception {
+      // Handle error if needed
     }
   }
 
@@ -43,15 +39,16 @@ class Favorites extends _$Favorites {
 
       // Refresh state
       state = await AsyncValue.guard(_loadFavorites);
-    } on Exception catch (e) {
-      debugPrint('[Favorites] Error removing favorite: $e');
+    } on Exception {
+      // Handle error if needed
     }
   }
 
   /// Toggle favorite status
   Future<void> toggleFavorite(Station station) async {
-    final isFav =
-        await FavoritesService.instance.isFavorite(station.stationUuid);
+    final isFav = await FavoritesService.instance.isFavorite(
+      station.stationUuid,
+    );
 
     if (isFav) {
       await removeFavorite(station.stationUuid);

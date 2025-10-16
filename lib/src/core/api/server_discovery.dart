@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:tuneatlas/src/src.dart';
 
 /// Discovers Radio Browser API servers using DNS lookup
@@ -11,8 +10,6 @@ class ServerDiscovery {
   /// Tries multiple servers with health checks
   Future<String> discoverServer() async {
     try {
-      debugPrint('[ServerDiscovery] Looking up servers...');
-
       // DNS lookup to get all available servers
       final addresses = await InternetAddress.lookup(
         AppConfig.radioBrowserDnsHost,
@@ -21,8 +18,6 @@ class ServerDiscovery {
       if (addresses.isEmpty) {
         throw Exception('No Radio Browser servers found');
       }
-
-      debugPrint('[ServerDiscovery] Found ${addresses.length} servers');
 
       // Randomize server order for load balancing
       final shuffledAddresses = List<InternetAddress>.from(addresses)
@@ -34,28 +29,19 @@ class ServerDiscovery {
           final hostname = await _getHostnameFromIp(address.address);
           final serverUrl = 'https://$hostname';
 
-          debugPrint('[ServerDiscovery] Testing server: $serverUrl');
-
           // Health check - try to reach the API
           final isHealthy = await _healthCheck(serverUrl);
 
           if (isHealthy) {
-            debugPrint(
-              '[ServerDiscovery] ✓ Selected working server: $serverUrl',
-            );
             return serverUrl;
           }
-
-          debugPrint('[ServerDiscovery] ✗ Server unhealthy, trying next...');
-        } on DioException catch (e) {
-          debugPrint('[ServerDiscovery] Server failed: $e');
+        } on DioException {
           continue; // Try next server
         }
       }
 
       throw Exception('No healthy Radio Browser servers found');
     } catch (e) {
-      debugPrint('[ServerDiscovery] Failed to discover servers: $e');
       throw Exception('Failed to discover Radio Browser servers: $e');
     }
   }
@@ -68,15 +54,13 @@ class ServerDiscovery {
       final hostname = reversedAddress.host;
 
       if (hostname.isNotEmpty && hostname != ipAddress) {
-        debugPrint('[ServerDiscovery] Resolved hostname: $hostname');
         return hostname;
       }
-    } on Exception catch (e) {
-      debugPrint('[ServerDiscovery] Reverse lookup failed: $e');
+    } on Exception {
+      // Ignore and fallback
     }
 
     // Fallback to DNS host
-    debugPrint('[ServerDiscovery] Using fallback hostname');
     return AppConfig.radioBrowserDnsHost;
   }
 
@@ -96,8 +80,7 @@ class ServerDiscovery {
       );
 
       return response.statusCode == 200;
-    } on Exception catch (e) {
-      debugPrint('[ServerDiscovery] Health check failed: $e');
+    } on Exception {
       return false;
     }
   }
@@ -110,8 +93,7 @@ class ServerDiscovery {
 
       final addresses = await InternetAddress.lookup(uri.host);
       return addresses.isNotEmpty;
-    } on Exception catch (e) {
-      debugPrint('[ServerDiscovery] Server verification failed: $e');
+    } on Exception {
       return false;
     }
   }

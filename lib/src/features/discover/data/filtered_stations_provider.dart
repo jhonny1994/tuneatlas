@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -20,8 +19,6 @@ class FilteredStations extends _$FilteredStations {
     String filterValue,
   ) async {
     try {
-      debugPrint('[FilteredStations] Loading $filterType: $filterValue');
-
       final api = ref.read(radioBrowserApiProvider);
       Result<List<Station>> result;
 
@@ -48,7 +45,6 @@ class FilteredStations extends _$FilteredStations {
 
       return result.when(
         success: (stations) {
-          debugPrint('[FilteredStations] Loaded ${stations.length} stations');
           return FilteredStationsState(
             filterType: filterType,
             filterValue: filterValue,
@@ -59,7 +55,6 @@ class FilteredStations extends _$FilteredStations {
           );
         },
         failure: (error) {
-          debugPrint('[FilteredStations] Error: $error');
           return FilteredStationsState(
             filterType: filterType,
             filterValue: filterValue,
@@ -68,8 +63,7 @@ class FilteredStations extends _$FilteredStations {
           );
         },
       );
-    } on Exception catch (e) {
-      debugPrint('[FilteredStations] Unexpected error: $e');
+    } on Exception {
       return FilteredStationsState(
         filterType: filterType,
         filterValue: filterValue,
@@ -84,8 +78,6 @@ class FilteredStations extends _$FilteredStations {
     if (currentState == null || !currentState.canLoadMore) return;
 
     try {
-      debugPrint('[FilteredStations] Loading more...');
-
       state = AsyncData(currentState.copyWith(isLoadingMore: true));
 
       final api = ref.read(radioBrowserApiProvider);
@@ -135,8 +127,7 @@ class FilteredStations extends _$FilteredStations {
           );
         },
       );
-    } on Exception catch (e) {
-      debugPrint('[FilteredStations] Pagination error: $e');
+    } on Exception {
       state = AsyncData(
         currentState.copyWith(
           isLoadingMore: false,

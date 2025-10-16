@@ -267,6 +267,8 @@ class _StationCardState extends ConsumerState<StationCard> {
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
+                memCacheHeight: 160, // 2x for high DPI displays
+                maxHeightDiskCache: 240, // Limit disk cache size
                 errorWidget: (context, error, stackTrace) {
                   return _buildFallbackIcon(context);
                 },

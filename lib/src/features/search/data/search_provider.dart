@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -20,8 +19,6 @@ class Search extends _$Search {
     }
 
     try {
-      debugPrint('[Search] Searching for: $query');
-
       state = AsyncData(
         SearchState(
           query: query,
@@ -38,8 +35,6 @@ class Search extends _$Search {
 
       result.when(
         success: (stations) {
-          debugPrint('[Search] Found ${stations.length} stations');
-
           state = AsyncData(
             SearchState(
               query: query,
@@ -51,7 +46,6 @@ class Search extends _$Search {
           );
         },
         failure: (error) {
-          debugPrint('[Search] Error: $error');
           state = AsyncData(
             SearchState(
               query: query,
@@ -61,8 +55,7 @@ class Search extends _$Search {
           );
         },
       );
-    } on Exception catch (e) {
-      debugPrint('[Search] Unexpected error: $e');
+    } on Exception {
       state = AsyncData(
         SearchState(
           query: query,
@@ -77,15 +70,10 @@ class Search extends _$Search {
   Future<void> loadMore() async {
     final currentState = state.value;
     if (currentState == null || !currentState.canLoadMore) {
-      debugPrint('[Search] Cannot load more');
       return;
     }
 
     try {
-      debugPrint(
-        '[Search] Loading more from offset ${currentState.currentOffset}',
-      );
-
       state = AsyncData(currentState.copyWith(isLoadingMore: true));
 
       final api = ref.read(radioBrowserApiProvider);
@@ -97,8 +85,6 @@ class Search extends _$Search {
 
       result.when(
         success: (newStations) {
-          debugPrint('[Search] Loaded ${newStations.length} more stations');
-
           final updatedStations = [...currentState.results, ...newStations];
 
           state = AsyncData(
@@ -111,7 +97,6 @@ class Search extends _$Search {
           );
         },
         failure: (error) {
-          debugPrint('[Search] Pagination error: $error');
           state = AsyncData(
             currentState.copyWith(
               isLoadingMore: false,
@@ -120,8 +105,7 @@ class Search extends _$Search {
           );
         },
       );
-    } on Exception catch (e) {
-      debugPrint('[Search] Pagination unexpected error: $e');
+    } on Exception {
       state = AsyncData(
         currentState.copyWith(
           isLoadingMore: false,

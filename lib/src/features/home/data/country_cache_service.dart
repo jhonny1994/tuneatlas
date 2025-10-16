@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service for caching user's country
@@ -18,7 +17,6 @@ class CountryCacheService {
       final timestamp = prefs.getInt(_timestampKey);
 
       if (country == null || timestamp == null) {
-        debugPrint('[CountryCache] No cached country found');
         return null;
       }
 
@@ -28,18 +26,11 @@ class CountryCacheService {
 
       // Cache valid for 7 days
       if (age.inDays >= 7) {
-        debugPrint(
-          '[CountryCache] Cached country expired (${age.inDays} days old)',
-        );
         return null;
       }
 
-      debugPrint(
-        '[CountryCache] Using cached country: $country (${age.inDays} days old)',
-      );
       return country;
-    } on Exception catch (e) {
-      debugPrint('[CountryCache] Error reading cache: $e');
+    } on Exception {
       return null;
     }
   }
@@ -51,10 +42,8 @@ class CountryCacheService {
 
       await prefs.setString(_countryKey, countryCode);
       await prefs.setInt(_timestampKey, DateTime.now().millisecondsSinceEpoch);
-
-      debugPrint('[CountryCache] Cached country: $countryCode');
-    } on Exception catch (e) {
-      debugPrint('[CountryCache] Error writing cache: $e');
+    } on Exception {
+      // Ignore caching errors
     }
   }
 
@@ -65,10 +54,8 @@ class CountryCacheService {
 
       await prefs.remove(_countryKey);
       await prefs.remove(_timestampKey);
-
-      debugPrint('[CountryCache] Cache cleared');
-    } on Exception catch (e) {
-      debugPrint('[CountryCache] Error clearing cache: $e');
+    } on Exception {
+      // Ignore errors
     }
   }
 }

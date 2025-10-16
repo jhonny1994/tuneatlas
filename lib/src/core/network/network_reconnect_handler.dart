@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -18,7 +17,6 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
         networkMonitorProvider,
         _handleNetworkChange,
       )
-
       // Listen to current audio state to track what was playing
       ..listen<AsyncValue<AudioState>>(
         audioPlayerProvider,
@@ -47,16 +45,12 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
     // Check if we just came back online
     if (previousStatus == NetworkStatus.offline &&
         currentStatus == NetworkStatus.online) {
-      debugPrint(
-        '[NetworkReconnectHandler] Back online - attempting reconnect',
-      );
       await _attemptReconnect();
     }
 
     // Check if we just went offline
     if (previousStatus == NetworkStatus.online &&
         currentStatus == NetworkStatus.offline) {
-      debugPrint('[NetworkReconnectHandler] Lost connection');
       _handleDisconnect();
     }
   }
@@ -66,9 +60,6 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
       if (currentState.isPlaying) {
         _wasPlayingBeforeDisconnect = true;
         _lastStation = currentState.currentStation;
-        debugPrint(
-          '[NetworkReconnectHandler] Saved state: ${_lastStation?.name}',
-        );
       }
     });
   }
@@ -76,7 +67,6 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
   Future<void> _attemptReconnect() async {
     // Only reconnect if we had a station playing before disconnect
     if (!_wasPlayingBeforeDisconnect || _lastStation == null) {
-      debugPrint('[NetworkReconnectHandler] No station to reconnect');
       return;
     }
 
@@ -86,7 +76,6 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
     // Check if network is still online
     final isOnline = await ref.read(networkMonitorProvider.notifier).isOnline();
     if (!isOnline) {
-      debugPrint('[NetworkReconnectHandler] Network not stable, aborting');
       return;
     }
 
@@ -98,19 +87,15 @@ class NetworkReconnectHandler extends _$NetworkReconnectHandler {
     );
 
     if (shouldAbort ?? false) {
-      debugPrint('[NetworkReconnectHandler] User changed station, aborting');
       return;
     }
 
     // Attempt to reconnect
     try {
-      debugPrint(
-        '[NetworkReconnectHandler] Reconnecting to ${_lastStation!.name}',
-      );
       await ref.read(audioPlayerProvider.notifier).playStation(_lastStation!);
       _wasPlayingBeforeDisconnect = false;
-    } on Exception catch (e) {
-      debugPrint('[NetworkReconnectHandler] Reconnect failed: $e');
+    } on Exception {
+      // Ignore errors during auto-reconnect
     }
   }
 

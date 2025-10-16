@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:tuneatlas/src/core/core.dart';
 
@@ -56,8 +55,6 @@ class RadioAudioHandler extends BaseAudioHandler {
         );
       },
       onError: (Object e, StackTrace st) {
-        debugPrint('[RadioAudioHandler] Player state error: $e');
-        debugPrint('[RadioAudioHandler] Stack trace: $st');
         _handleError();
       },
     );
@@ -68,8 +65,6 @@ class RadioAudioHandler extends BaseAudioHandler {
         // Monitor playback events
       },
       onError: (Object e, StackTrace st) {
-        debugPrint('[RadioAudioHandler] Playback event error: $e');
-        debugPrint('[RadioAudioHandler] Stack trace: $st');
         _handleError();
       },
     );
@@ -88,7 +83,6 @@ class RadioAudioHandler extends BaseAudioHandler {
   /// Play a radio station
   Future<void> playStation(Station station) async {
     try {
-      debugPrint('[RadioAudioHandler] Playing: ${station.name}');
       _currentStation = station;
 
       // CRITICAL: Reset to clean loading state (clears any previous error)
@@ -112,21 +106,20 @@ class RadioAudioHandler extends BaseAudioHandler {
       );
 
       // Set audio source with timeout
-      await _player.setUrl(station.url).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () {
-          throw TimeoutException(
-            'Stream connection timeout - server not responding',
+      await _player
+          .setUrl(station.url)
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () {
+              throw TimeoutException(
+                'Stream connection timeout - server not responding',
+              );
+            },
           );
-        },
-      );
 
       // Start playback
       await _player.play();
-
-      debugPrint('[RadioAudioHandler] Playback started');
     } catch (e) {
-      debugPrint('[RadioAudioHandler] Error playing station: $e');
       _handleError();
       rethrow;
     }
@@ -134,19 +127,16 @@ class RadioAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    debugPrint('[RadioAudioHandler] Play');
     await _player.play();
   }
 
   @override
   Future<void> pause() async {
-    debugPrint('[RadioAudioHandler] Pause');
     await _player.pause();
   }
 
   @override
   Future<void> stop() async {
-    debugPrint('[RadioAudioHandler] Stop');
     await _player.stop();
     _currentStation = null;
 
@@ -192,12 +182,9 @@ class RadioAudioHandler extends BaseAudioHandler {
       if (uri.hasScheme && uri.hasAuthority) {
         return uri;
       }
-      debugPrint(
-        '[RadioAudioHandler] Invalid artUri: $favicon (missing scheme or host)',
-      );
+
       return null;
-    } on Exception catch (e) {
-      debugPrint('[RadioAudioHandler] Failed to parse artUri: $favicon - $e');
+    } on Exception {
       return null;
     }
   }

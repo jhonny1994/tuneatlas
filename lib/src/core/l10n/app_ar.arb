@@ -92,5 +92,12 @@
   "stations": "المحطات",
   "emptyStateSemanticLabel": "حالة فارغة",
   "errorSemanticLabel": "خطأ",
-  "language": "اللغة"
+  "language": "اللغة",
+  "liveRadio": "راديو مباشر",
+  "radio": "راديو",
+  "searchFailed": "فشل البحث",
+  "failedToLoadMore": "فشل تحميل المزيد من النتائج",
+  "failedToLoadStations": "فشل تحميل المحطات",
+  "streamTimeoutError": "انتهت مهلة الاتصال بالبث - الخادم لا يستجيب",
+  "failedToConnectToServers": "فشل الاتصال بخوادم Radio Browser. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى."
 }

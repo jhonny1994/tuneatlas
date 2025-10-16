@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -75,9 +74,7 @@ class AudioPlayerService {
       });
 
       _initialized = true;
-      debugPrint('[AudioPlayerService] Initialized successfully');
     } catch (e) {
-      debugPrint('[AudioPlayerService] Initialization failed: $e');
       rethrow;
     }
   }
@@ -86,9 +83,6 @@ class AudioPlayerService {
   Future<void> playStation(Station station) async {
     try {
       await _ensureInitialized();
-
-      debugPrint('[AudioPlayerService] Playing station: ${station.name}');
-      debugPrint('[AudioPlayerService] Stream URL: ${station.url}');
 
       // CRITICAL: Clear error state BEFORE attempting new playback
       // This prevents stale errors from previous stations
@@ -108,17 +102,12 @@ class AudioPlayerService {
 
       // Success - clear error state
       _errorSubject.add(null);
-      debugPrint('[AudioPlayerService] Playback started successfully');
 
       // Track station click for Radio Browser API (async, don't await)
       await _trackStationClick(station.stationUuid);
     } on Exception catch (e) {
-      debugPrint('[AudioPlayerService] Error playing station: $e');
-
       // Format user-friendly error message (keys for AudioErrorMapper)
       final errorMessage = _formatErrorMessage(e);
-
-      debugPrint('[AudioPlayerService] Error state set: $errorMessage');
 
       // Update all states properly on error
       _errorSubject.add(errorMessage);
@@ -154,8 +143,7 @@ class AudioPlayerService {
       await _ensureInitialized();
       await _handler!.play();
       _isStoppedSubject.add(false);
-    } on Exception catch (e) {
-      debugPrint('[AudioPlayerService] Error resuming: $e');
+    } on Exception {
       _errorSubject.add('errorFailedToResume');
     }
   }
@@ -165,23 +153,21 @@ class AudioPlayerService {
     try {
       await _ensureInitialized();
       await _handler!.pause();
-    } on Exception catch (e) {
-      debugPrint('[AudioPlayerService] Error pausing: $e');
+    } on Exception {
+      _errorSubject.add('errorFailedToPause');
     }
   }
 
   /// Stop playback and clear current station
   Future<void> stop() async {
     try {
-      debugPrint('[AudioPlayerService] Stopping playback');
-
       await _ensureInitialized();
       await _handler!.stop();
       _currentStationSubject.add(null);
       _isStoppedSubject.add(true);
       _errorSubject.add(null);
-    } on Exception catch (e) {
-      debugPrint('[AudioPlayerService] Error stopping: $e');
+    } on Exception {
+      _errorSubject.add('errorFailedToStop');
     }
   }
 
@@ -197,7 +183,6 @@ class AudioPlayerService {
   /// Set volume (0.0 to 1.0)
   Future<void> setVolume(double volume) async {
     // Volume control through system volume
-    debugPrint('[AudioPlayerService] Volume control via system');
   }
 
   /// Dispose resources
@@ -216,21 +201,14 @@ class AudioPlayerService {
   /// Runs asynchronously without blocking playback
   Future<void> _trackStationClick(String stationUuid) async {
     if (api == null) {
-      debugPrint(
-        '[AudioPlayerService] Cannot track click - API not initialized',
-      );
       return;
     }
 
     // Run async without awaiting (fire and forget)
     await api!.trackStationClick(stationUuid).then((result) {
       result.when(
-        success: (_) {
-          debugPrint('[AudioPlayerService] Station click tracked');
-        },
-        failure: (error) {
-          debugPrint('[AudioPlayerService] Click tracking failed: $error');
-        },
+        success: (_) {},
+        failure: (error) {},
       );
     });
   }

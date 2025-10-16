@@ -17,6 +17,11 @@ class AudioPlayer extends _$AudioPlayer {
     final api = ref.read(radioBrowserApiProvider);
     _service.api = api;
 
+    // Dispose service when provider is disposed
+    ref.onDispose(() async {
+      await _service.dispose();
+    });
+
     // Combine all streams into a single AudioState stream
     return _service.currentStationStream.switchMap((station) {
       return _service.isPlayingStream.switchMap((isPlaying) {

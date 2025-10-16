@@ -118,10 +118,15 @@ class _FilteredStationsScreenState
             controller: _scrollController,
             padding: const EdgeInsets.all(16),
             itemCount: state.stations.length + 1,
+            cacheExtent: 500, // Pre-render off-screen items
+            addAutomaticKeepAlives: false, // Don't keep state unnecessarily
             itemBuilder: (context, index) {
               if (index < state.stations.length) {
                 final station = state.stations[index];
-                return StationCard(station: station);
+                return StationCard(
+                  key: ValueKey(station.stationUuid),
+                  station: station,
+                );
               }
 
               // Bottom loading/end indicator

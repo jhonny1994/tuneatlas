@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tuneatlas/src/src.dart';
 
@@ -20,32 +19,22 @@ class AppInitialization extends _$AppInitialization {
   /// Initialize the app
   Future<void> _initialize() async {
     try {
-      debugPrint('[AppInitialization] Starting initialization...');
-
       // Discover Radio Browser server
       final serverDiscovery = ref.read(serverDiscoveryProvider);
       final serverUrl = await serverDiscovery.discoverServer();
 
-      debugPrint('[AppInitialization] Server discovered: $serverUrl');
-
       // Update API client with discovered server
       ref.read(apiClientProvider).updateBaseUrl(serverUrl);
-
-      debugPrint('[AppInitialization] API client initialized');
 
       // Small delay for splash screen visibility (optional)
       await Future<void>.delayed(const Duration(milliseconds: 500));
 
       // Success!
       state = const AppInitializationState.success();
-      debugPrint('[AppInitialization] Initialization complete ✓');
-    } on Exception catch (e, stackTrace) {
-      debugPrint('[AppInitialization] Initialization failed: $e');
-      debugPrint('[AppInitialization] Stack trace: $stackTrace');
-
+    } on Exception {
+      // Use a generic error key that exists in localization
       state = const AppInitializationState.error(
-        'Failed to connect to Radio Browser servers. '
-        'Please check your internet connection and try again.',
+        'errorFailedToConnect',
       );
     }
   }

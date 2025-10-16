@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:tuneatlas/src/src.dart';
 
 /// Custom exception for API related errors
 class ApiException implements Exception {
@@ -14,20 +12,26 @@ class ApiException implements Exception {
 /// HTTP client for Radio Browser API
 /// Handles all network requests with proper configuration
 class ApiClient {
-  ApiClient() {
-    _dio = Dio(
-      BaseOptions(
-        connectTimeout: AppConfig.connectTimeout,
-        receiveTimeout: AppConfig.requestTimeout,
-        headers: {
-          'User-Agent': AppConfig.userAgent,
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
-  }
+  /// Creates an [ApiClient] with a required [Dio] instance.
+  ///
+  /// The Dio instance should be provided via dependency injection
+  /// (typically from dioProvider. This ensures a single HTTP client
+  /// instance is used throughout the app for connection pooling and
+  /// consistent configuration.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Production use with provider:
+  /// final dio = ref.watch(dioProvider);
+  /// final client = ApiClient(dio: dio);
+  ///
+  /// // Testing with mock:
+  /// final mockDio = MockDio();
+  /// final client = ApiClient(dio: mockDio);
+  /// ```
+  ApiClient({required Dio dio}) : _dio = dio;
 
-  late final Dio _dio;
+  final Dio _dio;
 
   /// Current Radio Browser API base URL
   /// Must be set via updateBaseUrl() after server discovery
@@ -37,7 +41,6 @@ class ApiClient {
   void updateBaseUrl(String newBaseUrl) {
     _baseUrl = newBaseUrl;
     _dio.options.baseUrl = newBaseUrl;
-    debugPrint('[ApiClient] Base URL updated to: $newBaseUrl');
   }
 
   /// Check if base URL has been set

@@ -46,8 +46,9 @@ class MiniPlayer extends ConsumerWidget {
         boxShadow: [
           // Primary shadow - more pronounced
           BoxShadow(
-            color: theme.colorScheme.shadow
-                .withValues(alpha: 0.3), // Enhanced from 0.2
+            color: theme.colorScheme.shadow.withValues(
+              alpha: 0.3,
+            ), // Enhanced from 0.2
             blurRadius: 16, // Enhanced from 8
             offset: const Offset(0, -4), // Enhanced from -2
           ),
@@ -114,8 +115,9 @@ class MiniPlayer extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color: theme.colorScheme.primary
-                                    .withValues(alpha: 0.4),
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.4,
+                                ),
                                 blurRadius: 12,
                                 spreadRadius: 2,
                               ),
@@ -130,6 +132,8 @@ class MiniPlayer extends ConsumerWidget {
                               width: 56,
                               height: 56,
                               fit: BoxFit.cover,
+                              memCacheHeight: 112, // 2x for high DPI displays
+                              maxHeightDiskCache: 168, // Limit disk cache size
                               placeholder: (context, url) => Container(
                                 width: 56,
                                 height: 56,
@@ -211,15 +215,16 @@ class MiniPlayer extends ConsumerWidget {
                                         state.error!,
                                       )
                                     : (state.isLoading
-                                        ? l10n.loadingStation
-                                        : (state.isPlaying
-                                            ? l10n.playing
-                                            : l10n.paused)),
+                                          ? l10n.loadingStation
+                                          : (state.isPlaying
+                                                ? l10n.playing
+                                                : l10n.paused)),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: state.error != null
                                       ? theme.colorScheme.error
-                                      : theme.colorScheme.onSurface
-                                          .withValues(alpha: 0.7),
+                                      : theme.colorScheme.onSurface.withValues(
+                                          alpha: 0.7,
+                                        ),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

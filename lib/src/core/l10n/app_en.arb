@@ -435,5 +435,33 @@
   "language": "Language",
   "@language": {
     "description": "Language settings label"
+  },
+  "liveRadio": "Live Radio",
+  "@liveRadio": {
+    "description": "Default album name for media notification"
+  },
+  "radio": "Radio",
+  "@radio": {
+    "description": "Default artist name for media notification when country is empty"
+  },
+  "searchFailed": "Search failed",
+  "@searchFailed": {
+    "description": "Error message when search operation fails"
+  },
+  "failedToLoadMore": "Failed to load more results",
+  "@failedToLoadMore": {
+    "description": "Error message when pagination fails"
+  },
+  "failedToLoadStations": "Failed to load stations",
+  "@failedToLoadStations": {
+    "description": "Error message when station loading fails"
+  },
+  "streamTimeoutError": "Stream connection timeout - server not responding",
+  "@streamTimeoutError": {
+    "description": "Error message when stream connection times out"
+  },
+  "failedToConnectToServers": "Failed to connect to Radio Browser servers. Please check your internet connection and try again.",
+  "@failedToConnectToServers": {
+    "description": "Initialization error message when unable to discover servers"
   }
 }

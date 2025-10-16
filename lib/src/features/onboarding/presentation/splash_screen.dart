@@ -40,8 +40,8 @@ class SplashScreen extends ConsumerWidget {
         Text(
           l10n.appName,
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 48),
 
@@ -52,10 +52,10 @@ class SplashScreen extends ConsumerWidget {
         Text(
           l10n.initializingApp,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+            color: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.7),
+          ),
         ),
       ],
     );
@@ -105,14 +105,14 @@ class SplashScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
 
-          // Error message
+          // Error message - localize the error key
           Text(
-            message,
+            _getLocalizedError(l10n, message),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -127,5 +127,21 @@ class SplashScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Map error keys to localized messages
+  String _getLocalizedError(AppLocalizations l10n, String errorKey) {
+    // If it's already a full message (backward compatibility), return it
+    if (errorKey.contains(' ')) {
+      return errorKey;
+    }
+
+    // Map error keys to localized strings
+    switch (errorKey) {
+      case 'errorFailedToConnect':
+        return l10n.errorFailedToConnect;
+      default:
+        return l10n.somethingWentWrong;
+    }
   }
 }

@@ -71,11 +71,16 @@ class LibraryScreen extends ConsumerWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.all(16),
                 itemCount: favorites.length,
+                cacheExtent: 500, // Pre-render off-screen items
+                addAutomaticKeepAlives: false, // Don't keep state unnecessarily
                 itemBuilder: (context, index) {
                   final station = favorites[index];
                   return StaggeredListItem(
                     index: index,
-                    child: StationCard(station: station),
+                    child: StationCard(
+                      key: ValueKey(station.stationUuid),
+                      station: station,
+                    ),
                   );
                 },
               ),

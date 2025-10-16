@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast_io.dart';
@@ -34,14 +33,10 @@ class DatabaseService {
       await appDir.create(recursive: true);
       final dbPath = join(appDir.path, 'tuneatlas.db');
 
-      debugPrint('[DatabaseService] Opening database at: $dbPath');
-
       final database = await databaseFactoryIo.openDatabase(dbPath);
-      debugPrint('[DatabaseService] Database opened successfully');
 
       return database;
     } catch (e) {
-      debugPrint('[DatabaseService] Error initializing database: $e');
       _initFuture = null; // Reset on error so it can be retried
       rethrow;
     }
@@ -53,7 +48,6 @@ class DatabaseService {
       await _database!.close();
       _database = null;
       _initFuture = null;
-      debugPrint('[DatabaseService] Database closed');
     }
   }
 }
