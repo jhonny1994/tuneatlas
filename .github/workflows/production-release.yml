@@ -86,12 +86,12 @@ jobs:
 
       - name: Decode keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/tuneatlas-keystore.jks
-          if [ ! -f android/app/tuneatlas-keystore.jks ] || [ ! -s android/app/tuneatlas-keystore.jks ]; then
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/tuneatlas-keystore.jks
+          if [ ! -f android/tuneatlas-keystore.jks ] || [ ! -s android/tuneatlas-keystore.jks ]; then
             echo "Error: Failed to decode keystore or file is empty"
             exit 1
           fi
-          ls -lh android/app/tuneatlas-keystore.jks
+          ls -lh android/tuneatlas-keystore.jks
           echo "Keystore decoded successfully"
 
       - name: Create key.properties
@@ -100,14 +100,14 @@ jobs:
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
           keyAlias=${{ secrets.KEY_ALIAS }}
-          storeFile=app/tuneatlas-keystore.jks
+          storeFile=tuneatlas-keystore.jks
           EOF
           echo "key.properties created:"
           cat android/key.properties
 
       - name: Verify keystore with keytool
         run: |
-          keytool -list -v -keystore android/app/tuneatlas-keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}" || echo "Warning: Could not verify keystore"
+          keytool -list -v -keystore android/tuneatlas-keystore.jks -storepass "${{ secrets.KEYSTORE_PASSWORD }}" || echo "Warning: Could not verify keystore"
 
       - name: Build App Bundle (AAB)
         run: flutter build appbundle --release
