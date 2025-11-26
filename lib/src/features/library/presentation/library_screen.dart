@@ -69,7 +69,7 @@ class LibraryScreen extends ConsumerWidget {
             },
             child: AnimationLimiter(
               child: ListView.builder(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppConfig.paddingScreen),
                 itemCount: favorites.length,
                 cacheExtent: 500, // Pre-render off-screen items
                 addAutomaticKeepAlives: false, // Don't keep state unnecessarily

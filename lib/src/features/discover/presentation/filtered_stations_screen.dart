@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:tuneatlas/src/src.dart';
 
 class FilteredStationsScreen extends ConsumerStatefulWidget {
@@ -41,8 +42,7 @@ class _FilteredStationsScreenState
   }
 
   void _onScroll() {
-    const thresholdPx = 200.0;
-    if (_scrollController.position.pixels + thresholdPx >=
+    if (_scrollController.position.pixels + AppConfig.scrollThresholdPx >=
         _scrollController.position.maxScrollExtent) {
       unawaited(
         ref
@@ -114,31 +114,38 @@ class _FilteredStationsScreenState
             return _buildEmptyState(context);
           }
 
-          return ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.all(16),
-            itemCount: state.stations.length + 1,
-            cacheExtent: 500, // Pre-render off-screen items
-            addAutomaticKeepAlives: false, // Don't keep state unnecessarily
-            itemBuilder: (context, index) {
-              if (index < state.stations.length) {
-                final station = state.stations[index];
-                return StationCard(
-                  key: ValueKey(station.stationUuid),
-                  station: station,
-                );
-              }
+          return AnimationLimiter(
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(AppConfig.paddingScreen),
+              itemCount: state.stations.length + 1,
+              cacheExtent: 500, // Pre-render off-screen items
+              addAutomaticKeepAlives: false, // Don't keep state unnecessarily
+              itemBuilder: (context, index) {
+                if (index < state.stations.length) {
+                  final station = state.stations[index];
+                  return StaggeredListItem(
+                    index: index,
+                    child: StationCard(
+                      key: ValueKey(station.stationUuid),
+                      station: station,
+                    ),
+                  );
+                }
 
-              // Bottom loading/end indicator
-              if (state.isLoadingMore) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
+                // Bottom loading/end indicator
+                if (state.isLoadingMore) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppConfig.spacingL,
+                    ),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
 
-              return const SizedBox.shrink();
-            },
+                return const SizedBox.shrink();
+              },
+            ),
           );
         },
       ),

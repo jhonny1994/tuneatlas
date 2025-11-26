@@ -67,7 +67,10 @@ class MiniPlayer extends ConsumerWidget {
           if (state.error != null)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConfig.paddingScreen,
+                vertical: AppConfig.spacingS,
+              ),
               color: theme.colorScheme.errorContainer,
               child: Row(
                 children: [
@@ -76,7 +79,7 @@ class MiniPlayer extends ConsumerWidget {
                     size: 16,
                     color: theme.colorScheme.onErrorContainer,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppConfig.spacingS),
                   Expanded(
                     child: Text(
                       state.error!,
@@ -103,16 +106,21 @@ class MiniPlayer extends ConsumerWidget {
             ),
           // Main player controls
           SizedBox(
-            height: 72,
+            height: AppConfig.miniPlayerHeight,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConfig.paddingScreen,
+                vertical: AppConfig.spacingS,
+              ),
               child: Row(
                 children: [
                   // Station artwork with glow when playing
                   Container(
                     decoration: state.isPlaying
                         ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(
+                              AppConfig.radiusImage,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: theme.colorScheme.primary.withValues(
@@ -125,18 +133,20 @@ class MiniPlayer extends ConsumerWidget {
                           )
                         : null,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(
+                        AppConfig.radiusImage,
+                      ),
                       child: station.favicon.isNotEmpty
                           ? CachedNetworkImage(
                               imageUrl: station.favicon,
-                              width: 56,
-                              height: 56,
+                              width: AppConfig.miniPlayerImageSize,
+                              height: AppConfig.miniPlayerImageSize,
                               fit: BoxFit.cover,
                               memCacheHeight: 112, // 2x for high DPI displays
                               maxHeightDiskCache: 168, // Limit disk cache size
                               placeholder: (context, url) => Container(
-                                width: 56,
-                                height: 56,
+                                width: AppConfig.miniPlayerImageSize,
+                                height: AppConfig.miniPlayerImageSize,
                                 color: theme.colorScheme.surfaceContainerHigh,
                                 child: Icon(
                                   Icons.radio,
@@ -144,8 +154,8 @@ class MiniPlayer extends ConsumerWidget {
                                 ),
                               ),
                               errorWidget: (context, url, error) => Container(
-                                width: 56,
-                                height: 56,
+                                width: AppConfig.miniPlayerImageSize,
+                                height: AppConfig.miniPlayerImageSize,
                                 color: theme.colorScheme.surfaceContainerHigh,
                                 child: Icon(
                                   Icons.radio,
@@ -154,8 +164,8 @@ class MiniPlayer extends ConsumerWidget {
                               ),
                             )
                           : Container(
-                              width: 56,
-                              height: 56,
+                              width: AppConfig.miniPlayerImageSize,
+                              height: AppConfig.miniPlayerImageSize,
                               color: theme.colorScheme.surfaceContainerHigh,
                               child: Icon(
                                 Icons.radio,
@@ -164,7 +174,7 @@ class MiniPlayer extends ConsumerWidget {
                             ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppConfig.spacingM),
 
                   // Station info
                   Expanded(

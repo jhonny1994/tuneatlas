@@ -31,8 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _onScroll() {
-    const thresholdPx = 200.0;
-    if (_scrollController.position.pixels + thresholdPx >=
+    if (_scrollController.position.pixels + AppConfig.scrollThresholdPx >=
         _scrollController.position.maxScrollExtent) {
       // Fetch next page if possible
       unawaited(ref.read(localStationsProvider.notifier).loadMore());
@@ -117,7 +116,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: AnimationLimiter(
               child: ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppConfig.paddingScreen),
                 itemCount: state.stations.length + 1,
                 cacheExtent: 500, // Pre-render off-screen items
                 addAutomaticKeepAlives: false, // Don't keep state unnecessarily
@@ -135,7 +134,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   // Show bottom loader if loading more
                   if (state.isLoadingMore) {
                     return const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppConfig.spacingL,
+                      ),
                       child: Center(child: CircularProgressIndicator()),
                     );
                   }

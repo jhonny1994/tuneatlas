@@ -22,6 +22,8 @@ class AppConfig {
   // Pagination
   static const int pageSize = 20;
   static const double preloadThreshold = 0.8; // Load more at 80% scroll
+  static const double scrollThresholdPx =
+      200; // Pixels from bottom to trigger load
 
   // Caching
   static const Duration cacheDuration = Duration(days: 7);
@@ -56,12 +58,17 @@ class AppConfig {
 
   // Micro-interaction Settings
   static const double pressedScale = 0.97; // Scale factor when pressing cards
+  static const double pressedRotation = -0.002; // Rotation when pressing cards
   static const double hoveredScale =
       1.02; // Scale factor on hover (web/desktop)
 
   // UI Constants
   static const double buttonHeight = 48; // Standard button height
   static const double iconSizeLarge = 80; // Large icon size for empty states
+  static const double iconSizeSmall = 20; // Small icon size
+  static const double iconSizeFallback = 32; // Fallback icon size
+  static const double miniPlayerHeight = 72; // Height of the mini player
+  static const double miniPlayerImageSize = 56; // Size of album art in mini player
 
   // Border Radius
   static const double radiusCard = 16; // Cards and surfaces

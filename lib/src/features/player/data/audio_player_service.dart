@@ -96,9 +96,14 @@ class AudioPlayerService {
       // Update current station
       _currentStationSubject.add(station);
 
-      // Just play - let just_audio handle buffering naturally
-      // No timeout, no retries - radio streams will connect when ready
-      await _handler!.playStation(station);
+      // Enforce 20s timeout for connection as per requirements
+      // This prevents infinite loading if the handler hangs
+      await _handler!.playStation(station).timeout(
+        const Duration(seconds: 20),
+        onTimeout: () {
+          throw TimeoutException('Connection timed out after 20 seconds');
+        },
+      );
 
       // Success - clear error state
       _errorSubject.add(null);

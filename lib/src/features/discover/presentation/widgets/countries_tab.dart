@@ -24,13 +24,13 @@ class CountriesTab extends ConsumerWidget {
 
         return AnimationLimiter(
           child: ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppConfig.paddingScreen),
             itemCount: countries.length,
             itemBuilder: (context, index) {
               final country = countries[index];
 
               final tile = Card(
-                margin: const EdgeInsets.only(bottom: 8),
+                margin: const EdgeInsets.only(bottom: AppConfig.spacingS),
                 child: ListTile(
                   leading: CircleAvatar(
                     backgroundColor: Theme.of(

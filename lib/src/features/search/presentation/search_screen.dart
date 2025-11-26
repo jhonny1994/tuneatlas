@@ -33,8 +33,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   void _onScroll() {
-    const thresholdPx = 200.0;
-    if (_scrollController.position.pixels + thresholdPx >=
+    if (_scrollController.position.pixels + AppConfig.scrollThresholdPx >=
         _scrollController.position.maxScrollExtent) {
       unawaited(ref.read(searchProvider.notifier).loadMore());
     }
@@ -101,7 +100,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         children: [
           // Search input
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppConfig.paddingScreen),
             child: TextField(
               controller: _searchController,
               onChanged: _onSearchChanged,
@@ -115,7 +114,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       )
                     : null,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppConfig.radiusInput),
                 ),
                 filled: true,
                 fillColor: theme.colorScheme.surfaceContainerHighest,
@@ -144,7 +143,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 return AnimationLimiter(
                   child: ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppConfig.paddingScreen,
+                    ),
                     itemCount: state.results.length + 1,
                     cacheExtent: 500, // Pre-render off-screen items
                     addAutomaticKeepAlives:
@@ -164,7 +165,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       // Bottom loading/end indicator
                       if (state.isLoadingMore) {
                         return const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 24),
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppConfig.spacingL,
+                          ),
                           child: Center(child: CircularProgressIndicator()),
                         );
                       }
@@ -189,15 +192,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         children: [
           Icon(
             Icons.search,
-            size: 80,
+            size: AppConfig.iconSizeLarge,
             color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.5),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppConfig.spacingL),
           Text(
             l10n.searchForStations,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppConfig.spacingS),
           Text(
             l10n.enterStationName,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -222,35 +225,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   Widget _buildError(BuildContext context, Object error) {
     final l10n = AppLocalizations.of(context)!;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 80,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              l10n.errorSearchingStations,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error.toString(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withValues(alpha: 0.7),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+    return ErrorStateWidget(
+      title: l10n.errorSearchingStations,
+      error: error,
+      onRetry: () => ref.read(searchProvider.notifier).search(
+            _searchController.text,
+          ),
     );
   }
 }

@@ -94,7 +94,7 @@ class _StationCardState extends ConsumerState<StationCard> {
         false;
 
     return AnimatedRotation(
-      turns: _isPressed ? -0.002 : 0, // Subtle 0.72 degree rotation
+      turns: _isPressed ? AppConfig.pressedRotation : 0, // Subtle rotation
       duration: AppConfig.fastAnimation,
       curve: AppConfig.defaultCurve,
       child: AnimatedScale(
@@ -135,7 +135,7 @@ class _StationCardState extends ConsumerState<StationCard> {
                     )
                   : null,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppConfig.paddingScreen),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -145,7 +145,7 @@ class _StationCardState extends ConsumerState<StationCard> {
                       children: [
                         // Station logo/favicon (larger)
                         _buildLogo(context),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: AppConfig.spacingM),
 
                         // Station info (expanded)
                         Expanded(
@@ -169,11 +169,11 @@ class _StationCardState extends ConsumerState<StationCard> {
                               ),
 
                               // Technical info (Country, Codec, Bitrate)
-                              const SizedBox(height: 4),
+                              const SizedBox(height: AppConfig.spacingXS),
                               _buildTechnicalInfo(context, isCurrentStation),
 
                               // Tags
-                              const SizedBox(height: 8),
+                              const SizedBox(height: AppConfig.spacingS),
                               _buildMetadata(context),
                             ],
                           ),
@@ -189,8 +189,8 @@ class _StationCardState extends ConsumerState<StationCard> {
                             onPressed: _isLoading ? null : _toggleFavorite,
                             icon: _isLoading
                                 ? SizedBox(
-                                    width: 20,
-                                    height: 20,
+                                    width: AppConfig.iconSizeSmall,
+                                    height: AppConfig.iconSizeSmall,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       color: theme.colorScheme.primary,
@@ -237,11 +237,11 @@ class _StationCardState extends ConsumerState<StationCard> {
         false;
 
     return Container(
-      width: 80, // Increased from 60 for Material You
-      height: 80,
+      width: AppConfig.iconSizeLarge, // Increased from 60 for Material You
+      height: AppConfig.iconSizeLarge,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(AppConfig.radiusImage),
         // Add shadow when active
         boxShadow: isCurrentStation
             ? [
@@ -257,11 +257,11 @@ class _StationCardState extends ConsumerState<StationCard> {
       ),
       child: widget.station.favicon.isNotEmpty
           ? ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppConfig.radiusImage),
               child: CachedNetworkImage(
                 imageUrl: widget.station.favicon,
-                width: 80,
-                height: 80,
+                width: AppConfig.iconSizeLarge,
+                height: AppConfig.iconSizeLarge,
                 fit: BoxFit.cover,
                 memCacheHeight: 160, // 2x for high DPI displays
                 maxHeightDiskCache: 240, // Limit disk cache size
@@ -381,8 +381,8 @@ class _StationCardState extends ConsumerState<StationCard> {
     if (infoParts.isEmpty) return const SizedBox.shrink();
 
     return Wrap(
-      spacing: 8,
-      runSpacing: 4,
+      spacing: AppConfig.spacingS,
+      runSpacing: AppConfig.spacingXS,
       crossAxisAlignment: WrapCrossAlignment.center,
       children: infoParts,
     );
@@ -442,19 +442,28 @@ class _StationCardState extends ConsumerState<StationCard> {
               ),
             ),
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConfig.paddingScreen,
+                vertical: AppConfig.paddingCard,
+              ),
             ),
           ),
         ),
 
-        const SizedBox(width: 8),
+        const SizedBox(width: AppConfig.spacingS),
 
         // More options button
         FilledButton.tonal(
           onPressed: () => _showStationOptions(context),
           style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            minimumSize: const Size(48, 48),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppConfig.paddingScreen,
+              vertical: AppConfig.paddingCard,
+            ),
+            minimumSize: const Size(
+              AppConfig.buttonHeight,
+              AppConfig.buttonHeight,
+            ),
           ),
           child: const Icon(Icons.more_horiz, size: 20),
         ),
@@ -502,7 +511,7 @@ class _StationCardState extends ConsumerState<StationCard> {
   Widget _buildFallbackIcon(BuildContext context) {
     return Icon(
       Icons.radio,
-      size: 32,
+      size: AppConfig.iconSizeFallback,
       color: Theme.of(context).colorScheme.primary,
     );
   }
@@ -539,15 +548,15 @@ class _StationCardState extends ConsumerState<StationCard> {
     final hasMore = tags.length > maxTags;
 
     return Wrap(
-      spacing: 4,
-      runSpacing: 4,
+      spacing: AppConfig.spacingXS,
+      runSpacing: AppConfig.spacingXS,
       children: [
         ...displayTags.map(
           (data) => Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color: theme.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(AppConfig.radiusChip),
             ),
             child: Text(
               data,
@@ -564,7 +573,7 @@ class _StationCardState extends ConsumerState<StationCard> {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
               color: theme.colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(AppConfig.radiusChip),
             ),
             child: Text(
               AppLocalizations.of(context)!.tagsOverflow(tags.length - maxTags),
