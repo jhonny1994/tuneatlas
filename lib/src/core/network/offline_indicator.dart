@@ -24,7 +24,7 @@ class OfflineIndicator extends ConsumerWidget {
 
   Widget _buildOfflineBanner(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return Material(
       color: theme.colorScheme.errorContainer,

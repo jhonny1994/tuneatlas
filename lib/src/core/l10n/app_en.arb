@@ -463,5 +463,19 @@
   "failedToConnectToServers": "Failed to connect to Radio Browser servers. Please check your internet connection and try again.",
   "@failedToConnectToServers": {
     "description": "Initialization error message when unable to discover servers"
+  },
+  "shareMessage": "Check out {stationName} on TuneAtlas! {deepLink}",
+  "@shareMessage": {
+    "description": "Message when sharing a station",
+    "placeholders": {
+      "stationName": {
+        "type": "String",
+        "example": "BBC Radio 1"
+      },
+      "deepLink": {
+        "type": "String",
+        "example": "tuneatlas://station/123"
+      }
+    }
   }
 }

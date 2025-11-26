@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tuneatlas/src/src.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -407,7 +408,7 @@ class _StationCardState extends ConsumerState<StationCard> {
     bool isLoadingAudio,
   ) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return Row(
       children: [
@@ -474,7 +475,7 @@ class _StationCardState extends ConsumerState<StationCard> {
   /// Show station options (placeholder for future features)
   Future<void> _showStationOptions(BuildContext context) async {
     unawaited(Haptics.light());
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     await showModalBottomSheet<void>(
       context: context,
@@ -486,9 +487,16 @@ class _StationCardState extends ConsumerState<StationCard> {
               ListTile(
                 leading: const Icon(Icons.share),
                 title: Text(l10n.shareStation),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  // TODO: Implement share functionality
+                  await SharePlus.instance.share(
+                    ShareParams(
+                      text: l10n.shareMessage(
+                        widget.station.name,
+                        'tuneatlas://tuneatlas.com/station/${widget.station.stationUuid}',
+                      ),
+                    ),
+                  );
                 },
               ),
               ListTile(
@@ -576,7 +584,7 @@ class _StationCardState extends ConsumerState<StationCard> {
               borderRadius: BorderRadius.circular(AppConfig.radiusChip),
             ),
             child: Text(
-              AppLocalizations.of(context)!.tagsOverflow(tags.length - maxTags),
+              S.of(context).tagsOverflow(tags.length - maxTags),
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.w500,

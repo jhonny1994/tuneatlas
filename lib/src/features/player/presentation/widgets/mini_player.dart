@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tuneatlas/src/src.dart';
 
 class MiniPlayer extends ConsumerWidget {
@@ -32,7 +33,7 @@ class MiniPlayer extends ConsumerWidget {
     AudioState state,
   ) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     final station = state.currentStation!;
 
     return Container(
@@ -244,6 +245,22 @@ class MiniPlayer extends ConsumerWidget {
                         ),
                       ],
                     ),
+                  ),
+
+                  // Share button
+                  IconButton(
+                    icon: const Icon(Icons.share_outlined),
+                    onPressed: () async {
+                      unawaited(Haptics.light());
+                      await SharePlus.instance.share(
+                        ShareParams(
+                          text: l10n.shareMessage(
+                            station.name,
+                            'tuneatlas://tuneatlas.com/station/${station.stationUuid}',
+                          ),
+                        ),
+                      );
+                    },
                   ),
 
                   // Play/pause button

@@ -12,7 +12,7 @@ class TagsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tagsAsync = ref.watch(tagsProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return tagsAsync.when(
       loading: () => const ListTileShimmer(),
@@ -70,7 +70,7 @@ class TagsTab extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return ErrorStateWidget(
       title: l10n.errorLoadingStations,
       error: error,
@@ -79,7 +79,7 @@ class TagsTab extends ConsumerWidget {
   }
 
   Widget _buildEmpty(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return EmptyStateWidget(
       icon: Icons.sell_outlined,
       title: l10n.noTagsTitle,

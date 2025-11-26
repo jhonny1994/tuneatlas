@@ -58,7 +58,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     final isLastPage =
         _currentPage == OnboardingPages.pages(context).length - 1;
 

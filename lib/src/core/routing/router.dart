@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tuneatlas/src/features/home/presentation/deep_link_handler_screen.dart';
 import 'package:tuneatlas/src/src.dart';
 
 part 'router.g.dart';
@@ -15,7 +16,7 @@ class RootScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.path;
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     // Determine selected index based on current route
     var selectedIndex = 0;
@@ -140,11 +141,16 @@ GoRouter router(Ref ref) {
       // Onboarding screen (first launch) - Slide from right
       GoRoute(
         path: '/onboarding',
-        pageBuilder: (context, state) =>
-            AppPageTransitions.slideRightTransition(
-          child: const OnboardingScreen(),
-          state: state,
-        ),
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+
+      // Deep link for station
+      GoRoute(
+        path: '/station/:stationId',
+        builder: (context, state) {
+          final stationId = state.pathParameters['stationId']!;
+          return DeepLinkHandlerScreen(stationId: stationId);
+        },
       ),
 
       // Main app routes with bottom navigation - Scale fade for smooth peer transitions
@@ -194,7 +200,7 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/filtered-stations',
         pageBuilder: (context, state) {
-          final l10n = AppLocalizations.of(context)!;
+          final l10n = S.of(context);
           final filterType = state.uri.queryParameters['filterType'] ?? '';
           final filterValue = state.uri.queryParameters['filterValue'] ?? '';
           final title = state.uri.queryParameters['title'] ?? l10n.stations;

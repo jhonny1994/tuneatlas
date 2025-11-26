@@ -33,7 +33,7 @@ class LanguageButton extends ConsumerWidget {
     WidgetRef ref,
     Locale currentLocale,
   ) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     final theme = Theme.of(context);
 
     unawaited(

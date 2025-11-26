@@ -24,7 +24,7 @@ class SplashScreen extends ConsumerWidget {
 
   /// Loading state UI
   Widget _buildLoading(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -63,7 +63,7 @@ class SplashScreen extends ConsumerWidget {
 
   /// Success state UI (briefly shown before navigation)
   Widget _buildSuccess(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -83,7 +83,7 @@ class SplashScreen extends ConsumerWidget {
 
   /// Error state UI with retry button
   Widget _buildError(BuildContext context, String message, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return Padding(
       padding: const EdgeInsets.all(32),
       child: Column(
@@ -130,7 +130,7 @@ class SplashScreen extends ConsumerWidget {
   }
 
   /// Map error keys to localized messages
-  String _getLocalizedError(AppLocalizations l10n, String errorKey) {
+  String _getLocalizedError(S l10n, String errorKey) {
     // If it's already a full message (backward compatibility), return it
     if (errorKey.contains(' ')) {
       return errorKey;

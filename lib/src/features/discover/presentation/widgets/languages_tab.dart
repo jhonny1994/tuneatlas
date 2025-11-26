@@ -12,7 +12,7 @@ class LanguagesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final languagesAsync = ref.watch(languagesProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return languagesAsync.when(
       loading: () => const ListTileShimmer(),
@@ -67,7 +67,7 @@ class LanguagesTab extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return ErrorStateWidget(
       title: l10n.errorLoadingStations,
       error: error,
@@ -76,7 +76,7 @@ class LanguagesTab extends ConsumerWidget {
   }
 
   Widget _buildEmpty(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return EmptyStateWidget(
       icon: Icons.language_outlined,
       title: l10n.noLanguagesTitle,

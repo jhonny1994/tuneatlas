@@ -153,7 +153,7 @@ class _FilteredStationsScreenState
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return EmptyStateWidget(
       icon: Icons.radio_button_off,
       title: l10n.noStationsTitle,
@@ -162,7 +162,7 @@ class _FilteredStationsScreenState
   }
 
   Widget _buildError(BuildContext context, Object error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return ErrorStateWidget(
       title: l10n.errorLoadingStations,
       error: error,

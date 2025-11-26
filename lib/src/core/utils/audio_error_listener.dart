@@ -33,7 +33,7 @@ extension AudioErrorListener on WidgetRef {
     // Get localized error message
     final localizedMessage =
         AudioErrorMapper.getLocalizedError(context, message);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

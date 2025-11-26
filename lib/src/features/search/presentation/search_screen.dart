@@ -63,7 +63,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     final searchAsync = ref.watch(searchProvider);
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     // Listen for audio errors and show snackbar
     ref.listenToAudioErrors(context);
@@ -185,7 +185,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildInitialState(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +215,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildEmptyState(BuildContext context, String query) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return EmptyStateWidget(
       icon: Icons.search_off,
       title: l10n.noSearchResultsTitle,
@@ -224,7 +224,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildError(BuildContext context, Object error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return ErrorStateWidget(
       title: l10n.errorSearchingStations,
       error: error,

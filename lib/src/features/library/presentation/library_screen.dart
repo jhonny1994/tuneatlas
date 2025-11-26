@@ -12,7 +12,7 @@ class LibraryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final favoritesAsync = ref.watch(favoritesProvider);
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -92,7 +92,7 @@ class LibraryScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return EmptyStateWidget(
       icon: Icons.favorite_border,
       title: l10n.noFavoritesTitle,
@@ -101,7 +101,7 @@ class LibraryScreen extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return ErrorStateWidget(
       title: l10n.errorLoadingStations,
       error: error,
@@ -110,7 +110,7 @@ class LibraryScreen extends ConsumerWidget {
   }
 
   void _showClearDialog(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     unawaited(
       showDialog(
         context: context,

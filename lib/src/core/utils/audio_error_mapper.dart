@@ -5,7 +5,7 @@ import 'package:tuneatlas/src/src.dart';
 class AudioErrorMapper {
   /// Get localized error message based on error string content
   static String getLocalizedError(BuildContext context, String error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     // Match error keys from audio_player_service.dart
     if (error == 'errorFailedToConnect') {

@@ -241,4 +241,25 @@ class RadioBrowserApi {
       return const Result.failure('Failed to track click');
     }
   }
+
+  /// Get station by UUID
+  Future<Result<Station>> getStationByUuid(String uuid) async {
+    try {
+      final response = await _apiClient.get('/json/stations/byuuid/$uuid');
+
+      final stations = (response.data as List)
+          .map((json) => Station.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      if (stations.isEmpty) {
+        return const Result.failure('Station not found');
+      }
+
+      return Result.success(stations.first);
+    } on ApiException catch (e) {
+      return Result.failure(e.message);
+    } on Exception {
+      return const Result.failure('Failed to load station');
+    }
+  }
 }

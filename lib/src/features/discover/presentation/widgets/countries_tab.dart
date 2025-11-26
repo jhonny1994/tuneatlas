@@ -12,7 +12,7 @@ class CountriesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final countriesAsync = ref.watch(countriesProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
 
     return countriesAsync.when(
       loading: () => const ListTileShimmer(),
@@ -72,7 +72,7 @@ class CountriesTab extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return ErrorStateWidget(
       title: l10n.errorLoadingStations,
       error: error,
@@ -81,7 +81,7 @@ class CountriesTab extends ConsumerWidget {
   }
 
   Widget _buildEmpty(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return EmptyStateWidget(
       icon: Icons.public_off,
       title: l10n.noCountriesTitle,

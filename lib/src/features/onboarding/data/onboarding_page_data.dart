@@ -19,7 +19,7 @@ class OnboardingPageData {
 /// Predefined onboarding pages
 class OnboardingPages {
   static List<OnboardingPageData> pages(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = S.of(context);
     return [
       OnboardingPageData(
         title: l10n.welcomeTitle,

@@ -29,6 +29,7 @@ dependencies:
   riverpod_annotation: ^3.0.0
   rxdart: ^0.28.0
   sembast: ^3.8.5+1
+  share_plus: ^12.0.1
   shared_preferences: ^2.5.3
   shimmer: ^3.0.0
   url_launcher: ^6.3.2
@@ -46,4 +47,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  generate: true
+
+flutter_intl:
+  enabled: true
+  arb_dir: lib\src\core\l10n
+  output_dir: lib\src\core\l10n
