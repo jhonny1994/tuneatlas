@@ -32,15 +32,20 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- Deep Link Intent Filter -->
+            <!-- Deep Link Intent Filter: App Links (HTTPS) -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Handle https://dmar.site/tuneatlas/station/... -->
                 <data android:scheme="https" android:host="dmar.site" android:pathPrefix="/tuneatlas/station" />
-                <!-- Fallback for custom scheme -->
-                <data android:scheme="tuneatlas" />
+            </intent-filter>
+
+            <!-- Deep Link Intent Filter: Custom Scheme (Fallback) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tuneatlas" android:host="station" />
             </intent-filter>
         </activity>
 

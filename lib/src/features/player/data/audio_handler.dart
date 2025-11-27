@@ -116,7 +116,7 @@ class RadioAudioHandler extends BaseAudioHandler {
       );
 
       // Start playback
-      await _player.play();
+      unawaited(_player.play());
     } catch (e) {
       _handleError();
       rethrow;
@@ -125,7 +125,7 @@ class RadioAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    await _player.play();
+    unawaited(_player.play());
   }
 
   @override

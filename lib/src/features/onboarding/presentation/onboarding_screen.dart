@@ -32,7 +32,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _completeOnboarding() async {
     await ref.read(onboardingStateProvider.notifier).complete();
     if (mounted) {
-      context.go('/home');
+      final pendingLink = ref.read(pendingDeepLinkProvider);
+      if (pendingLink != null) {
+        ref.read(pendingDeepLinkProvider.notifier).clear();
+        context.go(pendingLink);
+      } else {
+        context.go('/home');
+      }
     }
   }
 

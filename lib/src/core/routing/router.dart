@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tuneatlas/src/features/home/presentation/deep_link_handler_screen.dart';
 import 'package:tuneatlas/src/src.dart';
 
 part 'router.g.dart';
@@ -96,6 +95,25 @@ GoRouter router(Ref ref) {
   return GoRouter(
     initialLocation: '/splash',
     redirect: (context, state) {
+      // Handle custom scheme deep links that GoRouter receives as full URIs
+      if (state.uri.scheme == 'tuneatlas') {
+        // Case 1: tuneatlas://station/UUID
+        if (state.uri.host == 'station') {
+          final stationId = state.uri.path.replaceAll('/', '');
+          if (stationId.isNotEmpty) {
+            return '/station/$stationId';
+          }
+        }
+        // Case 2: tuneatlas://tuneatlas.com/station/UUID
+        else if (state.uri.path.contains('/station/')) {
+          final segments = state.uri.pathSegments;
+          final stationIndex = segments.indexOf('station');
+          if (stationIndex != -1 && stationIndex + 1 < segments.length) {
+            return '/station/${segments[stationIndex + 1]}';
+          }
+        }
+      }
+
       final isSplash = state.matchedLocation == '/splash';
       final isOnboarding = state.matchedLocation == '/onboarding';
 
