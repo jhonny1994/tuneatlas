@@ -42,7 +42,7 @@ class ErrorStateWidget extends StatelessWidget {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(AppConfig.paddingContent),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -52,14 +52,14 @@ class ErrorStateWidget extends StatelessWidget {
               color: theme.colorScheme.error,
               semanticLabel: l10n.errorSemanticLabel,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppConfig.spacingL),
             Text(
               title,
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
             if (message != null || error != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: AppConfig.spacingS),
               Text(
                 message ?? error.toString(),
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -68,7 +68,7 @@ class ErrorStateWidget extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ],
-            const SizedBox(height: 24),
+            const SizedBox(height: AppConfig.spacingL),
             FilledButton.icon(
               onPressed: () {
                 unawaited(Haptics.light());

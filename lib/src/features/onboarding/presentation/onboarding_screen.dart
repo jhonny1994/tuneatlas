@@ -85,7 +85,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               )
             else
-              const SizedBox(height: 48),
+              const SizedBox(height: AppConfig.buttonHeightLg),
 
             // Page view
             Expanded(
@@ -111,14 +111,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppConfig.spacingXL),
 
             // Next/Get Started button
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppConfig.paddingContent,
+              ),
               child: SizedBox(
                 width: double.infinity,
-                height: 48,
+                height: AppConfig.buttonHeightLg,
                 child: FilledButton(
                   onPressed: () async {
                     unawaited(Haptics.light());
@@ -128,7 +130,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppConfig.spacingXL),
           ],
         ),
       ),
@@ -147,25 +149,25 @@ class _OnboardingPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(AppConfig.paddingContent),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Icon
           Container(
-            width: 120,
-            height: 120,
+            width: AppConfig.onboardingIconContainerSize,
+            height: AppConfig.onboardingIconContainerSize,
             decoration: BoxDecoration(
               color: page.color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(
               page.icon,
-              size: 60,
+              size: AppConfig.onboardingIconSize,
               color: page.color,
             ),
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: AppConfig.spacingXXL),
 
           // Title
           Text(
@@ -176,7 +178,7 @@ class _OnboardingPage extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppConfig.spacingM),
 
           // Description
           Text(
@@ -206,13 +208,13 @@ class _PageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      width: isActive ? 24 : 8,
-      height: 8,
+      duration: AppConfig.durationNormal,
+      margin: const EdgeInsets.symmetric(horizontal: AppConfig.spacingXS),
+      width: isActive ? AppConfig.spacingL : AppConfig.spacingS,
+      height: AppConfig.spacingS,
       decoration: BoxDecoration(
         color: isActive ? color : color.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(AppConfig.radiusSm),
       ),
     );
   }

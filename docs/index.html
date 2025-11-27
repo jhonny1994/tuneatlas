@@ -1,21 +1,63 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>TuneAtlas - Global Radio Tuner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; text-align: center; padding: 40px; background: #f0f2f5; color: #1a1a1a; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h1 { margin-bottom: 16px; color: #0066cc; }
-        p { line-height: 1.6; color: #666; margin-bottom: 24px; }
-        .button { display: inline-block; background: #0066cc; color: white; padding: 12px 24px; text-decoration: none; border-radius: 24px; font-weight: 600; transition: background 0.2s; }
-        .button:hover { background: #0052a3; }
-        .footer { margin-top: 40px; font-size: 12px; color: #999; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            text-align: center;
+            padding: 40px;
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 16px;
+            color: #0066cc;
+        }
+
+        p {
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 24px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .button:hover {
+            background: #0052a3;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #999;
+        }
     </style>
     <script>
         // Simple redirect logic if opened on mobile
-        window.onload = function() {
+        window.onload = function () {
             var path = window.location.pathname;
             if (path.includes('/tuneatlas/station/')) {
                 // Try to open app scheme as fallback
@@ -25,20 +67,23 @@
         }
     </script>
 </head>
+
 <body>
     <div class="container">
         <h1>TuneAtlas</h1>
         <p>Global Radio Tuner. Listen Live.</p>
-        <p>You clicked a link to a radio station. If you have the TuneAtlas app installed, it should open automatically.</p>
+        <p>You clicked a link to a radio station. If you have the TuneAtlas app installed, it should open automatically.
+        </p>
         <a href="#" id="openAppBtn" class="button">Open in App</a>
         <br><br>
-        <a href="https://github.com/jhonny1994/tuneatlas" style="color: #999; text-decoration: none; font-size: 14px;">Don't have the app? Get it here</a>
+        <a href="https://github.com/jhonny1994/tuneatlas"
+            style="color: #999; text-decoration: none; font-size: 14px;">Don't have the app? Get it here</a>
     </div>
     <div class="footer">
         &copy; 2025 TuneAtlas
     </div>
     <script>
-        document.getElementById('openAppBtn').onclick = function() {
+        document.getElementById('openAppBtn').onclick = function () {
             var path = window.location.pathname;
             if (path.includes('/tuneatlas/station/')) {
                 var uuid = path.split('/tuneatlas/station/')[1];
@@ -51,4 +96,5 @@
         };
     </script>
 </body>
+
 </html>

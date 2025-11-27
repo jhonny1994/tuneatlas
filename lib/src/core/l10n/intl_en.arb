@@ -477,5 +477,65 @@
                 "example": "tuneatlas://station/123"
             }
         }
+    },
+    "shareButtonLabel": "Share station",
+    "@shareButtonLabel": {
+        "description": "Accessibility label for share button"
+    },
+    "playButtonLabel": "Play",
+    "@playButtonLabel": {
+        "description": "Accessibility label for play button"
+    },
+    "pauseButtonLabel": "Pause",
+    "@pauseButtonLabel": {
+        "description": "Accessibility label for pause button"
+    },
+    "stopButtonLabel": "Stop playback",
+    "@stopButtonLabel": {
+        "description": "Accessibility label for stop button"
+    },
+    "retryButtonLabel": "Retry",
+    "@retryButtonLabel": {
+        "description": "Accessibility label for retry button"
+    },
+    "addToFavoritesLabel": "Add to favorites",
+    "@addToFavoritesLabel": {
+        "description": "Accessibility label for add to favorites button"
+    },
+    "removeFromFavoritesLabel": "Remove from favorites",
+    "@removeFromFavoritesLabel": {
+        "description": "Accessibility label for remove from favorites button"
+    },
+    "toggleThemeLabel": "Toggle theme",
+    "@toggleThemeLabel": {
+        "description": "Accessibility label for theme toggle button"
+    },
+    "moreOptionsLabel": "More options",
+    "@moreOptionsLabel": {
+        "description": "Accessibility label for more options button"
+    },
+    "nowPlayingLabel": "Now playing: {stationName}",
+    "@nowPlayingLabel": {
+        "description": "Accessibility label for currently playing station",
+        "placeholders": {
+            "stationName": {
+                "type": "String",
+                "example": "BBC Radio 1"
+            }
+        }
+    },
+    "stationCardLabel": "{stationName}, {country}",
+    "@stationCardLabel": {
+        "description": "Accessibility label for station card",
+        "placeholders": {
+            "stationName": {
+                "type": "String",
+                "example": "BBC Radio 1"
+            },
+            "country": {
+                "type": "String",
+                "example": "United Kingdom"
+            }
+        }
     }
 }

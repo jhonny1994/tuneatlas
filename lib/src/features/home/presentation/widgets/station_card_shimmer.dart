@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tuneatlas/src/src.dart';
 
-/// Shimmer loading placeholder for station cards
+/// Shimmer loading placeholder for station cards - matches new simplified layout
 class StationCardShimmer extends StatefulWidget {
   const StationCardShimmer({super.key});
 
@@ -43,164 +43,122 @@ class _StationCardShimmerState extends State<StationCardShimmer>
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppConfig.space3),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Top row: Logo + Info + Favorite button
+            // Row 1: Header with logo and info
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Logo shimmer (80x80 to match Material You)
-                AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _animation.value,
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: shimmerColor,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    );
-                  },
+                // Logo shimmer (64x64)
+                _buildShimmerBox(
+                  width: AppConfig.stationImageSize,
+                  height: AppConfig.stationImageSize,
+                  radius: AppConfig.radiusMd,
+                  color: shimmerColor,
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppConfig.space3),
 
-                // Text shimmers (expanded)
+                // Station info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Title shimmer (station name - 2 lines possible)
-                      AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _animation.value,
-                            child: Container(
-                              height: 20,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: shimmerColor,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          );
-                        },
+                      // Station name
+                      _buildShimmerBox(
+                        width: double.infinity,
+                        height: 18,
+                        radius: AppConfig.radiusSm,
+                        color: shimmerColor,
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppConfig.space2),
 
-                      // Technical info shimmer (country, codec, bitrate)
-                      AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _animation.value,
-                            child: Container(
-                              height: 14,
-                              width: 180,
-                              decoration: BoxDecoration(
-                                color: shimmerColor,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          );
-                        },
+                      // Metadata row
+                      _buildShimmerBox(
+                        width: 140,
+                        height: 14,
+                        radius: AppConfig.radiusSm,
+                        color: shimmerColor,
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppConfig.space2),
 
-                      // Tags/metadata shimmer
-                      AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: _animation.value,
-                            child: Container(
-                              height: 24,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                color: shimmerColor,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                          );
-                        },
+                      // Tags row
+                      Row(
+                        children: [
+                          _buildShimmerBox(
+                            width: 48,
+                            height: 22,
+                            radius: AppConfig.radiusSm,
+                            color: shimmerColor,
+                          ),
+                          const SizedBox(width: AppConfig.space2),
+                          _buildShimmerBox(
+                            width: 56,
+                            height: 22,
+                            radius: AppConfig.radiusSm,
+                            color: shimmerColor,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-
-                // Favorite button shimmer
-                AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _animation.value,
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: shimmerColor,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    );
-                  },
-                ),
               ],
             ),
 
-            // Action buttons shimmer
-            const SizedBox(height: 12),
+            const SizedBox(height: AppConfig.space3),
+
+            // Row 2: Action row
             Row(
               children: [
-                // Play button shimmer (expanded)
-                Expanded(
-                  child: AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return Opacity(
-                        opacity: _animation.value,
-                        child: Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: shimmerColor,
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                // Play button shimmer
+                _buildShimmerBox(
+                  width: 36,
+                  height: 36,
+                  radius: AppConfig.radiusMd,
+                  color: shimmerColor,
                 ),
-                const SizedBox(width: 8),
+                const Spacer(),
 
-                // More options button shimmer
-                AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _animation.value,
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: shimmerColor,
-                          borderRadius: BorderRadius.circular(24),
-                        ),
-                      ),
-                    );
-                  },
+                // Share button shimmer
+                _buildShimmerBox(
+                  width: 32,
+                  height: 32,
+                  radius: AppConfig.radiusSm,
+                  color: shimmerColor,
                 ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildShimmerBox({
+    required double width,
+    required double height,
+    required double radius,
+    required Color color,
+  }) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _animation.value,
+          child: Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(radius),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -214,7 +172,7 @@ class StationListShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppConfig.space4),
       itemCount: itemCount,
       itemBuilder: (context, index) {
         return const StationCardShimmer();

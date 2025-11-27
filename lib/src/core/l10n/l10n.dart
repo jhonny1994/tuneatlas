@@ -1058,6 +1058,116 @@ class S {
       args: [stationName, deepLink],
     );
   }
+
+  /// `Share station`
+  String get shareButtonLabel {
+    return Intl.message(
+      'Share station',
+      name: 'shareButtonLabel',
+      desc: 'Accessibility label for share button',
+      args: [],
+    );
+  }
+
+  /// `Play`
+  String get playButtonLabel {
+    return Intl.message(
+      'Play',
+      name: 'playButtonLabel',
+      desc: 'Accessibility label for play button',
+      args: [],
+    );
+  }
+
+  /// `Pause`
+  String get pauseButtonLabel {
+    return Intl.message(
+      'Pause',
+      name: 'pauseButtonLabel',
+      desc: 'Accessibility label for pause button',
+      args: [],
+    );
+  }
+
+  /// `Stop playback`
+  String get stopButtonLabel {
+    return Intl.message(
+      'Stop playback',
+      name: 'stopButtonLabel',
+      desc: 'Accessibility label for stop button',
+      args: [],
+    );
+  }
+
+  /// `Retry`
+  String get retryButtonLabel {
+    return Intl.message(
+      'Retry',
+      name: 'retryButtonLabel',
+      desc: 'Accessibility label for retry button',
+      args: [],
+    );
+  }
+
+  /// `Add to favorites`
+  String get addToFavoritesLabel {
+    return Intl.message(
+      'Add to favorites',
+      name: 'addToFavoritesLabel',
+      desc: 'Accessibility label for add to favorites button',
+      args: [],
+    );
+  }
+
+  /// `Remove from favorites`
+  String get removeFromFavoritesLabel {
+    return Intl.message(
+      'Remove from favorites',
+      name: 'removeFromFavoritesLabel',
+      desc: 'Accessibility label for remove from favorites button',
+      args: [],
+    );
+  }
+
+  /// `Toggle theme`
+  String get toggleThemeLabel {
+    return Intl.message(
+      'Toggle theme',
+      name: 'toggleThemeLabel',
+      desc: 'Accessibility label for theme toggle button',
+      args: [],
+    );
+  }
+
+  /// `More options`
+  String get moreOptionsLabel {
+    return Intl.message(
+      'More options',
+      name: 'moreOptionsLabel',
+      desc: 'Accessibility label for more options button',
+      args: [],
+    );
+  }
+
+  /// `Now playing: {stationName}`
+  String nowPlayingLabel(String stationName) {
+    return Intl.message(
+      'Now playing: $stationName',
+      name: 'nowPlayingLabel',
+      desc: 'Accessibility label for currently playing station',
+      args: [stationName],
+    );
+  }
+
+  /// `{stationName}, {country}`
+  String stationCardLabel(String stationName, String country) {
+    return Intl.message(
+      '$stationName, $country',
+      name: 'stationCardLabel',
+      desc: 'Accessibility label for station card',
+      args: [stationName, country],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

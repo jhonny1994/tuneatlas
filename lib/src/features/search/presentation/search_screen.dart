@@ -43,8 +43,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     // Cancel previous timer
     _debounceTimer?.cancel();
 
-    // Start new timer (wait 500ms after user stops typing)
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+    // Start new timer (wait for user to stop typing)
+    _debounceTimer = Timer(AppConfig.searchDebounce, () {
       if (query.trim().isNotEmpty) {
         unawaited(ref.read(searchProvider.notifier).search(query));
       } else {
@@ -88,6 +88,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               Icons.brightness_6_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
+            tooltip: l10n.toggleThemeLabel,
             onPressed: () async {
               unawaited(Haptics.toggle());
               await ref.read(themeModeProvider.notifier).toggle();
@@ -147,7 +148,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       horizontal: AppConfig.paddingScreen,
                     ),
                     itemCount: state.results.length + 1,
-                    cacheExtent: 500, // Pre-render off-screen items
+                    cacheExtent: AppConfig.listCacheExtent,
                     addAutomaticKeepAlives:
                         false, // Don't keep state unnecessarily
                     itemBuilder: (context, index) {

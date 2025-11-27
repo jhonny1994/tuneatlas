@@ -84,6 +84,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Icons.brightness_6_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
+            tooltip: l10n.toggleThemeLabel,
             onPressed: () async {
               unawaited(Haptics.toggle());
               await ref.read(themeModeProvider.notifier).toggle();
@@ -118,7 +119,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 controller: _scrollController,
                 padding: const EdgeInsets.all(AppConfig.paddingScreen),
                 itemCount: state.stations.length + 1,
-                cacheExtent: 500, // Pre-render off-screen items
+                cacheExtent: AppConfig.listCacheExtent,
                 addAutomaticKeepAlives: false, // Don't keep state unnecessarily
                 itemBuilder: (context, index) {
                   if (index < state.stations.length) {

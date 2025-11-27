@@ -32,21 +32,28 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m4(filterType) =>
       "No stations available for this ${filterType}";
 
-  static String m5(count) => "${count} results";
+  static String m5(stationName) => "Now playing: ${stationName}";
 
-  static String m6(stationName, deepLink) =>
+  static String m6(count) => "${count} results";
+
+  static String m7(stationName, deepLink) =>
       "Check out ${stationName} on TuneAtlas! ${deepLink}";
 
-  static String m7(count) => "${count} stations";
+  static String m8(stationName, country) => "${stationName}, ${country}";
 
-  static String m8(countryCode) => "Stations in ${countryCode}";
+  static String m9(count) => "${count} stations";
 
-  static String m9(count) => "${count} tags";
+  static String m10(countryCode) => "Stations in ${countryCode}";
 
-  static String m10(count) => "+${count} more";
+  static String m11(count) => "${count} tags";
+
+  static String m12(count) => "+${count} more";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "addToFavoritesLabel": MessageLookupByLibrary.simpleMessage(
+      "Add to favorites",
+    ),
     "appName": MessageLookupByLibrary.simpleMessage("TuneAtlas"),
     "bitrate": MessageLookupByLibrary.simpleMessage("Bitrate"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -165,6 +172,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "localStations": MessageLookupByLibrary.simpleMessage("Local Stations"),
     "moreOptions": MessageLookupByLibrary.simpleMessage("More Options"),
+    "moreOptionsLabel": MessageLookupByLibrary.simpleMessage("More options"),
     "next": MessageLookupByLibrary.simpleMessage("Next"),
     "noCountriesTitle": MessageLookupByLibrary.simpleMessage(
       "No Countries Available",
@@ -193,41 +201,52 @@ class MessageLookup extends MessageLookupByLibrary {
       "No Stations Found",
     ),
     "noTagsTitle": MessageLookupByLibrary.simpleMessage("No Tags Available"),
+    "nowPlayingLabel": m5,
     "pause": MessageLookupByLibrary.simpleMessage("Pause"),
+    "pauseButtonLabel": MessageLookupByLibrary.simpleMessage("Pause"),
     "paused": MessageLookupByLibrary.simpleMessage("Paused"),
     "play": MessageLookupByLibrary.simpleMessage("Play"),
+    "playButtonLabel": MessageLookupByLibrary.simpleMessage("Play"),
     "playNow": MessageLookupByLibrary.simpleMessage("Play Now"),
     "playing": MessageLookupByLibrary.simpleMessage("Playing"),
     "pullToRefresh": MessageLookupByLibrary.simpleMessage("Pull to refresh"),
     "radio": MessageLookupByLibrary.simpleMessage("Radio"),
     "ready": MessageLookupByLibrary.simpleMessage("Ready!"),
+    "removeFromFavoritesLabel": MessageLookupByLibrary.simpleMessage(
+      "Remove from favorites",
+    ),
     "retry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "retryButtonLabel": MessageLookupByLibrary.simpleMessage("Retry"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "searchFailed": MessageLookupByLibrary.simpleMessage("Search failed"),
     "searchForStations": MessageLookupByLibrary.simpleMessage(
       "Search for radio stations",
     ),
-    "searchResultsCount": m5,
+    "searchResultsCount": m6,
     "searchStations": MessageLookupByLibrary.simpleMessage(
       "Search stations...",
     ),
-    "shareMessage": m6,
+    "shareButtonLabel": MessageLookupByLibrary.simpleMessage("Share station"),
+    "shareMessage": m7,
     "shareStation": MessageLookupByLibrary.simpleMessage("Share Station"),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "somethingWentWrong": MessageLookupByLibrary.simpleMessage(
       "Something went wrong",
     ),
+    "stationCardLabel": m8,
     "stationDetails": MessageLookupByLibrary.simpleMessage("Station Details"),
     "stationOptions": MessageLookupByLibrary.simpleMessage("Station Options"),
     "stations": MessageLookupByLibrary.simpleMessage("Stations"),
-    "stationsCount": m7,
-    "stationsIn": m8,
+    "stationsCount": m9,
+    "stationsIn": m10,
+    "stopButtonLabel": MessageLookupByLibrary.simpleMessage("Stop playback"),
     "streamTimeoutError": MessageLookupByLibrary.simpleMessage(
       "Stream connection timeout - server not responding",
     ),
     "tags": MessageLookupByLibrary.simpleMessage("Tags"),
-    "tagsCount": m9,
-    "tagsOverflow": m10,
+    "tagsCount": m11,
+    "tagsOverflow": m12,
+    "toggleThemeLabel": MessageLookupByLibrary.simpleMessage("Toggle theme"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("Try Again"),
     "unknown": MessageLookupByLibrary.simpleMessage("Unknown"),
     "visitWebsite": MessageLookupByLibrary.simpleMessage("Visit Website"),

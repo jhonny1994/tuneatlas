@@ -12,6 +12,9 @@ class DiscoverScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = S.of(context);
 
+    // Listen for audio errors and show snackbar
+    ref.listenToAudioErrors(context);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -34,6 +37,7 @@ class DiscoverScreen extends ConsumerWidget {
                 Icons.brightness_6_outlined,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
+              tooltip: l10n.toggleThemeLabel,
               onPressed: () async {
                 unawaited(Haptics.toggle());
                 await ref.read(themeModeProvider.notifier).toggle();

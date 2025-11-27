@@ -10,6 +10,7 @@ class LibraryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listenToAudioErrors(context);
     final favoritesAsync = ref.watch(favoritesProvider);
     final theme = Theme.of(context);
     final l10n = S.of(context);
@@ -46,6 +47,7 @@ class LibraryScreen extends ConsumerWidget {
               Icons.brightness_6_outlined,
               color: Theme.of(context).colorScheme.onSurface,
             ),
+            tooltip: l10n.toggleThemeLabel,
             onPressed: () async {
               unawaited(Haptics.toggle());
               await ref.read(themeModeProvider.notifier).toggle();
@@ -71,7 +73,7 @@ class LibraryScreen extends ConsumerWidget {
               child: ListView.builder(
                 padding: const EdgeInsets.all(AppConfig.paddingScreen),
                 itemCount: favorites.length,
-                cacheExtent: 500, // Pre-render off-screen items
+                cacheExtent: AppConfig.listCacheExtent,
                 addAutomaticKeepAlives: false, // Don't keep state unnecessarily
                 itemBuilder: (context, index) {
                   final station = favorites[index];

@@ -1,95 +1,174 @@
 import 'package:flutter/animation.dart';
 
-/// Central configuration for the entire app.
-/// All constants live here - no magic numbers in code.
+/// TuneAtlas "Clarity" Design System Configuration
+/// Minimalist, professional, production-grade
+/// Strict 4px base unit spacing system
 class AppConfig {
   // Prevent instantiation
   AppConfig._();
 
+  // ─────────────────────────────────────────────────────────────────────────
   // App Info
+  // ─────────────────────────────────────────────────────────────────────────
   static const String appName = 'TuneAtlas';
-  static const String version = '0.1.0';
+  static const String version = '0.1.2';
   static const String userAgent = '$appName/$version (Flutter)';
 
-  // Radio Browser API Configuration
+  // ─────────────────────────────────────────────────────────────────────────
+  // API Configuration
+  // ─────────────────────────────────────────────────────────────────────────
   static const String radioBrowserDnsHost = 'all.api.radio-browser.info';
   static const Duration requestTimeout = Duration(seconds: 10);
   static const Duration connectTimeout = Duration(seconds: 10);
-
-  // Country Detection
   static const String countryDetectionUrl = 'https://ipwho.is/';
-
-  // Deep Linking
   static const String deepLinkBaseUrl = 'https://dmar.site/tuneatlas';
 
-  // Pagination
+  // ─────────────────────────────────────────────────────────────────────────
+  // Pagination & Caching
+  // ─────────────────────────────────────────────────────────────────────────
   static const int pageSize = 20;
-  static const double preloadThreshold = 0.8; // Load more at 80% scroll
-  static const double scrollThresholdPx =
-      200; // Pixels from bottom to trigger load
-
-  // Caching
+  static const double preloadThreshold = 0.8;
+  static const double scrollThresholdPx = 200;
   static const Duration cacheDuration = Duration(days: 7);
 
+  // ─────────────────────────────────────────────────────────────────────────
   // Storage Limits
+  // ─────────────────────────────────────────────────────────────────────────
   static const int maxRecents = 15;
   static const int maxFavorites = 100;
+  static const int maxDiscoverTags = 100;
 
-  // UI Constants
-  static const double cardBorderRadius = 16;
-  static const double cardElevation = 2;
-  static const Duration shimmerDuration = Duration(milliseconds: 1500);
+  // List Performance
+  // ─────────────────────────────────────────────────────────────────────────
+  static const double listCacheExtent = 500;
+  static const Duration searchDebounce = Duration(milliseconds: 500);
 
-  // Animation Durations
-  static const Duration fastAnimation = Duration(milliseconds: 150);
-  static const Duration normalAnimation = Duration(milliseconds: 300);
-  static const Duration slowAnimation = Duration(milliseconds: 500);
+  // ─────────────────────────────────────────────────────────────────────────
+  // Spacing Scale - 4px base unit
+  // ─────────────────────────────────────────────────────────────────────────
+  static const double space0 = 0;
+  static const double space1 = 4; // xs
+  static const double space2 = 8; // sm
+  static const double space3 = 12; // md
+  static const double space4 = 16; // lg
+  static const double space5 = 20;
+  static const double space6 = 24; // xl
+  static const double space8 = 32; // 2xl
+  static const double space10 = 40;
+  static const double space12 = 48; // 3xl
 
-  // Animation Curves
-  static const Curve defaultCurve = Curves.easeInOutCubic;
-  static const Curve emphasizedCurve = Curves.easeOutExpo;
-  static const Curve deceleratedCurve = Curves.easeOut;
-  static const Curve acceleratedCurve = Curves.easeIn;
+  // Semantic spacing aliases (for compatibility)
+  static const double spacingXS = space1; // 4
+  static const double spacingS = space2; // 8
+  static const double spacingM = space4; // 16
+  static const double spacingL = space6; // 24
+  static const double spacingXL = space8; // 32
+  static const double spacingXXL = space12; // 48
 
-  // Stagger Animation
+  // ─────────────────────────────────────────────────────────────────────────
+  // Border Radius - Unified scale
+  // ─────────────────────────────────────────────────────────────────────────
+  static const double radiusNone = 0;
+  static const double radiusSm = 4; // Chips, badges
+  static const double radiusMd = 8; // Buttons, inputs, images
+  static const double radiusLg = 12; // Cards
+  static const double radiusXl = 16; // Bottom sheets, dialogs
+  static const double radiusFull = 999; // Pills, avatars
+
+  // Semantic aliases (for compatibility)
+  static const double radiusChip = radiusSm;
+  static const double radiusImage = radiusMd;
+  static const double radiusInput = radiusMd;
+  static const double radiusCard = radiusLg;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Component Sizes
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // Icons
+  static const double iconXs = 16;
+  static const double iconSm = 20;
+  static const double iconMd = 24;
+  static const double iconLg = 32;
+  static const double iconXl = 48;
+  static const double icon2xl = 64;
+
+  // Legacy aliases
+  static const double iconSizeSmall = iconSm;
+  static const double iconSizeFallback = iconLg;
+  static const double iconSizeLarge = iconXl;
+
+  // Touch targets
+  static const double touchTargetMin = 44; // Accessibility minimum
+  static const double buttonHeight = 44;
+  static const double buttonHeightLg = 48;
+
+  // Station card
+  static const double stationImageSize = 56;
+  static const double stationImageSizeLg = 64;
+
+  // Mini player
+  static const double miniPlayerHeight = 64;
+  static const double miniPlayerImageSize = 48;
+
+  // Onboarding
+  static const double onboardingIconContainerSize = 120;
+  static const double onboardingIconSize = 60;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Padding Presets
+  // ─────────────────────────────────────────────────────────────────────────
+  static const double paddingScreen = space4; // 16
+  static const double paddingCard = space3; // 12
+  static const double paddingContent = space6; // 24
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Animation
+  // ─────────────────────────────────────────────────────────────────────────
+  static const Duration durationFast = Duration(milliseconds: 150);
+  static const Duration durationNormal = Duration(milliseconds: 250);
+  static const Duration durationSlow = Duration(milliseconds: 350);
+  static const Duration durationShimmer = Duration(milliseconds: 1200);
+
+  // Legacy aliases
+  static const Duration fastAnimation = durationFast;
+  static const Duration normalAnimation = durationNormal;
+  static const Duration slowAnimation = durationSlow;
+  static const Duration shimmerDuration = durationShimmer;
+
+  // Curves
+  static const Curve curveDefault = Curves.easeOutCubic;
+  static const Curve curveEmphasized = Curves.easeOutExpo;
+  static const Curve curveDecelerate = Curves.easeOut;
+  static const Curve curveAccelerate = Curves.easeIn;
+
+  // Legacy aliases
+  static const Curve defaultCurve = curveDefault;
+  static const Curve emphasizedCurve = curveEmphasized;
+  static const Curve deceleratedCurve = curveDecelerate;
+  static const Curve acceleratedCurve = curveAccelerate;
+
+  // Stagger animation
   static const Duration staggerDelay = Duration(milliseconds: 50);
-  static const int maxStaggerItems = 20; // Prevent excessive stagger
-  static const double staggerOffset = 50; // Vertical slide offset in pixels
+  static const int maxStaggerItems = 20;
+  static const double staggerOffset = 24; // Reduced from 50 for subtlety
 
-  // Haptic Feedback
-  static const bool enableHaptics = true; // Feature flag for haptic feedback
+  // ─────────────────────────────────────────────────────────────────────────
+  // Micro-interactions
+  // ─────────────────────────────────────────────────────────────────────────
+  static const bool enableHaptics = true;
+  static const double pressedScale = 0.98; // Subtle press feedback
+  static const double pressedOpacity = 0.8;
 
-  // Micro-interaction Settings
-  static const double pressedScale = 0.97; // Scale factor when pressing cards
-  static const double pressedRotation = -0.002; // Rotation when pressing cards
-  static const double hoveredScale =
-      1.02; // Scale factor on hover (web/desktop)
-
-  // UI Constants
-  static const double buttonHeight = 48; // Standard button height
-  static const double iconSizeLarge = 80; // Large icon size for empty states
-  static const double iconSizeSmall = 20; // Small icon size
-  static const double iconSizeFallback = 32; // Fallback icon size
-  static const double miniPlayerHeight = 72; // Height of the mini player
-  static const double miniPlayerImageSize =
-      56; // Size of album art in mini player
-
-  // Border Radius
-  static const double radiusCard = 16; // Cards and surfaces
-  static const double radiusInput = 12; // Input fields and interactive elements
-  static const double radiusImage = 8; // Images and thumbnails
-  static const double radiusChip = 4; // Small chips and badges
-
-  // Spacing Scale
-  static const double spacingXXL = 48; // Extra large spacing
-  static const double spacingXL = 32; // Large spacing
-  static const double spacingL = 24; // Medium-large spacing
-  static const double spacingM = 16; // Medium spacing
-  static const double spacingS = 8; // Small spacing
-  static const double spacingXS = 4; // Extra small spacing
-
-  // Padding
-  static const double paddingScreen = 16; // Standard screen/list padding
-  static const double paddingContent = 32; // Content area padding
-  static const double paddingCard = 12; // Card internal padding
+  // ─────────────────────────────────────────────────────────────────────────
+  // Deprecated - keeping for compatibility, use new names
+  // ─────────────────────────────────────────────────────────────────────────
+  @Deprecated('Use radiusCard instead')
+  static const double cardBorderRadius = radiusCard;
+  @Deprecated('Use 0 for flat design')
+  static const double cardElevation = 0;
+  @Deprecated('Use pressedScale instead')
+  static const double pressedRotation = 0;
+  @Deprecated('Use pressedScale instead')
+  static const double hoveredScale = 1.02;
 }

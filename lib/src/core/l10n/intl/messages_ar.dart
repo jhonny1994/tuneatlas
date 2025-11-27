@@ -31,21 +31,28 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m4(filterType) => "لا توجد محطات متاحة لهذا ${filterType}";
 
-  static String m5(count) => "${count} نتيجة";
+  static String m5(stationName) => "قيد التشغيل: ${stationName}";
 
-  static String m6(stationName, deepLink) =>
+  static String m6(count) => "${count} نتيجة";
+
+  static String m7(stationName, deepLink) =>
       "استمع إلى ${stationName} على TuneAtlas! ${deepLink}";
 
-  static String m7(count) => "${count} محطة";
+  static String m8(stationName, country) => "${stationName}، ${country}";
 
-  static String m8(countryCode) => "محطات في ${countryCode}";
+  static String m9(count) => "${count} محطة";
 
-  static String m9(count) => "${count} وسم";
+  static String m10(countryCode) => "محطات في ${countryCode}";
 
-  static String m10(count) => "+${count} أخرى";
+  static String m11(count) => "${count} وسم";
+
+  static String m12(count) => "+${count} أخرى";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "addToFavoritesLabel": MessageLookupByLibrary.simpleMessage(
+      "إضافة إلى المفضلة",
+    ),
     "appName": MessageLookupByLibrary.simpleMessage("TuneAtlas"),
     "bitrate": MessageLookupByLibrary.simpleMessage("معدل البت"),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
@@ -156,6 +163,9 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "localStations": MessageLookupByLibrary.simpleMessage("المحطات المحلية"),
     "moreOptions": MessageLookupByLibrary.simpleMessage("المزيد من الخيارات"),
+    "moreOptionsLabel": MessageLookupByLibrary.simpleMessage(
+      "المزيد من الخيارات",
+    ),
     "next": MessageLookupByLibrary.simpleMessage("التالي"),
     "noCountriesTitle": MessageLookupByLibrary.simpleMessage(
       "لا توجد دول متاحة",
@@ -184,39 +194,50 @@ class MessageLookup extends MessageLookupByLibrary {
       "لم يتم العثور على محطات",
     ),
     "noTagsTitle": MessageLookupByLibrary.simpleMessage("لا توجد وسوم متاحة"),
+    "nowPlayingLabel": m5,
     "pause": MessageLookupByLibrary.simpleMessage("إيقاف مؤقت"),
+    "pauseButtonLabel": MessageLookupByLibrary.simpleMessage("إيقاف مؤقت"),
     "paused": MessageLookupByLibrary.simpleMessage("متوقف مؤقتًا"),
     "play": MessageLookupByLibrary.simpleMessage("تشغيل"),
+    "playButtonLabel": MessageLookupByLibrary.simpleMessage("تشغيل"),
     "playNow": MessageLookupByLibrary.simpleMessage("تشغيل الآن"),
     "playing": MessageLookupByLibrary.simpleMessage("قيد التشغيل"),
     "pullToRefresh": MessageLookupByLibrary.simpleMessage("اسحب للتحديث"),
     "radio": MessageLookupByLibrary.simpleMessage("راديو"),
     "ready": MessageLookupByLibrary.simpleMessage("جاهز!"),
+    "removeFromFavoritesLabel": MessageLookupByLibrary.simpleMessage(
+      "إزالة من المفضلة",
+    ),
     "retry": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
+    "retryButtonLabel": MessageLookupByLibrary.simpleMessage("إعادة المحاولة"),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
     "searchFailed": MessageLookupByLibrary.simpleMessage("فشل البحث"),
     "searchForStations": MessageLookupByLibrary.simpleMessage(
       "ابحث عن محطات الراديو",
     ),
-    "searchResultsCount": m5,
+    "searchResultsCount": m6,
     "searchStations": MessageLookupByLibrary.simpleMessage(
       "ابحث عن المحطات...",
     ),
-    "shareMessage": m6,
+    "shareButtonLabel": MessageLookupByLibrary.simpleMessage("مشاركة المحطة"),
+    "shareMessage": m7,
     "shareStation": MessageLookupByLibrary.simpleMessage("مشاركة المحطة"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "somethingWentWrong": MessageLookupByLibrary.simpleMessage("حدث خطأ ما"),
+    "stationCardLabel": m8,
     "stationDetails": MessageLookupByLibrary.simpleMessage("تفاصيل المحطة"),
     "stationOptions": MessageLookupByLibrary.simpleMessage("خيارات المحطة"),
     "stations": MessageLookupByLibrary.simpleMessage("المحطات"),
-    "stationsCount": m7,
-    "stationsIn": m8,
+    "stationsCount": m9,
+    "stationsIn": m10,
+    "stopButtonLabel": MessageLookupByLibrary.simpleMessage("إيقاف التشغيل"),
     "streamTimeoutError": MessageLookupByLibrary.simpleMessage(
       "انتهت مهلة الاتصال بالبث - الخادم لا يستجيب",
     ),
     "tags": MessageLookupByLibrary.simpleMessage("الوسوم"),
-    "tagsCount": m9,
-    "tagsOverflow": m10,
+    "tagsCount": m11,
+    "tagsOverflow": m12,
+    "toggleThemeLabel": MessageLookupByLibrary.simpleMessage("تبديل المظهر"),
     "tryAgain": MessageLookupByLibrary.simpleMessage("حاول مرة أخرى"),
     "unknown": MessageLookupByLibrary.simpleMessage("غير معروف"),
     "visitWebsite": MessageLookupByLibrary.simpleMessage("زيارة الموقع"),

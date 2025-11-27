@@ -100,5 +100,16 @@
     "failedToLoadStations": "فشل تحميل المحطات",
     "streamTimeoutError": "انتهت مهلة الاتصال بالبث - الخادم لا يستجيب",
     "failedToConnectToServers": "فشل الاتصال بخوادم Radio Browser. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
-    "shareMessage": "استمع إلى {stationName} على TuneAtlas! {deepLink}"
+    "shareMessage": "استمع إلى {stationName} على TuneAtlas! {deepLink}",
+    "shareButtonLabel": "مشاركة المحطة",
+    "playButtonLabel": "تشغيل",
+    "pauseButtonLabel": "إيقاف مؤقت",
+    "stopButtonLabel": "إيقاف التشغيل",
+    "retryButtonLabel": "إعادة المحاولة",
+    "addToFavoritesLabel": "إضافة إلى المفضلة",
+    "removeFromFavoritesLabel": "إزالة من المفضلة",
+    "toggleThemeLabel": "تبديل المظهر",
+    "moreOptionsLabel": "المزيد من الخيارات",
+    "nowPlayingLabel": "قيد التشغيل: {stationName}",
+    "stationCardLabel": "{stationName}، {country}"
 }

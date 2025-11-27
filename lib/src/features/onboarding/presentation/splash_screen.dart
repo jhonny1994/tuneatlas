@@ -31,10 +31,10 @@ class SplashScreen extends ConsumerWidget {
         // App logo/icon placeholder
         Icon(
           Icons.radio,
-          size: 80,
+          size: AppConfig.iconSizeLarge,
           color: Theme.of(context).colorScheme.primary,
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: AppConfig.paddingContent),
 
         // App name
         Text(
@@ -43,11 +43,11 @@ class SplashScreen extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        const SizedBox(height: 48),
+        const SizedBox(height: AppConfig.spacingXXL),
 
         // Loading indicator
         const CircularProgressIndicator(),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppConfig.spacingM),
 
         Text(
           l10n.initializingApp,
@@ -69,10 +69,10 @@ class SplashScreen extends ConsumerWidget {
       children: [
         Icon(
           Icons.check_circle,
-          size: 80,
+          size: AppConfig.iconSizeLarge,
           color: Theme.of(context).colorScheme.primary,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppConfig.spacingM),
         Text(
           l10n.ready,
           style: Theme.of(context).textTheme.headlineSmall,
@@ -85,17 +85,17 @@ class SplashScreen extends ConsumerWidget {
   Widget _buildError(BuildContext context, String message, WidgetRef ref) {
     final l10n = S.of(context);
     return Padding(
-      padding: const EdgeInsets.all(32),
+      padding: const EdgeInsets.all(AppConfig.paddingContent),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Error icon
           Icon(
             Icons.error_outline,
-            size: 80,
+            size: AppConfig.iconSizeLarge,
             color: Theme.of(context).colorScheme.error,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppConfig.spacingL),
 
           // Error title
           Text(
@@ -103,7 +103,7 @@ class SplashScreen extends ConsumerWidget {
             style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppConfig.spacingM),
 
           // Error message - localize the error key
           Text(
@@ -115,7 +115,7 @@ class SplashScreen extends ConsumerWidget {
                 ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: AppConfig.paddingContent),
 
           // Retry button
           FilledButton.icon(
