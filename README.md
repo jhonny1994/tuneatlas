@@ -29,7 +29,7 @@
 - **Smart Search**: Find stations by name, genre, or location with instant results
 - **Category Browse**: Explore by country, language, or tag
 - **Local Stations**: Automatic detection of stations in your region
-- **Deep Linking**: Share stations via web links (`https://dmar.site/tuneatlas/station/...`)
+- **Deep Linking**: Share stations via web links (`https://dmar.site/station/...`)
 
 ### 🎧 Seamless Playback
 - **Background Audio**: Listen while using other apps with full media controls

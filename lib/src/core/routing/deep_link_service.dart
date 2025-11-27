@@ -44,11 +44,11 @@ class DeepLinkService extends _$DeepLinkService {
     debugPrint('Received deep link: $uri');
 
     // Check if it's our GitHub Pages URL
-    // https://dmar.site/tuneatlas/station/UUID
+    // https://dmar.site/station/UUID
     if (uri.host == 'dmar.site' &&
-        uri.path.contains('/tuneatlas/station/')) {
+        uri.path.contains('/station/')) {
       final segments = uri.pathSegments;
-      // pathSegments for /tuneatlas/station/UUID -> ['tuneatlas', 'station', 'UUID']
+      // pathSegments for /station/UUID -> ['station', 'UUID']
       final stationIndex = segments.indexOf('station');
       if (stationIndex != -1 && stationIndex + 1 < segments.length) {
         final stationId = segments[stationIndex + 1];

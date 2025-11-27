@@ -38,7 +38,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Handle https://dmar.site/tuneatlas/station/... -->
-                <data android:scheme="https" android:host="dmar.site" android:pathPrefix="/tuneatlas/station" />
+                <data android:scheme="https" android:host="dmar.site" android:pathPrefix="/station" />
                 <!-- Fallback for custom scheme -->
                 <data android:scheme="tuneatlas" />
             </intent-filter>
