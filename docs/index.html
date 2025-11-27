@@ -20,7 +20,7 @@
             if (path.includes('/tuneatlas/station/')) {
                 // Try to open app scheme as fallback
                 var stationId = path.split('/tuneatlas/station/')[1];
-                // Optional: window.location.href = 'tuneatlas://station/' + stationId;
+                window.location.href = 'tuneatlas://station/' + stationId;
             }
         }
     </script>
