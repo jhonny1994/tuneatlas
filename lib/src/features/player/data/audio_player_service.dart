@@ -82,19 +82,16 @@ class AudioPlayerService {
   /// Play a radio station - just keep buffering until it connects
   Future<void> playStation(Station station) async {
     try {
-      await _ensureInitialized();
-
-      // CRITICAL: Clear error state BEFORE attempting new playback
-      // This prevents stale errors from previous stations
+      // CRITICAL: Update UI state IMMEDIATELY before initialization
+      // This ensures the MiniPlayer appears instantly with "Loading..."
+      // while the heavy AudioService initialization happens in the background.
       _errorSubject.add(null);
-
-      // Set loading/buffering state
       _isLoadingSubject.add(true);
       _isStoppedSubject.add(false);
       _isPlayingSubject.add(false);
-
-      // Update current station
       _currentStationSubject.add(station);
+
+      await _ensureInitialized();
 
       // Enforce 20s timeout for connection as per requirements
       // This prevents infinite loading if the handler hangs

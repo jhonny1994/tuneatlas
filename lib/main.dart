@@ -32,7 +32,11 @@ class TuneAtlasApp extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
 
     // Initialize network reconnect handler
-    ref.watch(networkReconnectHandlerProvider);
+    ref
+      ..watch(networkReconnectHandlerProvider)
+
+      // Initialize deep link service
+      ..watch(deepLinkServiceProvider);
 
     return MaterialApp.router(
       title: 'TuneAtlas',

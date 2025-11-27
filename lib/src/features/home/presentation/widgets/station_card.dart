@@ -493,7 +493,7 @@ class _StationCardState extends ConsumerState<StationCard> {
                     ShareParams(
                       text: l10n.shareMessage(
                         widget.station.name,
-                        'tuneatlas://tuneatlas.com/station/${widget.station.stationUuid}',
+                        '${AppConfig.deepLinkBaseUrl}/station/${widget.station.stationUuid}',
                       ),
                     ),
                   );

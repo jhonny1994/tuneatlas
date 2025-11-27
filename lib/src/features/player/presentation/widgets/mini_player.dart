@@ -256,7 +256,7 @@ class MiniPlayer extends ConsumerWidget {
                         ShareParams(
                           text: l10n.shareMessage(
                             station.name,
-                            'tuneatlas://tuneatlas.com/station/${station.stationUuid}',
+                            'https://tuneatlas.com/station/${station.stationUuid}',
                           ),
                         ),
                       );

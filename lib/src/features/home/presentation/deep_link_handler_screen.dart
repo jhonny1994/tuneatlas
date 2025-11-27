@@ -43,10 +43,12 @@ class _DeepLinkHandlerScreenState extends ConsumerState<DeepLinkHandlerScreen> {
 
       await result.when(
         success: (station) async {
-          // Play station
-          await ref.read(audioPlayerProvider.notifier).playStation(station);
+          // Play station (updates UI state immediately)
+          unawaited(
+            ref.read(audioPlayerProvider.notifier).playStation(station),
+          );
 
-          // Navigate to home
+          // Navigate to home immediately
           if (mounted) context.go('/home');
         },
         failure: (error) {

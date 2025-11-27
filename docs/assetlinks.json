@@ -1,0 +1,15 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.carbodex.tuneatlas",
+            "sha256_cert_fingerprints": [
+                "69:8C:BD:63:F4:6E:0D:C7:B0:EE:AD:C6:64:9D:73:3D:90:6E:0C:27:EC:F0:8B:7F:59:AE:CD:86:F6:6C:89:59",
+                "E8:68:B6:05:12:9B:04:1A:BC:5F:B6:00:27:00:75:CE:66:49:39:DE:C1:3A:88:CF:5E:99:DD:B1:9F:2B:2A:D2"
+            ]
+        }
+    }
+]

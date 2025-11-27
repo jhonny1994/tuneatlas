@@ -19,6 +19,10 @@ class AppConfig {
   // Country Detection
   static const String countryDetectionUrl = 'https://ipwho.is/';
 
+  // Deep Linking
+  static const String deepLinkBaseUrl =
+      'https://jhonny1994.github.io/tuneatlas';
+
   // Pagination
   static const int pageSize = 20;
   static const double preloadThreshold = 0.8; // Load more at 80% scroll
@@ -68,7 +72,8 @@ class AppConfig {
   static const double iconSizeSmall = 20; // Small icon size
   static const double iconSizeFallback = 32; // Fallback icon size
   static const double miniPlayerHeight = 72; // Height of the mini player
-  static const double miniPlayerImageSize = 56; // Size of album art in mini player
+  static const double miniPlayerImageSize =
+      56; // Size of album art in mini player
 
   // Border Radius
   static const double radiusCard = 16; // Cards and surfaces
