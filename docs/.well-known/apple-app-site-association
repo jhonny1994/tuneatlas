@@ -5,7 +5,7 @@
             {
                 "appID": "TEAMID.com.carbodex.tuneatlas",
                 "paths": [
-                    "/station/*"
+                    "/tuneatlas/station/*"
                 ]
             }
         ]

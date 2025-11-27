@@ -17,9 +17,9 @@
         // Simple redirect logic if opened on mobile
         window.onload = function() {
             var path = window.location.pathname;
-            if (path.includes('/station/')) {
+            if (path.includes('/tuneatlas/station/')) {
                 // Try to open app scheme as fallback
-                var stationId = path.split('/station/')[1];
+                var stationId = path.split('/tuneatlas/station/')[1];
                 // Optional: window.location.href = 'tuneatlas://station/' + stationId;
             }
         }
@@ -40,8 +40,8 @@
     <script>
         document.getElementById('openAppBtn').onclick = function() {
             var path = window.location.pathname;
-            if (path.includes('/station/')) {
-                var uuid = path.split('/station/')[1];
+            if (path.includes('/tuneatlas/station/')) {
+                var uuid = path.split('/tuneatlas/station/')[1];
                 window.location.href = 'tuneatlas://tuneatlas.com/station/' + uuid;
             } else {
                 window.location.href = 'tuneatlas://tuneatlas.com/home';

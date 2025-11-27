@@ -20,7 +20,7 @@ class AppConfig {
   static const String countryDetectionUrl = 'https://ipwho.is/';
 
   // Deep Linking
-  static const String deepLinkBaseUrl = 'https://dmar.site';
+  static const String deepLinkBaseUrl = 'https://dmar.site/tuneatlas';
 
   // Pagination
   static const int pageSize = 20;
