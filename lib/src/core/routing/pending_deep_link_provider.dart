@@ -10,9 +10,11 @@ class PendingDeepLink extends _$PendingDeepLink {
     return null;
   }
 
-  void set(String path) {
+  set link(String? path) {
     state = path;
   }
+
+  String? get link => state;
 
   void clear() {
     state = null;

@@ -90,7 +90,7 @@ class DeepLinkService extends _$DeepLinkService {
         ref.read(routerProvider).go(targetPath);
       } else {
         // Store for later
-        ref.read(pendingDeepLinkProvider.notifier).set(targetPath);
+        ref.read(pendingDeepLinkProvider.notifier).link = targetPath;
       }
     }
   }
