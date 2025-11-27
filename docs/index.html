@@ -42,9 +42,10 @@
             var path = window.location.pathname;
             if (path.includes('/tuneatlas/station/')) {
                 var uuid = path.split('/tuneatlas/station/')[1];
-                window.location.href = 'tuneatlas://tuneatlas.com/station/' + uuid;
+                // Use simplified custom scheme format
+                window.location.href = 'tuneatlas://station/' + uuid;
             } else {
-                window.location.href = 'tuneatlas://tuneatlas.com/home';
+                window.location.href = 'tuneatlas://home';
             }
             return false;
         };

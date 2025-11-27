@@ -56,13 +56,24 @@ class DeepLinkService extends _$DeepLinkService {
       }
     }
     // Fallback for custom scheme if still supported
-    // tuneatlas://tuneatlas.com/station/UUID
-    else if (uri.scheme == 'tuneatlas' && uri.path.contains('/station/')) {
-      final segments = uri.pathSegments;
-      final stationIndex = segments.indexOf('station');
-      if (stationIndex != -1 && stationIndex + 1 < segments.length) {
-        final stationId = segments[stationIndex + 1];
-        ref.read(routerProvider).go('/station/$stationId');
+    // tuneatlas://station/UUID
+    else if (uri.scheme == 'tuneatlas') {
+      final path = uri.path;
+      if (path.startsWith('/station/')) {
+        final stationId = path.replaceFirst('/station/', '');
+        if (stationId.isNotEmpty) {
+          debugPrint('Opening station from custom scheme: $stationId');
+          ref.read(routerProvider).go('/station/$stationId');
+        }
+      } else if (path.contains('/station/')) {
+        // Handle case with host: tuneatlas://tuneatlas.com/station/UUID
+        final segments = uri.pathSegments;
+        final stationIndex = segments.indexOf('station');
+        if (stationIndex != -1 && stationIndex + 1 < segments.length) {
+          final stationId = segments[stationIndex + 1];
+          debugPrint('Opening station from custom scheme with host: $stationId');
+          ref.read(routerProvider).go('/station/$stationId');
+        }
       }
     }
   }
