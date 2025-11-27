@@ -34,7 +34,9 @@ class DeepLinkService extends _$DeepLinkService {
     );
 
     ref.onDispose(() {
-      _linkSubscription?.cancel();
+      if (_linkSubscription != null) {
+        unawaited(_linkSubscription!.cancel());
+      }
     });
   }
 
@@ -42,8 +44,8 @@ class DeepLinkService extends _$DeepLinkService {
     debugPrint('Received deep link: $uri');
 
     // Check if it's our GitHub Pages URL
-    // https://jhonny1994.github.io/tuneatlas/station/UUID
-    if (uri.host == 'jhonny1994.github.io' &&
+    // https://dmar.site/tuneatlas/station/UUID
+    if (uri.host == 'dmar.site' &&
         uri.path.contains('/tuneatlas/station/')) {
       final segments = uri.pathSegments;
       // pathSegments for /tuneatlas/station/UUID -> ['tuneatlas', 'station', 'UUID']
